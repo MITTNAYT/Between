@@ -1,0 +1,1962 @@
+[
+    {
+        "id": "ident-01",
+        "text": "What are three words your friends would use to describe you?",
+        "category": "IDENTITY",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Which of those words feels most accurate to you?",
+            "What is a word you wish they would use instead?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "ident-02",
+        "text": "What's something you spend a lot of time thinking about?",
+        "category": "IDENTITY",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "When did that fascination or thought loop start?",
+            "Does thinking about it bring you energy or drain you?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "ident-03",
+        "text": "What's a part of your personality you're proud of?",
+        "category": "IDENTITY",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Who or what helped you develop that part of yourself?",
+            "When was the last time that quality served you well?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "ident-04",
+        "text": "What's something you're naturally good at?",
+        "category": "IDENTITY",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Did you always know you had that ability?",
+            "How do you use that gift in your everyday life?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "ident-05",
+        "text": "What do you enjoy that most people wouldn't guess?",
+        "category": "IDENTITY",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Why do you keep that interest low-key?",
+            "What feeling does doing it give you?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "ident-06",
+        "text": "What do people usually misunderstand about you?",
+        "category": "IDENTITY",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Why do you think people get that first impression?",
+            "What is the deeper truth they are missing?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "ident-07",
+        "text": "What version of yourself do different people see?",
+        "category": "IDENTITY",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Which version feels the most exhausting to maintain?",
+            "Who gets to see the rawest, unedited version of you?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "ident-08",
+        "text": "What trait has helped you most in life?",
+        "category": "IDENTITY",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Was that trait born out of necessity or encouragement?",
+            "Can that same trait ever become a blind spot?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "ident-09",
+        "text": "What trait has made life harder?",
+        "category": "IDENTITY",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "How have you learned to manage or soften it?",
+            "What situation triggers that trait the fastest?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "ident-10",
+        "text": "What part of yourself took the longest to accept?",
+        "category": "IDENTITY",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "What caused the shift toward self-acceptance?",
+            "How does it feel now to look back at your younger self?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "ident-11",
+        "text": "When do you feel most like yourself?",
+        "category": "IDENTITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Where are you and who is around when that happens?",
+            "What stops you from being in that state more often?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "ident-12",
+        "text": "What role do you naturally play in a group?",
+        "category": "IDENTITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Do you choose that role willingly, or is it expected of you?",
+            "What happens if you step back and let someone else lead?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "ident-13",
+        "text": "What part of your identity matters most to you?",
+        "category": "IDENTITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "If you had to let go of everything else, why would you keep that?",
+            "How do you protect that core part of you?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "ident-14",
+        "text": "What has shaped who you are more than people realize?",
+        "category": "IDENTITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "Was it a specific event, a quiet season, or a person?",
+            "Why don't you talk about it very often?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "ident-15",
+        "text": "What do you hope never changes about you?",
+        "category": "IDENTITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What makes that quality so precious to hold onto?",
+            "What forces in the world threaten to erode it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "ident-16",
+        "text": "What part of yourself do you hide most often?",
+        "category": "IDENTITY",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "What are you afraid will happen if someone sees it?",
+            "Who is the closest to having seen that part of you?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "ident-17",
+        "text": "What insecurity influences you more than you'd like?",
+        "category": "IDENTITY",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "How does that insecurity disguise itself in daily choices?",
+            "Where did you first learn to feel inadequate about that?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "ident-18",
+        "text": "What version of yourself are you afraid of becoming?",
+        "category": "IDENTITY",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "Have you ever seen glimpses of that person in stressful moments?",
+            "What helps pull you back to who you truly want to be?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "ident-19",
+        "text": "What do you wish people saw in you?",
+        "category": "IDENTITY",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "What would it change about how you walk into rooms?",
+            "How does it feel to say that out loud right now?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "ident-20",
+        "text": "What truth about yourself took years to admit?",
+        "category": "IDENTITY",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "What was the cost of denying that truth for so long?",
+            "Did accepting it bring peace or grief first?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "child-01",
+        "text": "What was your favorite thing to do as a child?",
+        "category": "ORIGINS",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Who did you usually do that with?",
+            "Do you still experience that kind of pure immersion today?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "child-02",
+        "text": "What was your dream job growing up?",
+        "category": "ORIGINS",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made that job sound magical to your younger self?",
+            "Is there a small element of that dream in what you do now?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "child-03",
+        "text": "What cartoon or show did you love?",
+        "category": "ORIGINS",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Which character did you relate to most?",
+            "What memory of watching it stands out clearest?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "child-04",
+        "text": "What snack reminds you of childhood?",
+        "category": "ORIGINS",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Where were you usually when you ate it?",
+            "Who was the person who bought or prepared it for you?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "child-05",
+        "text": "What was your favorite place growing up?",
+        "category": "ORIGINS",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made that place feel like a sanctuary?",
+            "Does that place still exist today?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "child-06",
+        "text": "What were you like at ten years old?",
+        "category": "ORIGINS",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Were you quiet, adventurous, anxious, or expressive?",
+            "What would that ten-year-old think of your life today?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "child-07",
+        "text": "What did you think adulthood would be like?",
+        "category": "ORIGINS",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What has been the biggest pleasant surprise about growing up?",
+            "What is the hardest reality you had to adjust to?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "child-08",
+        "text": "What memory always makes you smile?",
+        "category": "ORIGINS",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Take me to the exact moment that happened.",
+            "Why has that memory stayed so bright over the years?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "child-09",
+        "text": "What family tradition stands out most?",
+        "category": "ORIGINS",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Is that a tradition you want to carry forward into your own life?",
+            "What feeling was tied to that tradition?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "child-10",
+        "text": "What lesson did your childhood teach you?",
+        "category": "ORIGINS",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "Did you learn that lesson gently or through difficulty?",
+            "How does that lesson influence your instincts today?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "child-11",
+        "text": "Who influenced you most growing up?",
+        "category": "ORIGINS",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What specific mannerism or belief did you adopt from them?",
+            "Do they know how much impact they had on your life?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "child-12",
+        "text": "What experience changed your childhood?",
+        "category": "ORIGINS",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "How old were you when that happened?",
+            "How did your perception of the world split into 'before' and 'after'?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "child-13",
+        "text": "What did you need more of as a child?",
+        "category": "ORIGINS",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "Was it safety, praise, freedom, or emotional presence?",
+            "How do you try to give that to yourself now?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "child-14",
+        "text": "What made you feel safe?",
+        "category": "ORIGINS",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "Was it a specific person, a room, or a routine?",
+            "What does emotional safety look and feel like to you now?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "child-15",
+        "text": "What made you feel understood?",
+        "category": "ORIGINS",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "Who was the first person who made you feel truly seen?",
+            "What did they do that others didn't?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "child-16",
+        "text": "What from your childhood still affects you today?",
+        "category": "ORIGINS",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "When does that early pattern show up in your relationships?",
+            "What would it take to finally heal or release that weight?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "child-17",
+        "text": "What did you learn about love growing up?",
+        "category": "ORIGINS",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "Was love presented as conditional, quiet, intense, or scarce?",
+            "What have you had to consciously redefine about love?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "child-18",
+        "text": "What's something your younger self deserved?",
+        "category": "ORIGINS",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "Why didn't they receive that at the time?",
+            "Can you give a piece of that validation to yourself right now?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "child-19",
+        "text": "What's something you've had to unlearn?",
+        "category": "ORIGINS",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "What was the moment you realized that belief was hurting you?",
+            "How do you catch yourself when the old pattern kicks in?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "child-20",
+        "text": "If you could speak to your younger self, what would you say?",
+        "category": "ORIGINS",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "Would they be surprised by where you are sitting right now?",
+            "What reassurance do you still need to hear from yourself?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "friend-01",
+        "text": "What makes someone easy to talk to?",
+        "category": "US",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What body language or energy puts you at ease?",
+            "Who in your life embodies that conversational safety?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "friend-02",
+        "text": "What's your favorite thing to do with friends?",
+        "category": "US",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Do you prefer high-energy outings or quiet conversations?",
+            "What makes shared downtime feel so restorative?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "friend-03",
+        "text": "What type of friend are you?",
+        "category": "US",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Are you the listener, the planner, the truth-teller, or the comic?",
+            "Which role feels most natural to you?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "friend-04",
+        "text": "What quality attracts you to people?",
+        "category": "US",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Is it curiosity, warmth, intelligence, or humor?",
+            "How quickly can you sense that in someone?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "friend-05",
+        "text": "What's the funniest thing a friend has done?",
+        "category": "US",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Take me back to the exact moment that happened.",
+            "How hard did you laugh in that room?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "friend-06",
+        "text": "What makes you trust someone?",
+        "category": "US",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Is trust built over time or felt almost immediately in your gut?",
+            "What is one green flag that instantly signals integrity to you?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "friend-07",
+        "text": "What makes you feel included?",
+        "category": "US",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What small gesture makes you feel like you truly belong?",
+            "When have you felt like an outsider looking in?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "friend-08",
+        "text": "How do you usually make friends?",
+        "category": "US",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Do you initiate easily, or do you wait for others to approach?",
+            "Has making friends become harder or easier as you've gotten older?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "friend-09",
+        "text": "What quality keeps friendships strong?",
+        "category": "US",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "How do you maintain depth when life gets busy?",
+            "What is the foundation that keeps long-distance friendships alive?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "friend-10",
+        "text": "What kind of people bring out your best side?",
+        "category": "US",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What happens to your energy when you are around them?",
+            "What side of you emerges in their presence?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "friend-11",
+        "text": "What friendship taught you the most?",
+        "category": "US",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What did that relationship reveal about your own boundaries or loyalty?",
+            "Are you still in touch with that person today?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "friend-12",
+        "text": "What makes someone unforgettable?",
+        "category": "US",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Who is a person you only knew briefly who left a lasting mark on you?",
+            "What was it about their presence that stayed with you?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "friend-13",
+        "text": "What do you appreciate most in your closest friends?",
+        "category": "US",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Have you told them that recently?",
+            "What makes that specific quality irreplaceable?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "friend-14",
+        "text": "When do you feel closest to people?",
+        "category": "US",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Is it during shared struggle, silent presence, or deep late-night talks?",
+            "How does that closeness feel in your body?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "friend-15",
+        "text": "What does loyalty mean to you?",
+        "category": "US",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "How has your standard for loyalty changed over time?",
+            "What is an act of loyalty you will never forget?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "friend-16",
+        "text": "What's the hardest friendship lesson you've learned?",
+        "category": "US",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "Did that lesson make you more guarded or more intentional?",
+            "What did you have to forgive yourself for in that situation?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "friend-17",
+        "text": "Have you ever outgrown a friendship?",
+        "category": "US",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "Was there a definitive ending, or a slow, quiet drifting apart?",
+            "How did you process the grief of losing that shared world?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "friend-18",
+        "text": "What friendship loss affected you most?",
+        "category": "US",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "What part of yourself did you feel you lost along with them?",
+            "If you could have one final conversation with them, what would you say?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "friend-19",
+        "text": "What's difficult for you in friendships?",
+        "category": "US",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "Is it expressing hurt, asking for help, or staying consistent?",
+            "How does that difficulty manifest between us?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "friend-20",
+        "text": "What do you wish your friends understood better?",
+        "category": "US",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "Why is that difficult to explain to people in the moment?",
+            "How can the people close to you support you when you're there?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "dream-01",
+        "text": "What's a place you want to visit?",
+        "category": "DREAMS",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What is the first thing you would do when you landed there?",
+            "What image or feeling draws you to that specific destination?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "dream-02",
+        "text": "What's a skill you'd love to learn?",
+        "category": "DREAMS",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What would you build or do once you mastered it?",
+            "What has kept you from diving into it so far?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "dream-03",
+        "text": "What's on your bucket list?",
+        "category": "DREAMS",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Which item on that list feels closest within your reach?",
+            "Who would you want beside you when you accomplish it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "dream-04",
+        "text": "What's something you're excited about?",
+        "category": "DREAMS",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "How does your daily energy shift when you anticipate it?",
+            "What is the best part of looking forward to that?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "dream-05",
+        "text": "What's a hobby you'd like to try?",
+        "category": "DREAMS",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What draws you toward that particular craft or activity?",
+            "What is holding you back from starting this weekend?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "dream-06",
+        "text": "What does success mean to you?",
+        "category": "DREAMS",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "How is your definition different from what society expects of you?",
+            "When was the last time you felt truly successful inside?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "dream-07",
+        "text": "What motivates you right now?",
+        "category": "DREAMS",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Is that motivation driven by inspiration, curiosity, or necessity?",
+            "What helps you keep moving forward on days when motivation dips?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "dream-08",
+        "text": "What's a goal you're working toward?",
+        "category": "DREAMS",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What will daily life look like once you achieve that goal?",
+            "What is the hardest part of the process right now?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "dream-09",
+        "text": "What kind of lifestyle appeals to you?",
+        "category": "DREAMS",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Describe the rhythm of your ideal morning and evening.",
+            "What trade-offs are you willing to make to build that life?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "dream-10",
+        "text": "What are you curious about lately?",
+        "category": "DREAMS",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What rabbit hole have you fallen down recently?",
+            "What does that curiosity say about what you're seeking right now?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "dream-11",
+        "text": "What dream have you held onto the longest?",
+        "category": "DREAMS",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "How has that dream matured or changed form over the years?",
+            "Why has that desire refused to die out?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "dream-12",
+        "text": "What would you do if money didn't matter?",
+        "category": "DREAMS",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "How would you spend your working hours?",
+            "What kind of community or environment would you create around yourself?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "dream-13",
+        "text": "What's something you want to build?",
+        "category": "DREAMS",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Is it a tangible creation, a family culture, a business, or a sanctuary?",
+            "Who is that creation meant to serve?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "dream-14",
+        "text": "What impact would you like to have?",
+        "category": "DREAMS",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "In whose life do you most want to make a lasting difference?",
+            "How do you want people to feel when they remember your name?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "dream-15",
+        "text": "What are you chasing right now?",
+        "category": "DREAMS",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Is chasing it giving you joy or making you restless?",
+            "What do you hope you will feel once you catch it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "dream-16",
+        "text": "What dream are you afraid to say out loud?",
+        "category": "DREAMS",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "Why does stating that dream feel dangerous or vulnerable?",
+            "How does it feel to finally share it with me tonight?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "dream-17",
+        "text": "What dream have you almost given up on?",
+        "category": "DREAMS",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made it feel too heavy or improbable to carry?",
+            "Is there still a small ember of hope left in your heart for it?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "dream-18",
+        "text": "What would a meaningful life look like?",
+        "category": "DREAMS",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "What would you have to let go of to live that way fully?",
+            "What is one courageous step you could take toward it this month?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "dream-19",
+        "text": "What's worth struggling for?",
+        "category": "DREAMS",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "What makes that struggle sacred rather than merely painful?",
+            "How has enduring that struggle shaped your character?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "dream-20",
+        "text": "What future are you trying to create?",
+        "category": "DREAMS",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "Who do you want beside you in that future?",
+            "What promise can you make to yourself right now about that vision?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "fear-01",
+        "text": "What's something that makes you nervous?",
+        "category": "FEARS",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "How does that nervousness show up physically in your body?",
+            "What is your go-to ritual for calming yourself down?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "fear-02",
+        "text": "What's your biggest irrational fear?",
+        "category": "FEARS",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "When did that fear first start?",
+            "What is the most ridiculous situation it has caused for you?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "fear-03",
+        "text": "What challenge intimidates you?",
+        "category": "FEARS",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What makes that challenge feel so daunting right now?",
+            "What is the smallest step you could take to face it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "fear-04",
+        "text": "What's something outside your comfort zone?",
+        "category": "FEARS",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "When was the last time you pushed past your usual boundaries?",
+            "How did you feel on the other side of that experience?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "fear-05",
+        "text": "What risk would you like to take?",
+        "category": "FEARS",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What is the upside you keep envisioning?",
+            "What has stopped you from taking that leap so far?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "fear-06",
+        "text": "What kind of failure worries you?",
+        "category": "FEARS",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Is it failing publicly, failing someone you love, or failing yourself?",
+            "What meaning do you attach to that potential failure?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "fear-07",
+        "text": "What fear has followed you longest?",
+        "category": "FEARS",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "Where did that fear take root in your earlier years?",
+            "How has your relationship with that fear changed as you've grown?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "fear-08",
+        "text": "What makes you doubt yourself?",
+        "category": "FEARS",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "What triggers your inner imposter or critic most reliably?",
+            "What helps restore your self-trust when doubt creeps in?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "fear-09",
+        "text": "What fear has become smaller over time?",
+        "category": "FEARS",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What experience gave you the evidence to shrink that fear?",
+            "How does knowing you overcame it give you strength today?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "fear-10",
+        "text": "What fear still feels large?",
+        "category": "FEARS",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "How much energy do you spend avoiding or managing that fear?",
+            "What would your life look like if that fear lost 50% of its power?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "fear-11",
+        "text": "What fear influences your decisions?",
+        "category": "FEARS",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "Has that fear kept you safe, or has it kept you small?",
+            "What decision would you make tomorrow if that fear vanished?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "fear-12",
+        "text": "What fear do people not know you have?",
+        "category": "FEARS",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "Why do you keep that fear hidden from most people?",
+            "What would happen if you were open about it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "fear-13",
+        "text": "What are you afraid of losing?",
+        "category": "FEARS",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "Is it a person, a feeling of security, your health, or your freedom?",
+            "How does that fear shape the way you hold onto what you love?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "fear-14",
+        "text": "What keeps you from taking bigger risks?",
+        "category": "FEARS",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "What is the worst-case scenario that plays in your mind?",
+            "What is the cost of staying where it is comfortable and predictable?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "fear-15",
+        "text": "What fear has taught you something useful?",
+        "category": "FEARS",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "What wisdom did you gain by walking through that anxiety?",
+            "How has that insight made you more compassionate toward others?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED"
+    },
+    {
+        "id": "fear-16",
+        "text": "What are you most afraid of becoming?",
+        "category": "FEARS",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "Have you seen glimpses of that in yourself during hard seasons?",
+            "What helps you pull back and recommit to your values?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "fear-17",
+        "text": "What fear would change your life if you overcame it?",
+        "category": "FEARS",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "What doors would immediately open for you?",
+            "What is one brave conversation that could begin that shift?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "fear-18",
+        "text": "What fear rarely leaves you?",
+        "category": "FEARS",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "How do you carry that companion without letting it run your life?",
+            "What brings you comfort when that fear is loud?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "fear-19",
+        "text": "What fear do you wish you could let go of?",
+        "category": "FEARS",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "How much lighter would your chest feel without that weight?",
+            "What would it take to let it drop to the floor tonight?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "fear-20",
+        "text": "What fear feels closest to your heart?",
+        "category": "FEARS",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "What makes that fear so tender to speak about?",
+            "How does it feel to share it with me right now?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "bible-partner-01",
+        "text": "When do you feel closest to me?",
+        "category": "US",
+        "depth": 5,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "Why that moment?",
+            "What made it meaningful to you?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "bible-partner-02",
+        "text": "What do I do that makes you feel deeply loved?",
+        "category": "US",
+        "depth": 5,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "When did you first notice that?",
+            "What is something small I do that matters most?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "bible-partner-03",
+        "text": "What's something you've never told me before?",
+        "category": "US",
+        "depth": 5,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made that difficult to share?",
+            "What support do you need from me?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "bible-partner-04",
+        "text": "What fear do you have about our relationship or future?",
+        "category": "FEARS",
+        "depth": 5,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "Where does that fear stem from?",
+            "How can we navigate that together?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "bible-partner-05",
+        "text": "When do you feel most misunderstood by me?",
+        "category": "CONFLICT",
+        "depth": 5,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What happens in those moments?",
+            "How can I listen better when that happens?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "bible-partner-06",
+        "text": "What's something you're still healing from that affects us?",
+        "category": "FEARS",
+        "depth": 5,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "When did that start?",
+            "How can I hold space for you?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "bible-partner-07",
+        "text": "What kind of life do you dream of us building in ten years?",
+        "category": "FUTURE",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "Why is that vision meaningful to you?",
+            "What excites you most about it?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "bible-partner-08",
+        "text": "What's an adventure or dream you're afraid to hope for?",
+        "category": "DREAMS",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "Why that dream?",
+            "What feels like it's standing in the way?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "bible-partner-09",
+        "text": "What's something we've overcome together that made us stronger?",
+        "category": "US",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What did that season teach you about us?",
+            "How did our bond change afterward?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "bible-partner-10",
+        "text": "What part of yourself are you still learning to embrace?",
+        "category": "IDENTITY",
+        "depth": 5,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "Why has that been a journey for you?",
+            "When do you feel most at ease with it?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "bible-friend-01",
+        "text": "What's a fear you've never fully overcome?",
+        "category": "FEARS",
+        "depth": 5,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "When did that fear first take root?",
+            "What helps you feel brave when it appears?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "bible-friend-02",
+        "text": "What's something you're currently healing from?",
+        "category": "FEARS",
+        "depth": 5,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What has been the hardest part of that process?",
+            "What has given you comfort or strength?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "bible-friend-03",
+        "text": "What's a mistake that completely changed the trajectory of your life?",
+        "category": "ORIGINS",
+        "depth": 5,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "How did you handle the aftermath?",
+            "What wisdom did you gain from it?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "bible-friend-04",
+        "text": "What's something about your inner world you're afraid people won't understand?",
+        "category": "IDENTITY",
+        "depth": 5,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "Why does it feel risky to share?",
+            "What would true understanding feel like?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "bible-friend-05",
+        "text": "What's a dream for your life that you rarely say out loud?",
+        "category": "DREAMS",
+        "depth": 5,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What makes that dream so sacred to you?",
+            "What would your life feel like if it came true?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "bible-friend-06",
+        "text": "What challenge in the last five years made you who you are today?",
+        "category": "VALUES",
+        "depth": 4,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What kept you going during that time?",
+            "What are you proud of regarding how you handled it?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "bible-friend-07",
+        "text": "What values do you refuse to compromise on, no matter what?",
+        "category": "VALUES",
+        "depth": 4,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "Where did that conviction come from?",
+            "How has it shaped your friendships?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "bible-friend-08",
+        "text": "What's something you wish more people knew about you?",
+        "category": "IDENTITY",
+        "depth": 4,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "Why is that part often hidden?",
+            "How can the people close to you see it more?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "bible-friend-09",
+        "text": "What future excites you most when you think about where you're heading?",
+        "category": "FUTURE",
+        "depth": 4,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What are you doing now to get there?",
+            "Who do you want by your side?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    },
+    {
+        "id": "bible-friend-10",
+        "text": "What memory of our friendship always brings you joy?",
+        "category": "GRATITUDE",
+        "depth": 4,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made that day or moment stand out?",
+            "What do you appreciate most about our bond?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED"
+    }
+]
