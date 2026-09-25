@@ -59,6 +59,7 @@ import kotlinx.coroutines.launch
 fun SettingsScreen(
     viewModel: SettingsViewModel,
     onBack: () -> Unit,
+    onOpenRules: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val isBiometricLockEnabled by viewModel.isBiometricLockEnabled.collectAsState()
@@ -199,7 +200,47 @@ fun SettingsScreen(
 
                 Spacer(modifier = Modifier.height(28.dp))
 
-                // SECTION 3: DATA RESET
+                // SECTION 3: HOW TO PLAY & RULES
+                SectionHeader(title = "GUIDE & RULES")
+
+                SoftCard(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable(onClick = onOpenRules)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(18.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "How to Play & Ground Rules",
+                                style = TonightTheme.typography.titleM.copy(fontSize = 16.sp),
+                                color = TonightTheme.colors.ink
+                            )
+                            Spacer(modifier = Modifier.height(2.dp))
+                            Text(
+                                text = "Review turn-taking, passing, depth control, and tips",
+                                style = TonightTheme.typography.caption.copy(fontSize = 13.sp),
+                                color = TonightTheme.colors.muted
+                            )
+                        }
+
+                        Icon(
+                            imageVector = AppIcons.Forward,
+                            contentDescription = "Open guide",
+                            tint = TonightTheme.colors.ember,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(28.dp))
+
+                // SECTION 4: DATA RESET
                 SectionHeader(title = "DATA MANAGEMENT")
 
                 SecondaryButton(

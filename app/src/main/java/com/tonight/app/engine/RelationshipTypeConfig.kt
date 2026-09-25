@@ -40,7 +40,7 @@ data class RelationshipTypeConfig(
 
 object RelationshipTypeRegistry {
 
-    private val COUPLE_SESSION_PHASES = listOf(
+    private val COUPLE_5MIN_PHASES = listOf(
         PhasePlan(
             phase = ArcPhase.WARMUP,
             key = "warmup",
@@ -63,12 +63,6 @@ object RelationshipTypeRegistry {
             )
         ),
         PhasePlan(
-            phase = ArcPhase.PEAK,
-            key = "peak",
-            allowedDepths = setOf(4, 5),
-            slots = listOf(SlotPlan(ArcPhase.PEAK, targetDepth = 4))
-        ),
-        PhasePlan(
             phase = ArcPhase.LANDING,
             key = "landing",
             allowedDepths = setOf(2, 3),
@@ -83,7 +77,7 @@ object RelationshipTypeRegistry {
         )
     )
 
-    private val COUPLE_DEEP_PHASES = listOf(
+    private val COUPLE_10MIN_PHASES = listOf(
         PhasePlan(
             phase = ArcPhase.WARMUP,
             key = "warmup",
@@ -136,7 +130,115 @@ object RelationshipTypeRegistry {
         )
     )
 
-    private val JUST_MET_SESSION_PHASES = listOf(
+    private val COUPLE_15MIN_PHASES = listOf(
+        PhasePlan(
+            phase = ArcPhase.WARMUP,
+            key = "warmup",
+            allowedDepths = setOf(1),
+            slots = listOf(
+                SlotPlan(ArcPhase.WARMUP, targetDepth = 1),
+                SlotPlan(ArcPhase.WARMUP, targetDepth = 1),
+                SlotPlan(ArcPhase.WARMUP, targetDepth = 1)
+            )
+        ),
+        PhasePlan(
+            phase = ArcPhase.OPENING,
+            key = "opening",
+            allowedDepths = setOf(2),
+            slots = listOf(
+                SlotPlan(ArcPhase.OPENING, targetDepth = 2),
+                SlotPlan(ArcPhase.OPENING, targetDepth = 2),
+                SlotPlan(ArcPhase.OPENING, targetDepth = 2)
+            )
+        ),
+        PhasePlan(
+            phase = ArcPhase.DEEPENING,
+            key = "deepening",
+            allowedDepths = setOf(3),
+            slots = listOf(
+                SlotPlan(ArcPhase.DEEPENING, targetDepth = 3),
+                SlotPlan(ArcPhase.DEEPENING, targetDepth = 3),
+                SlotPlan(ArcPhase.DEEPENING, targetDepth = 3),
+                SlotPlan(ArcPhase.DEEPENING, targetDepth = 3),
+                SlotPlan(ArcPhase.DEEPENING, targetDepth = 3)
+            )
+        ),
+        PhasePlan(
+            phase = ArcPhase.PEAK,
+            key = "peak",
+            allowedDepths = setOf(4, 5),
+            slots = listOf(
+                SlotPlan(ArcPhase.PEAK, targetDepth = 4),
+                SlotPlan(ArcPhase.PEAK, targetDepth = 5)
+            )
+        ),
+        PhasePlan(
+            phase = ArcPhase.LANDING,
+            key = "landing",
+            allowedDepths = setOf(2, 3),
+            slots = listOf(
+                SlotPlan(
+                    phase = ArcPhase.LANDING,
+                    targetDepth = null,
+                    depthRange = 2..3,
+                    allowedCategories = setOf(Category.GRATITUDE, Category.US)
+                ),
+                SlotPlan(
+                    phase = ArcPhase.LANDING,
+                    targetDepth = null,
+                    depthRange = 2..3,
+                    allowedCategories = setOf(Category.GRATITUDE, Category.US)
+                )
+            )
+        )
+    )
+
+    private val COUPLE_30MIN_PHASES = listOf(
+        PhasePlan(
+            phase = ArcPhase.WARMUP,
+            key = "warmup",
+            allowedDepths = setOf(1),
+            slots = (1..5).map { SlotPlan(ArcPhase.WARMUP, targetDepth = 1) }
+        ),
+        PhasePlan(
+            phase = ArcPhase.OPENING,
+            key = "opening",
+            allowedDepths = setOf(2),
+            slots = (1..6).map { SlotPlan(ArcPhase.OPENING, targetDepth = 2) }
+        ),
+        PhasePlan(
+            phase = ArcPhase.DEEPENING,
+            key = "deepening",
+            allowedDepths = setOf(3),
+            slots = (1..11).map { SlotPlan(ArcPhase.DEEPENING, targetDepth = 3) }
+        ),
+        PhasePlan(
+            phase = ArcPhase.PEAK,
+            key = "peak",
+            allowedDepths = setOf(4, 5),
+            slots = listOf(
+                SlotPlan(ArcPhase.PEAK, targetDepth = 4),
+                SlotPlan(ArcPhase.PEAK, targetDepth = 4),
+                SlotPlan(ArcPhase.PEAK, targetDepth = 5),
+                SlotPlan(ArcPhase.PEAK, targetDepth = 5)
+            )
+        ),
+        PhasePlan(
+            phase = ArcPhase.LANDING,
+            key = "landing",
+            allowedDepths = setOf(2, 3),
+            slots = (1..4).map {
+                SlotPlan(
+                    phase = ArcPhase.LANDING,
+                    targetDepth = null,
+                    depthRange = 2..3,
+                    allowedCategories = setOf(Category.GRATITUDE, Category.US)
+                )
+            }
+        )
+    )
+
+    private val JUST_MET_5MIN_PHASES = listOf(
         PhasePlan(
             phase = ArcPhase.WARMUP,
             key = "warmup",
@@ -156,10 +258,47 @@ object RelationshipTypeRegistry {
             )
         ),
         PhasePlan(
+            phase = ArcPhase.LANDING,
+            key = "landing",
+            allowedDepths = setOf(1, 2),
+            slots = listOf(
+                SlotPlan(
+                    phase = ArcPhase.LANDING,
+                    targetDepth = null,
+                    depthRange = 1..2
+                )
+            )
+        )
+    )
+
+    private val JUST_MET_10MIN_PHASES = listOf(
+        PhasePlan(
+            phase = ArcPhase.WARMUP,
+            key = "warmup",
+            allowedDepths = setOf(1),
+            slots = listOf(
+                SlotPlan(ArcPhase.WARMUP, targetDepth = 1),
+                SlotPlan(ArcPhase.WARMUP, targetDepth = 1),
+                SlotPlan(ArcPhase.WARMUP, targetDepth = 1)
+            )
+        ),
+        PhasePlan(
+            phase = ArcPhase.OPENING,
+            key = "opening",
+            allowedDepths = setOf(2),
+            slots = listOf(
+                SlotPlan(ArcPhase.OPENING, targetDepth = 2),
+                SlotPlan(ArcPhase.OPENING, targetDepth = 2),
+                SlotPlan(ArcPhase.OPENING, targetDepth = 2)
+            )
+        ),
+        PhasePlan(
             phase = ArcPhase.DEEPENING,
             key = "deepening",
             allowedDepths = setOf(3),
             slots = listOf(
+                SlotPlan(ArcPhase.DEEPENING, targetDepth = 3),
+                SlotPlan(ArcPhase.DEEPENING, targetDepth = 3),
                 SlotPlan(ArcPhase.DEEPENING, targetDepth = 3)
             )
         ),
@@ -177,48 +316,62 @@ object RelationshipTypeRegistry {
         )
     )
 
-    private val JUST_MET_DEEP_PHASES = listOf(
+    private val JUST_MET_15MIN_PHASES = listOf(
         PhasePlan(
             phase = ArcPhase.WARMUP,
             key = "warmup",
             allowedDepths = setOf(1),
-            slots = listOf(
-                SlotPlan(ArcPhase.WARMUP, targetDepth = 1),
-                SlotPlan(ArcPhase.WARMUP, targetDepth = 1),
-                SlotPlan(ArcPhase.WARMUP, targetDepth = 1)
-            )
+            slots = (1..5).map { SlotPlan(ArcPhase.WARMUP, targetDepth = 1) }
         ),
         PhasePlan(
             phase = ArcPhase.OPENING,
             key = "opening",
             allowedDepths = setOf(2),
-            slots = listOf(
-                SlotPlan(ArcPhase.OPENING, targetDepth = 2),
-                SlotPlan(ArcPhase.OPENING, targetDepth = 2),
-                SlotPlan(ArcPhase.OPENING, targetDepth = 2)
-            )
+            slots = (1..5).map { SlotPlan(ArcPhase.OPENING, targetDepth = 2) }
         ),
         PhasePlan(
             phase = ArcPhase.DEEPENING,
             key = "deepening",
             allowedDepths = setOf(3),
-            slots = listOf(
-                SlotPlan(ArcPhase.DEEPENING, targetDepth = 3),
-                SlotPlan(ArcPhase.DEEPENING, targetDepth = 3),
-                SlotPlan(ArcPhase.DEEPENING, targetDepth = 3)
-            )
+            slots = (1..3).map { SlotPlan(ArcPhase.DEEPENING, targetDepth = 3) }
         ),
         PhasePlan(
             phase = ArcPhase.LANDING,
             key = "landing",
             allowedDepths = setOf(1, 2),
             slots = listOf(
-                SlotPlan(
-                    phase = ArcPhase.LANDING,
-                    targetDepth = null,
-                    depthRange = 1..2
-                )
+                SlotPlan(phase = ArcPhase.LANDING, targetDepth = null, depthRange = 1..2),
+                SlotPlan(phase = ArcPhase.LANDING, targetDepth = null, depthRange = 1..2)
             )
+        )
+    )
+
+    private val JUST_MET_30MIN_PHASES = listOf(
+        PhasePlan(
+            phase = ArcPhase.WARMUP,
+            key = "warmup",
+            allowedDepths = setOf(1),
+            slots = (1..10).map { SlotPlan(ArcPhase.WARMUP, targetDepth = 1) }
+        ),
+        PhasePlan(
+            phase = ArcPhase.OPENING,
+            key = "opening",
+            allowedDepths = setOf(2),
+            slots = (1..10).map { SlotPlan(ArcPhase.OPENING, targetDepth = 2) }
+        ),
+        PhasePlan(
+            phase = ArcPhase.DEEPENING,
+            key = "deepening",
+            allowedDepths = setOf(3),
+            slots = (1..6).map { SlotPlan(ArcPhase.DEEPENING, targetDepth = 3) }
+        ),
+        PhasePlan(
+            phase = ArcPhase.LANDING,
+            key = "landing",
+            allowedDepths = setOf(1, 2),
+            slots = (1..4).map {
+                SlotPlan(phase = ArcPhase.LANDING, targetDepth = null, depthRange = 1..2)
+            }
         )
     )
 
@@ -242,8 +395,12 @@ object RelationshipTypeRegistry {
         maxDepth = 5,
         handshakeEnabled = true,
         arcs = mapOf(
-            SessionLength.SESSION to ArcPlan(SessionLength.SESSION, COUPLE_SESSION_PHASES),
-            SessionLength.DEEP to ArcPlan(SessionLength.DEEP, COUPLE_DEEP_PHASES)
+            SessionLength.FIVE_MIN to ArcPlan(SessionLength.FIVE_MIN, COUPLE_5MIN_PHASES),
+            SessionLength.TEN_MIN to ArcPlan(SessionLength.TEN_MIN, COUPLE_10MIN_PHASES),
+            SessionLength.FIFTEEN_MIN to ArcPlan(SessionLength.FIFTEEN_MIN, COUPLE_15MIN_PHASES),
+            SessionLength.THIRTY_MIN to ArcPlan(SessionLength.THIRTY_MIN, COUPLE_30MIN_PHASES),
+            SessionLength.SESSION to ArcPlan(SessionLength.SESSION, COUPLE_15MIN_PHASES),
+            SessionLength.DEEP to ArcPlan(SessionLength.DEEP, COUPLE_30MIN_PHASES)
         ),
         closingSteps = STANDARD_CLOSING_STEPS,
         showNextTimeLabel = true
@@ -254,8 +411,12 @@ object RelationshipTypeRegistry {
         maxDepth = 5,
         handshakeEnabled = true,
         arcs = mapOf(
-            SessionLength.SESSION to ArcPlan(SessionLength.SESSION, COUPLE_SESSION_PHASES),
-            SessionLength.DEEP to ArcPlan(SessionLength.DEEP, COUPLE_DEEP_PHASES)
+            SessionLength.FIVE_MIN to ArcPlan(SessionLength.FIVE_MIN, COUPLE_5MIN_PHASES),
+            SessionLength.TEN_MIN to ArcPlan(SessionLength.TEN_MIN, COUPLE_10MIN_PHASES),
+            SessionLength.FIFTEEN_MIN to ArcPlan(SessionLength.FIFTEEN_MIN, COUPLE_15MIN_PHASES),
+            SessionLength.THIRTY_MIN to ArcPlan(SessionLength.THIRTY_MIN, COUPLE_30MIN_PHASES),
+            SessionLength.SESSION to ArcPlan(SessionLength.SESSION, COUPLE_15MIN_PHASES),
+            SessionLength.DEEP to ArcPlan(SessionLength.DEEP, COUPLE_30MIN_PHASES)
         ),
         closingSteps = STANDARD_CLOSING_STEPS,
         showNextTimeLabel = true
@@ -266,8 +427,12 @@ object RelationshipTypeRegistry {
         maxDepth = 3,
         handshakeEnabled = false,
         arcs = mapOf(
-            SessionLength.SESSION to ArcPlan(SessionLength.SESSION, JUST_MET_SESSION_PHASES),
-            SessionLength.DEEP to ArcPlan(SessionLength.DEEP, JUST_MET_DEEP_PHASES)
+            SessionLength.FIVE_MIN to ArcPlan(SessionLength.FIVE_MIN, JUST_MET_5MIN_PHASES),
+            SessionLength.TEN_MIN to ArcPlan(SessionLength.TEN_MIN, JUST_MET_10MIN_PHASES),
+            SessionLength.FIFTEEN_MIN to ArcPlan(SessionLength.FIFTEEN_MIN, JUST_MET_15MIN_PHASES),
+            SessionLength.THIRTY_MIN to ArcPlan(SessionLength.THIRTY_MIN, JUST_MET_30MIN_PHASES),
+            SessionLength.SESSION to ArcPlan(SessionLength.SESSION, JUST_MET_15MIN_PHASES),
+            SessionLength.DEEP to ArcPlan(SessionLength.DEEP, JUST_MET_30MIN_PHASES)
         ),
         closingSteps = JUST_MET_CLOSING_STEPS,
         showNextTimeLabel = false

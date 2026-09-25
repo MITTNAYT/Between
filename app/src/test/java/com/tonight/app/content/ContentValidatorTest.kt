@@ -22,8 +22,9 @@ class ContentValidatorTest {
 
         val approvedCount = questions.count { it.status == QuestionStatus.APPROVED }
         val draftCount = questions.count { it.status == QuestionStatus.DRAFT }
-        assertEquals(questions.size, approvedCount)
-        assertEquals(0, draftCount)
+        assertTrue("Expected at least 100 approved questions", approvedCount >= 100)
+        assertEquals(58, draftCount)
+        assertEquals(questions.size, approvedCount + draftCount)
 
         // Verify unique IDs
         val uniqueIds = questions.map { it.id }.toSet()

@@ -1,0 +1,516 @@
+{
+  "IDENTITY": {
+    "REVIEW: depth 4/5": {
+      "ident-16": {
+        "question": "What part of yourself do you hide most often?",
+        "hint": "e.g. 'How sensitive I am to people\\'s tone of voice.'"
+      },
+      "ident-17": {
+        "question": "What insecurity influences you more than you'd like?",
+        "hint": "e.g. 'Worrying that I'm boring when I'm not entertaining people.'"
+      },
+      "ident-18": {
+        "question": "What version of yourself are you afraid of becoming?",
+        "hint": "e.g. 'Cynical, tired, and too busy to care about small things.'"
+      },
+      "ident-19": {
+        "question": "What do you wish people saw in you?",
+        "hint": "e.g. 'How much effort I put into making everyone feel comfortable.'"
+      },
+      "ident-20": {
+        "question": "What truth about yourself took years to admit?",
+        "hint": "e.g. 'That I can't fix people who don't want to be helped.'"
+      },
+      "bible-partner-10": {
+        "question": "What part of yourself are you still learning to embrace?",
+        "hint": "e.g. 'My need for quiet downtime without feeling guilty.'"
+      },
+      "bible-friend-04": {
+        "question": "What's something about your inner world you're afraid people won't understand?",
+        "hint": "e.g. 'How often I overthink interactions long after they're over.'"
+      },
+      "bible-friend-08": {
+        "question": "What's something you wish more people knew about you?",
+        "hint": "e.g. 'That I'm a lot warmer once the initial shyness passes.'"
+      }
+    },
+    "depth 1-3": {
+      "ident-01": {
+        "question": "What are three words your friends would use to describe you?",
+        "hint": "e.g. 'Loyal, chronically late, and surprisingly stubborn.'"
+      },
+      "ident-02": {
+        "question": "What's something you spend a lot of time thinking about?",
+        "hint": "e.g. 'Whether I should relocate or stay where I am.'"
+      },
+      "ident-03": {
+        "question": "What's a part of your personality you're proud of?",
+        "hint": "e.g. 'Staying patient when everyone else is frustrated.'"
+      },
+      "ident-04": {
+        "question": "What's something you're naturally good at?",
+        "hint": "e.g. 'Remembering obscure details people mentioned months ago.'"
+      },
+      "ident-05": {
+        "question": "What do you enjoy that most people wouldn't guess?",
+        "hint": "e.g. 'Solo walks late at night listening to movie soundtracks.'"
+      },
+      "ident-06": {
+        "question": "What do people usually misunderstand about you?",
+        "hint": "e.g. 'That being quiet means I'm upset or disinterested.'"
+      },
+      "ident-07": {
+        "question": "What version of yourself do different people see?",
+        "hint": "e.g. 'The organized coworker vs. the completely relaxed friend.'"
+      },
+      "ident-08": {
+        "question": "What trait has helped you most in life?",
+        "hint": "e.g. 'Being curious enough to ask when I don't know something.'"
+      },
+      "ident-09": {
+        "question": "What trait has made life harder?",
+        "hint": "e.g. 'Saying yes to too many commitments out of guilt.'"
+      },
+      "ident-10": {
+        "question": "What part of yourself took the longest to accept?",
+        "hint": "e.g. 'That I'm introverted and actually need alone time.'"
+      },
+      "ident-11": {
+        "question": "When do you feel most like yourself?",
+        "hint": "e.g. 'Cooking dinner while listening to an album I love.'"
+      },
+      "ident-12": {
+        "question": "What role do you naturally play in a group?",
+        "hint": "e.g. 'The one making sure nobody gets talked over.'"
+      },
+      "ident-13": {
+        "question": "What part of your identity matters most to you?",
+        "hint": "e.g. 'Being someone people can rely on in an emergency.'"
+      },
+      "ident-14": {
+        "question": "What has shaped who you are more than people realize?",
+        "hint": "e.g. 'Working a customer service job during college.'"
+      },
+      "ident-15": {
+        "question": "What do you hope never changes about you?",
+        "hint": "e.g. 'Getting genuinely excited about other people's wins.'"
+      }
+    }
+  },
+  "ORIGINS": {
+    "REVIEW: depth 4/5": {
+      "child-16": {
+        "question": "What from your childhood still affects you today?",
+        "hint": "e.g. 'Feeling like I have to earn rest by being productive first.'"
+      },
+      "child-17": {
+        "question": "What did you learn about love growing up?",
+        "hint": "e.g. 'That it was shown through acts of service rather than words.'"
+      },
+      "child-18": {
+        "question": "What's something your younger self deserved?",
+        "hint": "e.g. 'More patience when I was struggling in school.'"
+      },
+      "child-19": {
+        "question": "What's something you've had to unlearn?",
+        "hint": "e.g. 'That disagreeing with someone doesn't mean a fight.'"
+      },
+      "child-20": {
+        "question": "If you could speak to your younger self, what would you say?",
+        "hint": "e.g. 'Stop worrying so much — it turns out okay in the end.'"
+      },
+      "bible-friend-03": {
+        "question": "What's a mistake that completely changed the trajectory of your life?",
+        "hint": "e.g. 'Choosing the safe career path first before switching to what I loved.'"
+      }
+    },
+    "depth 1-3": {
+      "child-01": {
+        "question": "What was your favorite thing to do as a child?",
+        "hint": "e.g. 'Building blanket forts and reading with a flashlight.'"
+      },
+      "child-02": {
+        "question": "What was your dream job growing up?",
+        "hint": "e.g. 'An architect or a marine biologist.'"
+      },
+      "child-03": {
+        "question": "What cartoon or show did you love?",
+        "hint": "e.g. 'Saturday morning cartoons while eating cereal.'"
+      },
+      "child-04": {
+        "question": "What snack reminds you of childhood?",
+        "hint": "e.g. 'Warm toast with butter and cinnamon sugar.'"
+      },
+      "child-05": {
+        "question": "What was your favorite place growing up?",
+        "hint": "e.g. 'The backyard treehouse my neighbor built.'"
+      },
+      "child-06": {
+        "question": "What were you like at ten years old?",
+        "hint": "e.g. 'Quiet, observant, and always carrying a notebook.'"
+      },
+      "child-07": {
+        "question": "What did you think adulthood would be like?",
+        "hint": "e.g. 'Having unlimited freedom and staying up as late as I wanted.'"
+      },
+      "child-08": {
+        "question": "What memory always makes you smile?",
+        "hint": "e.g. 'Road trips with the windows rolled down singing off-key.'"
+      },
+      "child-09": {
+        "question": "What family tradition stands out most?",
+        "hint": "e.g. 'Baking holiday cookies together every December.'"
+      },
+      "child-10": {
+        "question": "What lesson did your childhood teach you?",
+        "hint": "e.g. 'How to entertain myself and enjoy my own company.'"
+      },
+      "child-11": {
+        "question": "Who influenced you most growing up?",
+        "hint": "e.g. 'My middle school art teacher who encouraged my creativity.'"
+      },
+      "child-12": {
+        "question": "What experience changed your childhood?",
+        "hint": "e.g. 'Moving to a different town when I was eight.'"
+      },
+      "child-13": {
+        "question": "What did you need more of as a child?",
+        "hint": "e.g. 'Reassurance that making a mistake wasn't the end of the world.'"
+      },
+      "child-14": {
+        "question": "What made you feel safe?",
+        "hint": "e.g. 'Hearing my parents' voices in the living room while falling asleep.'"
+      },
+      "child-15": {
+        "question": "What made you feel understood?",
+        "hint": "e.g. 'When a teacher noticed I was struggling without calling me out.'"
+      }
+    }
+  },
+  "US": {
+    "REVIEW: depth 4/5": {
+      "friend-16": {
+        "question": "What's the hardest friendship lesson you've learned?",
+        "hint": "e.g. 'That distance and effort have to be mutual to survive.'"
+      },
+      "friend-17": {
+        "question": "Have you ever outgrown a friendship?",
+        "hint": "e.g. 'Yes, when our values and lifestyle stopped aligning.'"
+      },
+      "friend-18": {
+        "question": "What friendship loss affected you most?",
+        "hint": "e.g. 'A childhood friend drifting away with no big argument.'"
+      },
+      "friend-19": {
+        "question": "What's difficult for you in friendships?",
+        "hint": "e.g. 'Being vulnerable about my own struggles instead of just listening.'"
+      },
+      "friend-20": {
+        "question": "What do you wish your friends understood better?",
+        "hint": "e.g. 'That going quiet usually means I'm overwhelmed, not distant.'"
+      },
+      "bible-partner-01": {
+        "question": "When do you feel closest to me?",
+        "hint": "e.g. 'When we're laughing quietly together after a long day.'"
+      },
+      "bible-partner-02": {
+        "question": "What do I do that makes you feel deeply loved?",
+        "hint": "e.g. 'Remembering the small things I mentioned in passing.'"
+      },
+      "bible-partner-03": {
+        "question": "What's something you've never told me before?",
+        "hint": "e.g. 'How nervous I was the first time we hung out one-on-one.'"
+      },
+      "bible-partner-09": {
+        "question": "What's something we've overcome together that made us stronger?",
+        "hint": "e.g. 'Navigating a hectic move under tight deadlines without arguing.'"
+      },
+      "bible-friend-10": {
+        "question": "What memory of our friendship always brings you joy?",
+        "hint": "e.g. 'The time we got stranded in the rain and couldn't stop laughing.'"
+      }
+    },
+    "depth 1-3": {
+      "friend-01": {
+        "question": "What makes someone easy to talk to?",
+        "hint": "e.g. 'When they don't jump in to give advice right away.'"
+      },
+      "friend-02": {
+        "question": "What's your favorite thing to do with friends?",
+        "hint": "e.g. 'Grabbing takeout and talking for hours on the living room floor.'"
+      },
+      "friend-03": {
+        "question": "What type of friend are you?",
+        "hint": "e.g. 'The loyal planner who always brings the snacks.'"
+      },
+      "friend-04": {
+        "question": "What quality attracts you to people?",
+        "hint": "e.g. 'A dry sense of humor and unpretentious kindness.'"
+      },
+      "friend-05": {
+        "question": "What's the funniest thing a friend has done?",
+        "hint": "e.g. 'Accidentally sending a voice memo singing to a group chat.'"
+      },
+      "friend-06": {
+        "question": "What makes you trust someone?",
+        "hint": "e.g. 'When they defend people who aren't in the room.'"
+      },
+      "friend-07": {
+        "question": "What makes you feel included?",
+        "hint": "e.g. 'Someone actively bringing me into a group conversation.'"
+      },
+      "friend-08": {
+        "question": "How do you usually make friends?",
+        "hint": "e.g. 'Through shared projects or regular routine meetups.'"
+      },
+      "friend-09": {
+        "question": "What quality keeps friendships strong?",
+        "hint": "e.g. 'Being able to pick right back up after months apart.'"
+      },
+      "friend-10": {
+        "question": "What kind of people bring out your best side?",
+        "hint": "e.g. 'Curious people who ask interesting questions.'"
+      },
+      "friend-11": {
+        "question": "What friendship taught you the most?",
+        "hint": "e.g. 'One where we grew apart and learned to let go gently.'"
+      },
+      "friend-12": {
+        "question": "What makes someone unforgettable?",
+        "hint": "e.g. 'The way they made me feel completely seen and valued.'"
+      },
+      "friend-13": {
+        "question": "What do you appreciate most in your closest friends?",
+        "hint": "e.g. 'Never having to pretend to be upbeat when I'm exhausted.'"
+      },
+      "friend-14": {
+        "question": "When do you feel closest to people?",
+        "hint": "e.g. 'During late-night conversations when everyone drops their guard.'"
+      },
+      "friend-15": {
+        "question": "What does loyalty mean to you?",
+        "hint": "e.g. 'Showing up consistently, especially when it's inconvenient.'"
+      }
+    }
+  },
+  "DREAMS": {
+    "REVIEW: depth 4/5": {
+      "dream-16": {
+        "question": "What dream are you afraid to say out loud?",
+        "hint": "e.g. 'Starting my own studio and leaving corporate work behind.'"
+      },
+      "dream-17": {
+        "question": "What dream have you almost given up on?",
+        "hint": "e.g. 'Writing and publishing a complete novel.'"
+      },
+      "dream-18": {
+        "question": "What would a meaningful life look like?",
+        "hint": "e.g. 'Doing work I respect and having daily dinners with people I love.'"
+      },
+      "dream-19": {
+        "question": "What's worth struggling for?",
+        "hint": "e.g. 'Building deep relationships that withstand hard seasons.'"
+      },
+      "dream-20": {
+        "question": "What future are you trying to create?",
+        "hint": "e.g. 'A life with more financial peace and creative freedom.'"
+      },
+      "bible-partner-08": {
+        "question": "What's an adventure or dream you're afraid to hope for?",
+        "hint": "e.g. 'Taking a multi-month sabbatical to live by the coast.'"
+      },
+      "bible-friend-05": {
+        "question": "What's a dream for your life that you rarely say out loud?",
+        "hint": "e.g. 'Building something entirely my own from scratch.'"
+      }
+    },
+    "depth 1-3": {
+      "dream-01": {
+        "question": "What's a place you want to visit?",
+        "hint": "e.g. 'A quiet seaside village in northern Spain.'"
+      },
+      "dream-02": {
+        "question": "What's a skill you'd love to learn?",
+        "hint": "e.g. 'Woodworking or playing the acoustic guitar.'"
+      },
+      "dream-03": {
+        "question": "What's on your bucket list?",
+        "hint": "e.g. 'Seeing the Northern Lights in winter.'"
+      },
+      "dream-04": {
+        "question": "What's something you're excited about?",
+        "hint": "e.g. 'An upcoming trip with close friends next month.'"
+      },
+      "dream-05": {
+        "question": "What's a hobby you'd like to try?",
+        "hint": "e.g. 'Ceramics and wheel throwing.'"
+      },
+      "dream-06": {
+        "question": "What does success mean to you?",
+        "hint": "e.g. 'Going to sleep without worrying about tomorrow's schedule.'"
+      },
+      "dream-07": {
+        "question": "What motivates you right now?",
+        "hint": "e.g. 'Saving up enough to have total peace of mind.'"
+      },
+      "dream-08": {
+        "question": "What's a goal you're working toward?",
+        "hint": "e.g. 'Running a 10k race by the end of the year.'"
+      },
+      "dream-09": {
+        "question": "What kind of lifestyle appeals to you?",
+        "hint": "e.g. 'Mornings with no rush and evenings cooking at home.'"
+      },
+      "dream-10": {
+        "question": "What are you curious about lately?",
+        "hint": "e.g. 'How different architectural styles shape mood and community.'"
+      },
+      "dream-11": {
+        "question": "What dream have you held onto the longest?",
+        "hint": "e.g. 'Designing and building a custom cabin in the woods.'"
+      },
+      "dream-12": {
+        "question": "What would you do if money didn't matter?",
+        "hint": "e.g. 'Run a small neighborhood bookshop and café.'"
+      },
+      "dream-13": {
+        "question": "What's something you want to build?",
+        "hint": "e.g. 'A community space where people can gather and work together.'"
+      },
+      "dream-14": {
+        "question": "What impact would you like to have?",
+        "hint": "e.g. 'Leaving people feeling lighter and more encouraged after talking.'"
+      },
+      "dream-15": {
+        "question": "What are you chasing right now?",
+        "hint": "e.g. 'A healthier balance between ambitious work and actual rest.'"
+      }
+    }
+  },
+  "FEARS": {
+    "REVIEW: depth 4/5": {
+      "fear-16": {
+        "question": "What are you most afraid of becoming?",
+        "hint": "e.g. 'Bitter or closed-off because of past disappointments.'"
+      },
+      "fear-17": {
+        "question": "What fear would change your life if you overcame it?",
+        "hint": "e.g. 'The fear of putting my creative work out there publicly.'"
+      },
+      "fear-18": {
+        "question": "What fear rarely leaves you?",
+        "hint": "e.g. 'That I might look back and realize I played it too safe.'"
+      },
+      "fear-19": {
+        "question": "What fear do you wish you could let go of?",
+        "hint": "e.g. 'Worrying constantly about what others think of my choices.'"
+      },
+      "fear-20": {
+        "question": "What fear feels closest to your heart?",
+        "hint": "e.g. 'Disappointing the people who believe in me.'"
+      },
+      "bible-partner-04": {
+        "question": "What fear do you have about our relationship or future?",
+        "hint": "e.g. 'That life gets too busy and we stop making time for just us.'"
+      },
+      "bible-partner-06": {
+        "question": "What's something you're still healing from that affects us?",
+        "hint": "e.g. 'An old habit of shutting down when I get stressed.'"
+      },
+      "bible-friend-01": {
+        "question": "What's a fear you've never fully overcome?",
+        "hint": "e.g. 'Feeling like an imposter even after achieving a milestone.'"
+      },
+      "bible-friend-02": {
+        "question": "What's something you're currently healing from?",
+        "hint": "e.g. 'The burnout from prioritizing work over my health last year.'"
+      }
+    },
+    "depth 1-3": {
+      "fear-01": {
+        "question": "What's something that makes you nervous?",
+        "hint": "e.g. 'Speaking up in a room full of senior people.'"
+      },
+      "fear-02": {
+        "question": "What's your biggest irrational fear?",
+        "hint": "e.g. 'Moths and checking behind the shower curtain.'"
+      },
+      "fear-03": {
+        "question": "What challenge intimidates you?",
+        "hint": "e.g. 'Leading a major project completely on my own.'"
+      },
+      "fear-04": {
+        "question": "What's something outside your comfort zone?",
+        "hint": "e.g. 'Attending a networking event where I know nobody.'"
+      },
+      "fear-05": {
+        "question": "What risk would you like to take?",
+        "hint": "e.g. 'Switching careers into a field I have no formal degree in.'"
+      },
+      "fear-06": {
+        "question": "What kind of failure worries you?",
+        "hint": "e.g. 'Putting 100% effort into something and still falling short.'"
+      },
+      "fear-07": {
+        "question": "What fear has followed you longest?",
+        "hint": "e.g. 'Not living up to the potential people saw in me as a kid.'"
+      },
+      "fear-08": {
+        "question": "What makes you doubt yourself?",
+        "hint": "e.g. 'Comparing my timeline to people my age on social media.'"
+      },
+      "fear-09": {
+        "question": "What fear has become smaller over time?",
+        "hint": "e.g. 'Eating alone at a restaurant or going to movies solo.'"
+      },
+      "fear-10": {
+        "question": "What fear still feels large?",
+        "hint": "e.g. 'Making a life-altering choice that I can't undo.'"
+      },
+      "fear-11": {
+        "question": "What fear influences your decisions?",
+        "hint": "e.g. 'Financial instability making me hesitate to take big leaps.'"
+      },
+      "fear-12": {
+        "question": "What fear do people not know you have?",
+        "hint": "e.g. 'That I appear confident on the outside while second-guessing.'"
+      },
+      "fear-13": {
+        "question": "What are you afraid of losing?",
+        "hint": "e.g. 'The close circle of friends I have right now as life moves on.'"
+      },
+      "fear-14": {
+        "question": "What keeps you from taking bigger risks?",
+        "hint": "e.g. 'The comfort of my current predictable routine.'"
+      },
+      "fear-15": {
+        "question": "What fear has taught you something useful?",
+        "hint": "e.g. 'Fear of public speaking taught me thorough preparation.'"
+      }
+    }
+  },
+  "CONFLICT & VALUES": {
+    "REVIEW: depth 4/5": {
+      "bible-partner-05": {
+        "question": "When do you feel most misunderstood by me?",
+        "hint": "e.g. 'When I get quiet to process thoughts and it seems like coldness.'"
+      },
+      "bible-friend-06": {
+        "question": "What challenge in the last five years made you who you are today?",
+        "hint": "e.g. 'Starting over after a job layoff and figuring out what mattered.'"
+      },
+      "bible-friend-07": {
+        "question": "What values do you refuse to compromise on, no matter what?",
+        "hint": "e.g. 'Honesty in difficult moments and treating everyone with respect.'"
+      },
+      "bible-partner-07": {
+        "question": "What kind of life do you dream of us building in ten years?",
+        "hint": "e.g. 'A home with a garden and time for spontaneous weekend trips.'"
+      },
+      "bible-friend-09": {
+        "question": "What future excites you most when you think about where you're heading?",
+        "hint": "e.g. 'Having more autonomy over my daily schedule and projects.'"
+      }
+    }
+  }
+}

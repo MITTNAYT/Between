@@ -45,18 +45,23 @@ fun QuestionCard(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            val isWildcard = question.id.startsWith("wildcard") || question.text.startsWith("Wildcard:")
             // Turn indicator chip/label
             Box(
                 modifier = Modifier
-                    .background(TonightTheme.colors.canvas, TonightTheme.shapes.pill)
+                    .background(
+                        if (isWildcard) TonightTheme.colors.ember.copy(alpha = 0.12f) else TonightTheme.colors.canvas,
+                        TonightTheme.shapes.pill
+                    )
                     .padding(horizontal = 14.dp, vertical = 6.dp)
             ) {
                 Text(
-                    text = turnIndicator.uppercase(),
+                    text = if (isWildcard) "✨ WILDCARD · ASK ANYTHING" else turnIndicator.uppercase(),
                     style = TonightTheme.typography.caption.copy(
                         fontSize = 12.sp,
                         letterSpacing = 1.2.sp,
-                        color = TonightTheme.colors.muted
+                        fontWeight = if (isWildcard) androidx.compose.ui.text.font.FontWeight.SemiBold else androidx.compose.ui.text.font.FontWeight.Medium,
+                        color = if (isWildcard) TonightTheme.colors.ember else TonightTheme.colors.muted
                     ),
                     textAlign = TextAlign.Center
                 )

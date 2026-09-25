@@ -84,7 +84,43 @@ fun TonightNavHost(
     NavHost(
         navController = navController,
         startDestination = Route.Splash,
-        modifier = modifier
+        modifier = modifier,
+        enterTransition = {
+            androidx.compose.animation.fadeIn(
+                animationSpec = androidx.compose.animation.core.tween(350, easing = androidx.compose.animation.core.FastOutSlowInEasing)
+            ) + slideIntoContainer(
+                towards = androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection.Start,
+                animationSpec = androidx.compose.animation.core.tween(350, easing = androidx.compose.animation.core.FastOutSlowInEasing),
+                initialOffset = { it / 5 }
+            )
+        },
+        exitTransition = {
+            androidx.compose.animation.fadeOut(
+                animationSpec = androidx.compose.animation.core.tween(250, easing = androidx.compose.animation.core.FastOutSlowInEasing)
+            ) + slideOutOfContainer(
+                towards = androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection.Start,
+                animationSpec = androidx.compose.animation.core.tween(250, easing = androidx.compose.animation.core.FastOutSlowInEasing),
+                targetOffset = { -it / 5 }
+            )
+        },
+        popEnterTransition = {
+            androidx.compose.animation.fadeIn(
+                animationSpec = androidx.compose.animation.core.tween(350, easing = androidx.compose.animation.core.FastOutSlowInEasing)
+            ) + slideIntoContainer(
+                towards = androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection.End,
+                animationSpec = androidx.compose.animation.core.tween(350, easing = androidx.compose.animation.core.FastOutSlowInEasing),
+                initialOffset = { -it / 5 }
+            )
+        },
+        popExitTransition = {
+            androidx.compose.animation.fadeOut(
+                animationSpec = androidx.compose.animation.core.tween(250, easing = androidx.compose.animation.core.FastOutSlowInEasing)
+            ) + slideOutOfContainer(
+                towards = androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection.End,
+                animationSpec = androidx.compose.animation.core.tween(250, easing = androidx.compose.animation.core.FastOutSlowInEasing),
+                targetOffset = { it / 5 }
+            )
+        }
     ) {
         composable<Route.Splash> {
             OpeningAnimationScreen(
@@ -239,6 +275,9 @@ fun TonightNavHost(
                 viewModel = settingsViewModel,
                 onBack = {
                     navController.popBackStack()
+                },
+                onOpenRules = {
+                    navController.navigate(Route.Intro)
                 }
             )
         }

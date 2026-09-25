@@ -16,4 +16,5 @@ interface AnalyticsTracker {
     fun trackMomentSaved()
     fun trackPaywallViewed(trigger: String)
     fun trackPurchaseCompleted(packageType: String)
+    fun trackHintOpened(depth: Int)
 }

@@ -48,6 +48,7 @@ class ClosingViewModelTest {
         override fun trackMomentSaved() { events.add("moment_saved") }
         override fun trackPaywallViewed(trigger: String) { events.add("paywall_viewed_$trigger") }
         override fun trackPurchaseCompleted(packageType: String) { events.add("purchase_completed_$packageType") }
+        override fun trackHintOpened(depth: Int) { events.add("hint_opened") }
     }
 
     private class FakeMomentRepository : MomentRepository {

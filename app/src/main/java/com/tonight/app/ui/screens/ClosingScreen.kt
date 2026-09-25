@@ -18,13 +18,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import com.tonight.app.ui.theme.AppIcons
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -589,14 +592,40 @@ fun ClosingScreen(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                // CoralHeroCard Summary
-                                CoralHeroCard(modifier = Modifier.fillMaxWidth()) {
+                                // High-Contrast Luxury Summary Card (Zero gradient washout)
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .softShadow(borderRadius = 28.dp, blurRadius = 24.dp, offsetY = 8.dp)
+                                        .clip(TonightTheme.shapes.card)
+                                        .background(Color(0xFF18181B))
+                                        .border(1.dp, Color(0xFF27272A), TonightTheme.shapes.card)
+                                        .padding(28.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
                                     Column(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(28.dp),
+                                        modifier = Modifier.fillMaxWidth(),
                                         horizontalAlignment = Alignment.CenterHorizontally
                                     ) {
+                                        // App Mark
+                                        Box(
+                                            modifier = Modifier
+                                                .size(48.dp)
+                                                .clip(RoundedCornerShape(13.dp))
+                                                .background(Color(0xFF27272A))
+                                                .border(1.dp, Color(0xFF3F3F46), RoundedCornerShape(13.dp)),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            Icon(
+                                                imageVector = AppIcons.VennLoop,
+                                                contentDescription = null,
+                                                tint = TonightTheme.colors.ember,
+                                                modifier = Modifier.size(24.dp)
+                                            )
+                                        }
+
+                                        Spacer(modifier = Modifier.height(16.dp))
+
                                         Text(
                                             text = "We reached Level ${uiState.depthReached} tonight",
                                             style = TonightTheme.typography.displayL.copy(fontSize = 24.sp),
@@ -605,20 +634,27 @@ fun ClosingScreen(
                                             modifier = Modifier.semantics { heading() }
                                         )
 
-                                        Spacer(modifier = Modifier.height(12.dp))
+                                        Spacer(modifier = Modifier.height(16.dp))
 
                                         Row(
                                             horizontalArrangement = Arrangement.spacedBy(10.dp),
                                             verticalAlignment = Alignment.CenterVertically
                                         ) {
+                                            val durationBadge = when {
+                                                uiState.sessionLength.contains("30") || uiState.sessionLength.contains("THIRTY", ignoreCase = true) || uiState.sessionLength.contains("DEEP", ignoreCase = true) -> "30 mins"
+                                                uiState.sessionLength.contains("10") || uiState.sessionLength.contains("TEN", ignoreCase = true) -> "10 mins"
+                                                uiState.sessionLength.contains("5") || uiState.sessionLength.contains("FIVE", ignoreCase = true) -> "5 mins"
+                                                else -> "15 mins"
+                                            }
                                             Box(
                                                 modifier = Modifier
                                                     .clip(PillShape)
-                                                    .background(Color.White.copy(alpha = 0.25f))
+                                                    .background(Color(0xFF27272A))
+                                                    .border(1.dp, Color(0xFF3F3F46), PillShape)
                                                     .padding(horizontal = 14.dp, vertical = 6.dp)
                                             ) {
                                                 Text(
-                                                    text = if (uiState.sessionLength == "DEEP") "30 mins" else "15 mins",
+                                                    text = durationBadge,
                                                     style = TonightTheme.typography.caption.copy(
                                                         fontSize = 13.sp,
                                                         fontWeight = FontWeight.SemiBold,
@@ -630,7 +666,8 @@ fun ClosingScreen(
                                             Box(
                                                 modifier = Modifier
                                                     .clip(PillShape)
-                                                    .background(Color.White.copy(alpha = 0.25f))
+                                                    .background(Color(0xFF27272A))
+                                                    .border(1.dp, Color(0xFF3F3F46), PillShape)
                                                     .padding(horizontal = 14.dp, vertical = 6.dp)
                                             ) {
                                                 Text(
@@ -644,13 +681,13 @@ fun ClosingScreen(
                                             }
                                         }
 
-                                        Spacer(modifier = Modifier.height(16.dp))
+                                        Spacer(modifier = Modifier.height(18.dp))
 
                                         Text(
                                             text = "Spoken together · Eye to eye · One phone",
                                             style = TonightTheme.typography.caption.copy(
                                                 fontSize = 12.sp,
-                                                color = Color.White.copy(alpha = 0.9f)
+                                                color = Color(0xFFA1A1AA)
                                             ),
                                             textAlign = TextAlign.Center
                                         )
@@ -670,7 +707,7 @@ fun ClosingScreen(
                                             .padding(horizontal = 18.dp, vertical = 8.dp)
                                     ) {
                                         Text(
-                                            text = "Same time next week?",
+                                            text = "Carry this closeness with you",
                                             style = TonightTheme.typography.caption.copy(
                                                 fontSize = 13.sp,
                                                 fontWeight = FontWeight.SemiBold,

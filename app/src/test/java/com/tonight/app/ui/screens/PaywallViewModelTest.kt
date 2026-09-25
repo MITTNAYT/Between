@@ -97,6 +97,7 @@ class PaywallViewModelTest {
         override fun trackMomentSaved() {}
         override fun trackPaywallViewed(trigger: String) { events.add("paywall_viewed_$trigger") }
         override fun trackPurchaseCompleted(packageType: String) { events.add("purchase_completed_$packageType") }
+        override fun trackHintOpened(depth: Int) {}
     }
 
     @Before

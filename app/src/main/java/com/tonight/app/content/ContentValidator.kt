@@ -117,6 +117,18 @@ object ContentValidator {
                 null
             }
 
+            var validHint: String? = null
+            if (dto.hint != null) {
+                val trimmedHint = dto.hint.trim()
+                if (!trimmedHint.startsWith("e.g. ") || trimmedHint.length > 90) {
+                    itemErrors.add(
+                        "Question '${dto.id}' has invalid hint '$trimmedHint'. Must start with 'e.g. ' and be <= 90 chars (length ${trimmedHint.length})."
+                    )
+                } else {
+                    validHint = trimmedHint
+                }
+            }
+
             // Also check for duplicate ID within loop for release-mode dropping
             val isDuplicate = !seenIds.add(dto.id)
 
@@ -130,12 +142,35 @@ object ContentValidator {
                         relationshipTypes = parsedRelationships,
                         followUps = dto.followUps.map { it.trim() },
                         needsHandshake = dto.needsHandshake,
-                        status = parsedStatus
+                        status = parsedStatus,
+                        isExperienceCard = dto.isExperienceCard,
+                        hint = validHint
                     )
                     validQuestions.add(question)
                 } catch (e: IllegalArgumentException) {
                     itemErrors.add("Question '${dto.id}' failed invariant check: ${e.message}")
                 }
+            } else if (parsedCategory != null && parsedStatus != null && parsedRelationships.isNotEmpty() && !isDuplicate) {
+                // Release mode fallback: drop invalid hint and keep valid question if only hint failed
+                try {
+                    val question = Question(
+                        id = dto.id.trim(),
+                        text = dto.text.trim(),
+                        category = parsedCategory,
+                        depth = dto.depth,
+                        relationshipTypes = parsedRelationships,
+                        followUps = dto.followUps.map { it.trim() },
+                        needsHandshake = dto.needsHandshake,
+                        status = parsedStatus,
+                        isExperienceCard = dto.isExperienceCard,
+                        hint = null
+                    )
+                    // If no critical structural errors (like blank text, bad depth)
+                    val criticalErrors = itemErrors.filterNot { it.contains("invalid hint") }
+                    if (criticalErrors.isEmpty()) {
+                        validQuestions.add(question)
+                    }
+                } catch (_: Exception) {}
             }
 
             errors.addAll(itemErrors)

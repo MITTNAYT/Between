@@ -65,6 +65,7 @@ class SessionViewModelTest {
         override fun trackMomentSaved() { events.add("moment_saved") }
         override fun trackPaywallViewed(trigger: String) { events.add("paywall_viewed_$trigger") }
         override fun trackPurchaseCompleted(packageType: String) { events.add("purchase_completed_$packageType") }
+        override fun trackHintOpened(depth: Int) { events.add("hint_opened_$depth") }
     }
 
     private class FakeSessionRecordRepository : SessionRecordRepository {
@@ -153,7 +154,7 @@ class SessionViewModelTest {
         testDispatcher.scheduler.advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertEquals(6, state.questions.size)
+        assertEquals(15, state.questions.size)
         assertEquals(0, state.currentIndex)
         assertEquals("Person A answers first", state.turnIndicator)
         assertFalse(state.isHandshakePending)
@@ -187,12 +188,12 @@ class SessionViewModelTest {
         viewModel.startSession(RelationshipType.COUPLE, SessionLength.SESSION)
         testDispatcher.scheduler.advanceUntilIdle()
 
-        // Advance to index 4 (Peak slot, depth 4)
-        repeat(4) {
+        // Advance to index 11 (Peak slot, depth 4)
+        repeat(11) {
             viewModel.nextQuestion()
         }
 
-        assertEquals(4, viewModel.uiState.value.currentIndex)
+        assertEquals(11, viewModel.uiState.value.currentIndex)
         val peakQuestion = viewModel.uiState.value.currentQuestion
         assertNotNull(peakQuestion)
         assertEquals(4, peakQuestion?.depth)
@@ -213,12 +214,12 @@ class SessionViewModelTest {
         viewModel.startSession(RelationshipType.COUPLE, SessionLength.SESSION)
         testDispatcher.scheduler.advanceUntilIdle()
 
-        // Advance to index 4 (Peak slot, depth 4)
-        repeat(4) {
+        // Advance to index 11 (Peak slot, depth 4)
+        repeat(11) {
             viewModel.nextQuestion()
         }
 
-        assertEquals(4, viewModel.uiState.value.currentIndex)
+        assertEquals(11, viewModel.uiState.value.currentIndex)
         assertFalse(viewModel.uiState.value.isPaywallPending)
         assertTrue(viewModel.uiState.value.isHandshakePending)
     }
@@ -231,11 +232,11 @@ class SessionViewModelTest {
         viewModel.startSession(RelationshipType.COUPLE, SessionLength.SESSION)
         testDispatcher.scheduler.advanceUntilIdle()
 
-        // Index 2 is depth 3 (Deepening)
-        repeat(2) {
+        // Index 6 is depth 3 (Deepening)
+        repeat(6) {
             viewModel.nextQuestion()
         }
-        assertEquals(2, viewModel.uiState.value.currentIndex)
+        assertEquals(6, viewModel.uiState.value.currentIndex)
         assertEquals(3, viewModel.uiState.value.currentQuestion?.depth)
 
         viewModel.deeperQuestion()
@@ -254,8 +255,8 @@ class SessionViewModelTest {
         viewModel.startSession(RelationshipType.COUPLE, SessionLength.SESSION)
         testDispatcher.scheduler.advanceUntilIdle()
 
-        // Go to peak (L4)
-        repeat(4) {
+        // Go to peak (L4 at index 11)
+        repeat(11) {
             viewModel.nextQuestion()
         }
         assertTrue(viewModel.uiState.value.isHandshakePending)
@@ -299,13 +300,21 @@ class SessionViewModelTest {
         testDispatcher.scheduler.advanceUntilIdle()
 
         val questions = viewModel.uiState.value.questions
-        assertEquals(6, questions.size)
+        assertEquals(15, questions.size)
 
         var seen: List<String> = emptyList()
         kotlinx.coroutines.runBlocking {
             seen = fakeHistoryRepository.getRecentlySeen(50)
         }
-        assertEquals(6, seen.size)
+        assertEquals(15, seen.size)
         assertTrue(seen.containsAll(questions.map { it.id }))
+    }
+
+    @Test
+    fun `onHintOpened logs hint_opened event with question depth`() {
+        val viewModel = createViewModel()
+        viewModel.onHintOpened(depth = 3)
+
+        assertTrue(fakeAnalyticsTracker.events.contains("hint_opened_3"))
     }
 }

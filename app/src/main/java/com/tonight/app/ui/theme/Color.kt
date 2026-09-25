@@ -28,6 +28,7 @@ val TonightTileBlue = Color(0xFF2563EB) // Slate Cobalt
 val TonightTileVermilion = Color(0xFFC2673B) // Warm Terracotta Ember
 val TonightTilePink = Color(0xFF9A3412) // Rich Ochre / Sienna (Unisex replacement)
 val TonightTileAmber = Color(0xFFD97706) // Warm Golden Amber
+val TonightTileRed = Color(0xFFE11D48) // Vibrant Crimson Red for Partner
 
 // Inactive Dots & Scrims & Shadows
 val TonightDotsInactive = Color(0xFFD4D4D8)
@@ -96,6 +97,7 @@ data class TonightColors(
     val tileVermilion: Color = TonightTileVermilion,
     val tilePink: Color = TonightTilePink,
     val tileAmber: Color = TonightTileAmber,
+    val tileRed: Color = TonightTileRed,
     val dotsInactive: Color = TonightDotsInactive,
     val shadow: Color = TonightShadowColor,
     val scrim: Color = TonightScrimColor
@@ -155,11 +157,15 @@ fun getColorsForPalette(mode: PaletteMode): TonightColors {
             body = MonochromeBody,
             muted = MonochromeMuted,
             hairline = MonochromeHairline,
-            ember = MonochromeAccent,
-            support = MonochromeAccent,
-            tileViolet = MonochromeAccent,
-            tileAmber = MonochromeBody,
-            tileGreen = MonochromeAccent
+            ember = TonightEmber,
+            support = TonightSupport,
+            tileViolet = TonightTileViolet,
+            tileAmber = TonightTileAmber,
+            tileGreen = TonightTileGreen,
+            tileRed = TonightTileRed,
+            tilePink = TonightTilePink,
+            tileBlue = TonightTileBlue,
+            tileVermilion = TonightTileVermilion
         )
         PaletteMode.NORDIC_SAGE -> TonightColors(
             canvas = NordicSageCanvas,

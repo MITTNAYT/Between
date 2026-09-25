@@ -84,6 +84,7 @@ fun animateTonightColors(
     val tileVermilion by androidx.compose.animation.animateColorAsState(target.tileVermilion, animationSpec, label = "tileVermilion")
     val tilePink by androidx.compose.animation.animateColorAsState(target.tilePink, animationSpec, label = "tilePink")
     val tileAmber by androidx.compose.animation.animateColorAsState(target.tileAmber, animationSpec, label = "tileAmber")
+    val tileRed by androidx.compose.animation.animateColorAsState(target.tileRed, animationSpec, label = "tileRed")
     val dotsInactive by androidx.compose.animation.animateColorAsState(target.dotsInactive, animationSpec, label = "dotsInactive")
     val shadow by androidx.compose.animation.animateColorAsState(target.shadow, animationSpec, label = "shadow")
     val scrim by androidx.compose.animation.animateColorAsState(target.scrim, animationSpec, label = "scrim")
@@ -103,6 +104,7 @@ fun animateTonightColors(
         tileVermilion = tileVermilion,
         tilePink = tilePink,
         tileAmber = tileAmber,
+        tileRed = tileRed,
         dotsInactive = dotsInactive,
         shadow = shadow,
         scrim = scrim

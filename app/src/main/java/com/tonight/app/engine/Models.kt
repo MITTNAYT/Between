@@ -20,6 +20,10 @@ enum class RelationshipType {
 }
 
 enum class SessionLength {
+    FIVE_MIN,
+    TEN_MIN,
+    FIFTEEN_MIN,
+    THIRTY_MIN,
     SESSION,
     DEEP
 }

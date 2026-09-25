@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tonight.app.BuildConfig
 import com.tonight.app.analytics.AnalyticsTracker
+import com.tonight.app.content.FollowUpEngine
 import com.tonight.app.content.QuestionRepository
 import com.tonight.app.data.BillingRepository
 import com.tonight.app.data.SessionHistoryRepository
@@ -24,6 +25,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.random.Random
 
 data class SessionUiState(
     val questions: List<Question> = emptyList(),
@@ -32,6 +34,7 @@ data class SessionUiState(
     val isPaywallPending: Boolean = false,
     val paywallTrigger: String = "",
     val showFollowUps: Boolean = false,
+    val currentFollowUps: List<String> = emptyList(),
     val isSessionFinished: Boolean = false,
     val relationshipType: RelationshipType = RelationshipType.COUPLE,
     val sessionLength: SessionLength = SessionLength.SESSION
@@ -108,6 +111,7 @@ class SessionViewModel @Inject constructor(
 
     private val seenIds = mutableSetOf<String>()
     private val confirmedHandshakeIndices = mutableSetOf<Int>()
+    private val sessionRandom = Random(System.nanoTime())
 
     companion object {
         private const val KEY_INDEX = "session_current_index"
@@ -164,7 +168,8 @@ class SessionViewModel @Inject constructor(
                 relationshipType = relationshipType,
                 length = length,
                 recentlySeenIds = recentlySeen,
-                includeDrafts = BuildConfig.DEBUG
+                includeDrafts = BuildConfig.DEBUG,
+                random = sessionRandom
             )
 
             seenIds.addAll(sessionQuestions.map { it.id })
@@ -245,7 +250,8 @@ class SessionViewModel @Inject constructor(
             pool = pool,
             relationshipType = state.relationshipType,
             recentlySeenIds = seenIds,
-            includeDrafts = BuildConfig.DEBUG
+            includeDrafts = BuildConfig.DEBUG,
+            random = sessionRandom
         )
 
         seenIds.add(result.newQuestion.id)
@@ -286,7 +292,8 @@ class SessionViewModel @Inject constructor(
             pool = pool,
             relationshipType = state.relationshipType,
             recentlySeenIds = seenIds,
-            includeDrafts = BuildConfig.DEBUG
+            includeDrafts = BuildConfig.DEBUG,
+            random = sessionRandom
         )
 
         seenIds.add(result.newQuestion.id)
@@ -324,7 +331,8 @@ class SessionViewModel @Inject constructor(
             pool = pool,
             relationshipType = state.relationshipType,
             recentlySeenIds = seenIds,
-            includeDrafts = BuildConfig.DEBUG
+            includeDrafts = BuildConfig.DEBUG,
+            random = sessionRandom
         )
 
         seenIds.add(result.newQuestion.id)
@@ -372,7 +380,23 @@ class SessionViewModel @Inject constructor(
     }
 
     fun toggleFollowUps(show: Boolean) {
-        _uiState.update { it.copy(showFollowUps = show) }
+        if (show) {
+            val currentQ = _uiState.value.currentQuestion
+            val dynamicFollowUps = if (currentQ != null) {
+                FollowUpEngine.buildFollowUpsForQuestion(
+                    question = currentQ,
+                    genericBank = questionRepository.getGenericFollowUps(),
+                    random = sessionRandom
+                )
+            } else emptyList()
+            _uiState.update { it.copy(showFollowUps = true, currentFollowUps = dynamicFollowUps) }
+        } else {
+            _uiState.update { it.copy(showFollowUps = false, currentFollowUps = emptyList()) }
+        }
+    }
+
+    fun onHintOpened(depth: Int) {
+        analyticsTracker.trackHintOpened(depth = depth)
     }
 
     private fun saveToSavedState() {

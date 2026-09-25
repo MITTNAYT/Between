@@ -15,6 +15,8 @@ import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.PeopleOutline
 import androidx.compose.material.icons.rounded.PersonOutline
+import androidx.compose.material.icons.outlined.Lightbulb
+import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.VolumeUp
 import androidx.compose.material.icons.rounded.Whatshot
@@ -33,6 +35,7 @@ object AppIcons {
     val Back: ImageVector = Icons.AutoMirrored.Rounded.ArrowBack
     val Forward: ImageVector = Icons.AutoMirrored.Rounded.ArrowForward
     val Settings: ImageVector = Icons.Rounded.Settings
+    val Lock: ImageVector = Icons.Rounded.Lock
     val Close: ImageVector = Icons.Rounded.Close
     val CheckCircle: ImageVector = Icons.Rounded.CheckCircle
     val ArrowDown: ImageVector = Icons.Rounded.KeyboardArrowDown
@@ -48,6 +51,7 @@ object AppIcons {
     val TurnPass: ImageVector = Icons.Rounded.CompareArrows
     val Volume: ImageVector = Icons.Rounded.VolumeUp
     val Flame: ImageVector = Icons.Rounded.Whatshot
+    val LightbulbOutline: ImageVector = Icons.Outlined.Lightbulb
 
     /**
      * VennLoop: Elegant two-circle intersection vector mark symbolizing mindful connection.

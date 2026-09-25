@@ -22,7 +22,7 @@ data class SetupUiState(
     val sessionLength: SessionLength = SessionLength.SESSION,
     val monthlySessionsUsed: Int = 0,
     val isPremium: Boolean = false,
-    val availableTypes: Set<RelationshipType> = emptySet(),
+    val availableTypes: Set<RelationshipType> = RelationshipType.values().toSet(),
     val isDebug: Boolean = BuildConfig.DEBUG
 ) {
     // Backward-compatible property for callers expecting non-nullable relationshipType

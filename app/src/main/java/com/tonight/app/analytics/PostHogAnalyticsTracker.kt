@@ -111,4 +111,15 @@ class PostHogAnalyticsTracker @Inject constructor(
             )
         }
     }
+
+    override fun trackHintOpened(depth: Int) {
+        if (isInitialized) {
+            PostHog.capture(
+                event = "hint_opened",
+                properties = mapOf(
+                    "depth" to depth
+                )
+            )
+        }
+    }
 }

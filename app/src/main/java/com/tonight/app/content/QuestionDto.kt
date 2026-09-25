@@ -11,5 +11,7 @@ data class QuestionDto(
     val relationshipTypes: List<String>,
     val followUps: List<String>,
     val needsHandshake: Boolean,
-    val status: String
+    val status: String,
+    val isExperienceCard: Boolean = false,
+    val hint: String? = null
 )

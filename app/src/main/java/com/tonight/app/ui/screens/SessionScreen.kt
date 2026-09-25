@@ -45,9 +45,13 @@ import com.tonight.app.ui.theme.SheetTopShape
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -122,7 +126,45 @@ fun SessionScreen(
         return
     }
 
-    val currentQuestion = uiState.currentQuestion ?: return
+    val currentQuestion = uiState.currentQuestion
+    if (currentQuestion == null) {
+        TonightScreen(modifier = modifier, showBlushGlow = true) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    val iconShape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
+                    Box(
+                        modifier = Modifier
+                            .size(56.dp)
+                            .softShadow(borderRadius = 16.dp, blurRadius = 12.dp, offsetY = 4.dp)
+                            .clip(iconShape)
+                            .background(TonightTheme.colors.surface)
+                            .border(1.dp, TonightTheme.colors.hairline, iconShape),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = AppIcons.VennLoop,
+                            contentDescription = "Loading session",
+                            tint = TonightTheme.colors.ember,
+                            modifier = Modifier.size(28.dp)
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(18.dp))
+                    Text(
+                        text = "Preparing your questions...",
+                        style = TonightTheme.typography.caption.copy(fontSize = 14.sp),
+                        color = TonightTheme.colors.muted
+                    )
+                }
+            }
+        }
+        return
+    }
 
     TonightScreen(modifier = modifier, showBlushGlow = true) {
         Column(
@@ -204,7 +246,96 @@ fun SessionScreen(
                                 .semantics { heading() }
                         )
 
-                        Spacer(modifier = Modifier.height(28.dp))
+                        if (!question.hint.isNullOrBlank()) {
+                            Spacer(modifier = Modifier.height(12.dp))
+
+                            var isHintExpanded by remember(question.id) { mutableStateOf(false) }
+
+                            AnimatedContent(
+                                targetState = isHintExpanded,
+                                transitionSpec = {
+                                    fadeIn(animationSpec = tween(durationMillis = 250, easing = TonightMotionTokens.CalmEaseInOut)) togetherWith
+                                        fadeOut(animationSpec = tween(durationMillis = 200, easing = TonightMotionTokens.CalmEaseInOut))
+                                },
+                                label = "hint_crossfade"
+                            ) { expanded ->
+                                if (!expanded) {
+                                    Row(
+                                        modifier = Modifier
+                                            .clip(PillShape)
+                                            .clickable {
+                                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                                                isHintExpanded = true
+                                                viewModel.onHintOpened(question.depth)
+                                            }
+                                            .semantics {
+                                                role = Role.Button
+                                                stateDescription = "Collapsed"
+                                                contentDescription = "Need a starting point? Tap to show example hint"
+                                            }
+                                            .padding(horizontal = 12.dp, vertical = 6.dp),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.Center
+                                    ) {
+                                        Icon(
+                                            imageVector = AppIcons.LightbulbOutline,
+                                            contentDescription = null,
+                                            tint = TonightTheme.colors.muted,
+                                            modifier = Modifier.size(16.dp)
+                                        )
+                                        Spacer(modifier = Modifier.width(6.dp))
+                                        Text(
+                                            text = "Need a starting point?",
+                                            style = TonightTheme.typography.caption.copy(
+                                                color = TonightTheme.colors.muted,
+                                                fontWeight = FontWeight.Medium
+                                            ),
+                                            textAlign = TextAlign.Center
+                                        )
+                                    }
+                                } else {
+                                    Row(
+                                        modifier = Modifier
+                                            .clip(PillShape)
+                                            .background(TonightTheme.colors.surface.copy(alpha = 0.6f))
+                                            .border(1.dp, TonightTheme.colors.hairline, PillShape)
+                                            .clickable {
+                                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                                                isHintExpanded = false
+                                            }
+                                            .semantics {
+                                                role = Role.Button
+                                                stateDescription = "Expanded"
+                                                contentDescription = "Example: ${question.hint}. Tap to collapse"
+                                            }
+                                            .padding(horizontal = 14.dp, vertical = 8.dp),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.Center
+                                    ) {
+                                        Text(
+                                            text = question.hint,
+                                            style = TonightTheme.typography.body.copy(
+                                                fontStyle = FontStyle.Italic,
+                                                color = TonightTheme.colors.muted,
+                                                fontSize = 14.sp
+                                            ),
+                                            textAlign = TextAlign.Center
+                                        )
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Icon(
+                                            imageVector = AppIcons.Close,
+                                            contentDescription = "Collapse hint",
+                                            tint = TonightTheme.colors.muted,
+                                            modifier = Modifier.size(14.dp)
+                                        )
+                                    }
+                                }
+                            }
+
+                            Spacer(modifier = Modifier.height(20.dp))
+                        } else {
+                            Spacer(modifier = Modifier.height(28.dp))
+                        }
 
                         var turnSwap by remember(uiState.currentIndex) { mutableStateOf(false) }
                         val isPersonA = if (!turnSwap) (uiState.currentIndex % 2 == 0) else (uiState.currentIndex % 2 != 0)
@@ -429,7 +560,7 @@ fun SessionScreen(
     // Follow-up Prompts Bottom Sheet (Swipeable Horizontal Pager)
     if (uiState.showFollowUps) {
         val followUpSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-        val followUps = currentQuestion.followUps
+        val followUps = uiState.currentFollowUps.ifEmpty { currentQuestion.followUps }
         val followUpPagerState = androidx.compose.foundation.pager.rememberPagerState(pageCount = { followUps.size })
 
         ModalBottomSheet(

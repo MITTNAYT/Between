@@ -8,7 +8,9 @@ data class Question(
     val relationshipTypes: Set<RelationshipType>,
     val followUps: List<String>,
     val needsHandshake: Boolean = depth >= 4,
-    val status: QuestionStatus
+    val status: QuestionStatus,
+    val isExperienceCard: Boolean = false,
+    val hint: String? = null
 ) {
     init {
         require(id.isNotBlank()) { "Question id cannot be blank" }
@@ -18,6 +20,11 @@ data class Question(
         require(followUps.size in 1..2) { "Follow-ups must contain 1-2 items, had: ${followUps.size}" }
         require(needsHandshake == (depth >= 4)) {
             "needsHandshake must be true when depth >= 4 and false otherwise (depth: $depth, needsHandshake: $needsHandshake)"
+        }
+        if (hint != null) {
+            require(hint.startsWith("e.g. ") && hint.length <= 90) {
+                "Hint must start with 'e.g. ' and be <= 90 chars, was: '$hint'"
+            }
         }
     }
 }

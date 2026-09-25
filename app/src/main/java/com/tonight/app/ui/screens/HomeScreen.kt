@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,6 +21,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -52,16 +52,14 @@ import com.tonight.app.engine.SessionLength
 import com.tonight.app.ui.components.BottomSheetSurface
 import com.tonight.app.ui.components.CircleIconButton
 import com.tonight.app.ui.components.CoralHeroCard
-import com.tonight.app.ui.components.IllustrationSlot
-import com.tonight.app.ui.components.IllustrationStyle
 import com.tonight.app.ui.components.NavItem
 import com.tonight.app.ui.components.PageDots
 import com.tonight.app.ui.components.PillNavBar
 import com.tonight.app.ui.components.PrimaryButton
+import com.tonight.app.ui.components.RelationshipOptionCard
 import com.tonight.app.ui.components.SecondaryButton
 import com.tonight.app.ui.components.SoftCard
 import com.tonight.app.ui.components.SparkButton
-import com.tonight.app.ui.components.TileCard
 import com.tonight.app.ui.components.TonightScreen
 import com.tonight.app.ui.theme.AppIcons
 import com.tonight.app.ui.theme.CardCornerShape
@@ -78,10 +76,54 @@ private data class RelationshipTypeUiData(
     val caption: String
 )
 
+private data class DurationUiData(
+    val length: SessionLength,
+    val badge: String,
+    val tabLabel: String,
+    val title: String,
+    val description: String,
+    val questionCountText: String
+)
+
+private val DURATION_OPTIONS = listOf(
+    DurationUiData(
+        length = SessionLength.FIVE_MIN,
+        badge = "5 mins",
+        tabLabel = "5m",
+        title = "Quick Check-in",
+        description = "Five light questions to spark a quick, meaningful moment together.",
+        questionCountText = "5 questions"
+    ),
+    DurationUiData(
+        length = SessionLength.TEN_MIN,
+        badge = "10 mins",
+        tabLabel = "10m",
+        title = "Warm Connection",
+        description = "Ten questions moving from light ease into genuine closeness.",
+        questionCountText = "10 questions"
+    ),
+    DurationUiData(
+        length = SessionLength.FIFTEEN_MIN,
+        badge = "15 mins",
+        tabLabel = "15m",
+        title = "Gentle Conversation",
+        description = "Fifteen questions to connect, reflect, and unwind together.",
+        questionCountText = "15 questions"
+    ),
+    DurationUiData(
+        length = SessionLength.THIRTY_MIN,
+        badge = "30 mins",
+        tabLabel = "30m",
+        title = "Go Deeper",
+        description = "Thirty questions moving deeply toward mutual vulnerability and care.",
+        questionCountText = "30 questions"
+    )
+)
+
 /**
  * HomeScreen:
  * Light-first entry dashboard matching the wellness reference style.
- * Includes CoralHeroCard, session duration carousel, Support link,
+ * Includes CoralHeroCard, 4-duration interactive selector, Daily Spark,
  * S3 ("Who's it with?") bottom sheet selector, and S3b ("Someone new" intro sheet).
  */
 @OptIn(ExperimentalMaterial3Api::class)
@@ -101,36 +143,40 @@ fun HomeScreen(
     val partnerSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val justMetSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
+    val currentLength = when (uiState.sessionLength) {
+        SessionLength.FIVE_MIN -> SessionLength.FIVE_MIN
+        SessionLength.TEN_MIN -> SessionLength.TEN_MIN
+        SessionLength.FIFTEEN_MIN, SessionLength.SESSION -> SessionLength.FIFTEEN_MIN
+        SessionLength.THIRTY_MIN, SessionLength.DEEP -> SessionLength.THIRTY_MIN
+    }
+    val currentDurationIndex = DURATION_OPTIONS.indexOfFirst { it.length == currentLength }.coerceAtLeast(0)
+    val activeDuration = DURATION_OPTIONS[currentDurationIndex]
+
     val allTypeOptions = listOf(
         RelationshipTypeUiData(
             type = RelationshipType.COUPLE,
             label = "Partner",
-            color = TonightTheme.colors.tileViolet,
+            color = TonightTheme.colors.tileRed,
             icon = AppIcons.Partner,
-            caption = "From playful to personal."
+            caption = ""
         ),
         RelationshipTypeUiData(
             type = RelationshipType.FRIEND,
             label = "Friend",
             color = TonightTheme.colors.tileAmber,
             icon = AppIcons.Friend,
-            caption = "Go beyond hanging out."
+            caption = ""
         ),
         RelationshipTypeUiData(
             type = RelationshipType.JUST_MET,
             label = "Someone new",
             color = TonightTheme.colors.tileGreen,
             icon = AppIcons.SomeoneNew,
-            caption = "Easy, curious questions for people meeting for the first time."
+            caption = ""
         )
     )
 
-    // Filter for release: only available types shown. In debug: show all types.
-    val displayedTypes = if (uiState.isDebug) {
-        allTypeOptions
-    } else {
-        allTypeOptions.filter { it.type in uiState.availableTypes }
-    }
+    val displayedTypes = allTypeOptions
 
     TonightScreen(modifier = modifier, showBlushGlow = true) {
         Column(
@@ -153,13 +199,14 @@ fun HomeScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    val appIconShape = RoundedCornerShape(13.dp)
                     Box(
                         modifier = Modifier
                             .size(48.dp)
-                            .softShadow(borderRadius = 24.dp, blurRadius = 14.dp, offsetY = 4.dp)
-                            .clip(CircleShape)
+                            .softShadow(borderRadius = 13.dp, blurRadius = 14.dp, offsetY = 4.dp)
+                            .clip(appIconShape)
                             .background(TonightTheme.colors.surface)
-                            .border(1.dp, TonightTheme.colors.hairline, CircleShape)
+                            .border(1.dp, TonightTheme.colors.hairline, appIconShape)
                             .semantics { contentDescription = "Between logo mark" },
                         contentAlignment = Alignment.Center
                     ) {
@@ -180,270 +227,185 @@ fun HomeScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // EMBER HERO CARD
-                CoralHeroCard(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Column(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(116.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                .size(68.dp)
-                                .softShadow(borderRadius = 34.dp, blurRadius = 16.dp, offsetY = 4.dp)
-                                .clip(CircleShape)
-                                .background(TonightTheme.colors.surface)
-                                .border(1.dp, TonightTheme.colors.hairline, CircleShape),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                    imageVector = AppIcons.VennLoop,
-                                    contentDescription = "Venn Loop icon",
-                                    tint = TonightTheme.colors.ember,
-                                    modifier = Modifier.size(34.dp)
-                                )
-                            }
-                        }
-
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(CardCornerShape)
-                                .background(TonightTheme.colors.surface)
-                                .padding(22.dp)
-                        ) {
-                            Column(
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text(
-                                    text = "Start a conversation",
-                                    style = TonightTheme.typography.displayL.copy(fontSize = 22.sp),
-                                    color = TonightTheme.colors.ink,
-                                    modifier = Modifier.semantics { heading() }
-                                )
-
-                                Spacer(modifier = Modifier.height(4.dp))
-
-                                Text(
-                                    text = "Who's it with tonight?",
-                                    style = TonightTheme.typography.body.copy(fontSize = 14.sp),
-                                    color = TonightTheme.colors.muted
-                                )
-
-                                Spacer(modifier = Modifier.height(16.dp))
-
-                                SparkButton(
-                                    text = "Let's begin",
-                                    onClick = {
-                                        viewModel.clearRelationshipTypeSelection()
-                                        showPartnerSheet = true
-                                    },
-                                    contentDescription = "Open conversation setup sheet"
-                                )
-                            }
-                        }
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(32.dp))
-
-                // SECTION: "FOR TONIGHT"
-                Text(
-                    text = "FOR TONIGHT",
-                    style = TonightTheme.typography.caption.copy(
-                        fontSize = 12.sp,
-                        letterSpacing = 1.2.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = TonightTheme.colors.muted
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .semantics { heading() }
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                // SESSION LENGTH CAROUSEL CARD
-                val isDeep = uiState.sessionLength == SessionLength.DEEP
+                // UNIFIED HERO + DURATION CARD
                 SoftCard(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(24.dp)
+                            .padding(24.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
+                        val heroIconShape = RoundedCornerShape(18.dp)
+                        Box(
+                            modifier = Modifier
+                                .size(56.dp)
+                                .softShadow(borderRadius = 18.dp, blurRadius = 14.dp, offsetY = 4.dp)
+                                .clip(heroIconShape)
+                                .background(TonightTheme.colors.canvas)
+                                .border(1.dp, TonightTheme.colors.hairline, heroIconShape),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = AppIcons.VennLoop,
+                                contentDescription = "Between mark",
+                                tint = TonightTheme.colors.ember,
+                                modifier = Modifier.size(28.dp)
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Text(
+                            text = "Start a conversation",
+                            style = TonightTheme.typography.displayL.copy(fontSize = 24.sp),
+                            color = TonightTheme.colors.ink,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.semantics { heading() }
+                        )
+
+                        Spacer(modifier = Modifier.height(4.dp))
+
+                        Text(
+                            text = "Choose your pace for tonight",
+                            style = TonightTheme.typography.body.copy(fontSize = 14.sp),
+                            color = TonightTheme.colors.muted,
+                            textAlign = TextAlign.Center
+                        )
+
+                        Spacer(modifier = Modifier.height(20.dp))
+
+                        // Duration Tabs Row: [5m] [10m] [15m] [30m]
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(PillShape)
+                                .background(TonightTheme.colors.canvas)
+                                .border(1.dp, TonightTheme.colors.hairline, PillShape)
+                                .padding(3.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            DURATION_OPTIONS.forEach { opt ->
+                                val isTabSelected = opt.length == activeDuration.length
+                                Box(
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .height(34.dp)
+                                        .clip(PillShape)
+                                        .background(
+                                            if (isTabSelected) TonightTheme.colors.surface else Color.Transparent
+                                        )
+                                        .then(
+                                            if (isTabSelected) {
+                                                Modifier.softShadow(borderRadius = 17.dp, blurRadius = 6.dp, offsetY = 2.dp)
+                                                    .border(1.dp, TonightTheme.colors.hairline, PillShape)
+                                            } else {
+                                                Modifier
+                                            }
+                                        )
+                                        .clickable {
+                                            viewModel.selectSessionLength(opt.length)
+                                        },
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = opt.tabLabel,
+                                        style = TonightTheme.typography.caption.copy(
+                                            fontSize = 13.sp,
+                                            fontWeight = if (isTabSelected) FontWeight.Bold else FontWeight.Medium,
+                                            color = if (isTabSelected) TonightTheme.colors.ink else TonightTheme.colors.muted
+                                        )
+                                    )
+                                }
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(18.dp))
+
+                        // Animated Description Content
                         AnimatedContent(
-                            targetState = isDeep,
+                            targetState = activeDuration,
                             transitionSpec = {
-                                fadeIn(animationSpec = tween(250)) togetherWith fadeOut(animationSpec = tween(150))
+                                fadeIn(animationSpec = tween(220)) togetherWith fadeOut(animationSpec = tween(150))
                             },
                             label = "length_carousel"
-                        ) { deep ->
-                            Column {
+                        ) { duration ->
+                            Column(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    Box(
-                                        modifier = Modifier
-                                            .clip(PillShape)
-                                            .background(TonightTheme.colors.ink)
-                                            .padding(horizontal = 14.dp, vertical = 6.dp)
-                                    ) {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Box(
+                                            modifier = Modifier
+                                                .clip(PillShape)
+                                                .background(TonightTheme.colors.ink)
+                                                .padding(horizontal = 12.dp, vertical = 5.dp)
+                                        ) {
+                                            Text(
+                                                text = duration.badge,
+                                                style = TonightTheme.typography.caption.copy(
+                                                    fontSize = 12.sp,
+                                                    fontWeight = FontWeight.SemiBold,
+                                                    color = TonightTheme.colors.surface
+                                                )
+                                            )
+                                        }
+
+                                        Spacer(modifier = Modifier.width(8.dp))
+
                                         Text(
-                                            text = if (deep) "30 mins" else "15 mins",
+                                            text = duration.questionCountText,
                                             style = TonightTheme.typography.caption.copy(
-                                                fontSize = 13.sp,
-                                                fontWeight = FontWeight.SemiBold,
-                                                color = TonightTheme.colors.surface
+                                                fontSize = 12.sp,
+                                                fontWeight = FontWeight.Medium,
+                                                color = TonightTheme.colors.muted
                                             )
                                         )
                                     }
 
                                     PageDots(
-                                        count = 2,
-                                        index = if (deep) 1 else 0
+                                        count = 4,
+                                        index = currentDurationIndex
                                     )
                                 }
 
-                                Spacer(modifier = Modifier.height(16.dp))
+                                Spacer(modifier = Modifier.height(14.dp))
 
                                 Text(
-                                    text = if (deep) "Go deeper" else "A gentle conversation",
-                                    style = TonightTheme.typography.titleM.copy(fontSize = 20.sp),
-                                    color = TonightTheme.colors.ink
+                                    text = duration.title,
+                                    style = TonightTheme.typography.titleM.copy(fontSize = 19.sp),
+                                    color = TonightTheme.colors.ink,
+                                    textAlign = TextAlign.Center
                                 )
 
                                 Spacer(modifier = Modifier.height(4.dp))
 
                                 Text(
-                                    text = if (deep) "Ten questions moving toward mutual vulnerability and care." else "Six light and warm questions to connect at the end of the day.",
-                                    style = TonightTheme.typography.body.copy(fontSize = 14.sp),
+                                    text = duration.description,
+                                    style = TonightTheme.typography.body.copy(fontSize = 13.sp),
                                     color = TonightTheme.colors.muted,
-                                    lineHeight = 20.sp
+                                    textAlign = TextAlign.Center,
+                                    lineHeight = 19.sp
                                 )
                             }
                         }
 
                         Spacer(modifier = Modifier.height(20.dp))
 
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.End,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            CircleIconButton(
-                                icon = AppIcons.Back,
-                                onClick = {
-                                    viewModel.selectSessionLength(SessionLength.SESSION)
-                                },
-                                contentDescription = "Select 15 minutes gentle session"
-                            )
-
-                            Spacer(modifier = Modifier.width(12.dp))
-
-                            CircleIconButton(
-                                icon = AppIcons.Forward,
-                                onClick = {
-                                    viewModel.selectSessionLength(SessionLength.DEEP)
-                                },
-                                contentDescription = "Select 30 minutes deep session"
-                            )
-                        }
-                    }
-                }
-
-                // SECTION: "DAILY SPARK"
-                Spacer(modifier = Modifier.height(28.dp))
-
-                Text(
-                    text = "DAILY SPARK",
-                    style = TonightTheme.typography.caption.copy(
-                        fontSize = 12.sp,
-                        letterSpacing = 1.2.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = TonightTheme.colors.muted
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .semantics { heading() }
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                SoftCard(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(20.dp)
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .clip(PillShape)
-                                    .background(TonightTheme.colors.canvas)
-                                    .border(1.dp, TonightTheme.colors.hairline, PillShape)
-                                    .padding(horizontal = 12.dp, vertical = 5.dp)
-                            ) {
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Icon(
-                                        imageVector = AppIcons.EmberSpark,
-                                        contentDescription = null,
-                                        tint = TonightTheme.colors.ember,
-                                        modifier = Modifier.size(14.dp)
-                                    )
-                                    Spacer(modifier = Modifier.width(6.dp))
-                                    Text(
-                                        text = "Today's Question",
-                                        style = TonightTheme.typography.caption.copy(
-                                            fontSize = 12.sp,
-                                            fontWeight = FontWeight.SemiBold,
-                                            color = TonightTheme.colors.body
-                                        )
-                                    )
-                                }
-                            }
-                        }
-
-                        Spacer(modifier = Modifier.height(14.dp))
-
-                        Text(
-                            text = "What's something you're excited about right now?",
-                            style = TonightTheme.typography.titleM.copy(fontSize = 18.sp),
-                            color = TonightTheme.colors.ink,
-                            lineHeight = 24.sp
-                        )
-
-                        Spacer(modifier = Modifier.height(6.dp))
-
-                        Text(
-                            text = "A quick question for reflection or casual conversation.",
-                            style = TonightTheme.typography.body.copy(fontSize = 13.sp),
-                            color = TonightTheme.colors.muted
-                        )
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        PrimaryButton(
-                            text = "Discuss this together",
+                        SparkButton(
+                            text = "Begin ${activeDuration.badge}",
                             onClick = {
-                                onBeginSession(RelationshipType.COUPLE, SessionLength.SESSION)
+                                viewModel.clearRelationshipTypeSelection()
+                                showPartnerSheet = true
                             },
-                            contentDescription = "Discuss today's prompt"
+                            contentDescription = "Start ${activeDuration.badge} session"
                         )
                     }
                 }
@@ -473,7 +435,7 @@ fun HomeScreen(
     }
 
     // =========================================================================
-    // S3: "WHO'S IT WITH?" BOTTOM SHEET - TWO-COLUMN GRID OF TILE CARDS
+    // S3: "WHO'S IT WITH?" BOTTOM SHEET - REFINED MINIMAL LIST
     // =========================================================================
     if (showPartnerSheet) {
         ModalBottomSheet(
@@ -505,81 +467,40 @@ fun HomeScreen(
                     Spacer(modifier = Modifier.height(6.dp))
 
                     Text(
-                        text = "We'll calibrate depth and questions to fit your bond.",
+                        text = "${activeDuration.badge} · ${activeDuration.questionCountText} for tonight",
                         style = TonightTheme.typography.body.copy(fontSize = 14.sp),
                         color = TonightTheme.colors.muted,
                         textAlign = TextAlign.Center
                     )
 
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    // TWO-COLUMN GRID OF TILE CARDS
-                    val chunkedTiles = displayedTypes.chunked(2)
-                    chunkedTiles.forEachIndexed { rowIndex, rowTiles ->
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Center,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            rowTiles.forEachIndexed { tileIndex, tileData ->
-                                if (tileIndex > 0) {
-                                    Spacer(modifier = Modifier.width(16.dp))
-                                }
-                                val isSelected = uiState.selectedRelationshipType == tileData.type
-                                val isAvailable = !uiState.isDebug || (tileData.type in uiState.availableTypes)
-
-                                TileCard(
-                                    label = tileData.label,
-                                    tileColor = tileData.color,
-                                    icon = tileData.icon,
-                                    isSelected = isSelected,
-                                    isAvailable = isAvailable,
-                                    onClick = {
-                                        viewModel.selectRelationshipType(tileData.type)
-                                    }
-                                )
-                            }
-                        }
-                        if (rowIndex < chunkedTiles.lastIndex) {
-                            Spacer(modifier = Modifier.height(16.dp))
-                        }
-                    }
-
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    // MUTED CAPTION FOR SELECTED TYPE
-                    val selectedUiData = allTypeOptions.firstOrNull { it.type == uiState.selectedRelationshipType }
-                    val captionText = selectedUiData?.caption ?: "Choose who you're speaking with to begin."
+                    // REFINED CARDS LIST
+                    displayedTypes.forEach { tileData ->
+                        val isSelected = uiState.selectedRelationshipType == tileData.type
 
-                    Text(
-                        text = captionText,
-                        style = TonightTheme.typography.body.copy(fontSize = 13.sp),
-                        color = TonightTheme.colors.muted,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
-                    )
-
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    // CONTINUE BUTTON (Disabled until chosen)
-                    PrimaryButton(
-                        text = "Continue",
-                        enabled = uiState.selectedRelationshipType != null,
-                        onClick = {
-                            val selectedType = uiState.selectedRelationshipType ?: return@PrimaryButton
-                            showPartnerSheet = false
-                            if (selectedType == RelationshipType.JUST_MET) {
-                                showJustMetSheet = true
-                            } else {
-                                onBeginSession(selectedType, uiState.sessionLength)
+                        RelationshipOptionCard(
+                            label = tileData.label,
+                            caption = tileData.caption,
+                            accentColor = tileData.color,
+                            icon = tileData.icon,
+                            isSelected = isSelected,
+                            isAvailable = true,
+                            onClick = {
+                                viewModel.selectRelationshipType(tileData.type)
+                                showPartnerSheet = false
+                                if (tileData.type == RelationshipType.JUST_MET) {
+                                    showJustMetSheet = true
+                                } else {
+                                    onBeginSession(tileData.type, activeDuration.length)
+                                }
                             }
-                        },
-                        contentDescription = "Continue with selected relationship type"
-                    )
+                        )
 
-                    Spacer(modifier = Modifier.height(12.dp))
+                        Spacer(modifier = Modifier.height(12.dp))
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
 
                     SecondaryButton(
                         text = "Not now",
@@ -637,7 +558,7 @@ fun HomeScreen(
                         text = "Start",
                         onClick = {
                             showJustMetSheet = false
-                            onBeginSession(RelationshipType.JUST_MET, uiState.sessionLength)
+                            onBeginSession(RelationshipType.JUST_MET, activeDuration.length)
                         },
                         contentDescription = "Start session for someone new"
                     )

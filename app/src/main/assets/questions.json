@@ -14,7 +14,8 @@
             "What is a word you wish they would use instead?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Loyal, chronically late, and surprisingly stubborn.'"
     },
     {
         "id": "ident-02",
@@ -31,7 +32,8 @@
             "Does thinking about it bring you energy or drain you?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Whether I should relocate or stay where I am.'"
     },
     {
         "id": "ident-03",
@@ -48,7 +50,8 @@
             "When was the last time that quality served you well?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Staying patient when everyone else is frustrated.'"
     },
     {
         "id": "ident-04",
@@ -65,7 +68,8 @@
             "How do you use that gift in your everyday life?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Remembering obscure details people mentioned months ago.'"
     },
     {
         "id": "ident-05",
@@ -82,7 +86,8 @@
             "What feeling does doing it give you?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Solo walks late at night listening to movie soundtracks.'"
     },
     {
         "id": "ident-06",
@@ -99,7 +104,8 @@
             "What is the deeper truth they are missing?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'That being quiet means I'm upset or disinterested.'"
     },
     {
         "id": "ident-07",
@@ -116,7 +122,8 @@
             "Who gets to see the rawest, unedited version of you?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'The organized coworker vs. the completely relaxed friend.'"
     },
     {
         "id": "ident-08",
@@ -133,7 +140,8 @@
             "Can that same trait ever become a blind spot?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Being curious enough to ask when I don't know something.'"
     },
     {
         "id": "ident-09",
@@ -149,7 +157,8 @@
             "What situation triggers that trait the fastest?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Saying yes to too many commitments out of guilt.'"
     },
     {
         "id": "ident-10",
@@ -165,7 +174,8 @@
             "How does it feel now to look back at your younger self?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'That I'm introverted and actually need alone time.'"
     },
     {
         "id": "ident-11",
@@ -182,7 +192,8 @@
             "What stops you from being in that state more often?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Cooking dinner while listening to an album I love.'"
     },
     {
         "id": "ident-12",
@@ -199,7 +210,8 @@
             "What happens if you step back and let someone else lead?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'The one making sure nobody gets talked over.'"
     },
     {
         "id": "ident-13",
@@ -216,7 +228,8 @@
             "How do you protect that core part of you?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Being someone people can rely on in an emergency.'"
     },
     {
         "id": "ident-14",
@@ -232,7 +245,8 @@
             "Why don't you talk about it very often?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Working a customer service job during college.'"
     },
     {
         "id": "ident-15",
@@ -249,7 +263,8 @@
             "What forces in the world threaten to erode it?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Getting genuinely excited about other people's wins.'"
     },
     {
         "id": "ident-16",
@@ -265,7 +280,8 @@
             "Who is the closest to having seen that part of you?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'How sensitive I am to people\\'s tone of voice.'"
     },
     {
         "id": "ident-17",
@@ -281,7 +297,8 @@
             "Where did you first learn to feel inadequate about that?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Worrying that I'm boring when I'm not entertaining people.'"
     },
     {
         "id": "ident-18",
@@ -297,7 +314,8 @@
             "What helps pull you back to who you truly want to be?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Cynical, tired, and too busy to care about small things.'"
     },
     {
         "id": "ident-19",
@@ -313,7 +331,8 @@
             "How does it feel to say that out loud right now?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'How much effort I put into making everyone feel comfortable.'"
     },
     {
         "id": "ident-20",
@@ -329,7 +348,8 @@
             "Did accepting it bring peace or grief first?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'That I can't fix people who don't want to be helped.'"
     },
     {
         "id": "child-01",
@@ -346,7 +366,8 @@
             "Do you still experience that kind of pure immersion today?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Building blanket forts and reading with a flashlight.'"
     },
     {
         "id": "child-02",
@@ -363,7 +384,8 @@
             "Is there a small element of that dream in what you do now?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'An architect or a marine biologist.'"
     },
     {
         "id": "child-03",
@@ -380,7 +402,8 @@
             "What memory of watching it stands out clearest?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Saturday morning cartoons while eating cereal.'"
     },
     {
         "id": "child-04",
@@ -397,7 +420,8 @@
             "Who was the person who bought or prepared it for you?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Warm toast with butter and cinnamon sugar.'"
     },
     {
         "id": "child-05",
@@ -414,7 +438,8 @@
             "Does that place still exist today?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'The backyard treehouse my neighbor built.'"
     },
     {
         "id": "child-06",
@@ -431,7 +456,8 @@
             "What would that ten-year-old think of your life today?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Quiet, observant, and always carrying a notebook.'"
     },
     {
         "id": "child-07",
@@ -448,7 +474,8 @@
             "What is the hardest reality you had to adjust to?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Having unlimited freedom and staying up as late as I wanted.'"
     },
     {
         "id": "child-08",
@@ -465,7 +492,8 @@
             "Why has that memory stayed so bright over the years?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Road trips with the windows rolled down singing off-key.'"
     },
     {
         "id": "child-09",
@@ -482,7 +510,8 @@
             "What feeling was tied to that tradition?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Baking holiday cookies together every December.'"
     },
     {
         "id": "child-10",
@@ -498,7 +527,8 @@
             "How does that lesson influence your instincts today?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'How to entertain myself and enjoy my own company.'"
     },
     {
         "id": "child-11",
@@ -515,7 +545,8 @@
             "Do they know how much impact they had on your life?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'My middle school art teacher who encouraged my creativity.'"
     },
     {
         "id": "child-12",
@@ -531,7 +562,8 @@
             "How did your perception of the world split into 'before' and 'after'?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Moving to a different town when I was eight.'"
     },
     {
         "id": "child-13",
@@ -547,7 +579,8 @@
             "How do you try to give that to yourself now?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Reassurance that making a mistake wasn't the end of the world.'"
     },
     {
         "id": "child-14",
@@ -563,7 +596,8 @@
             "What does emotional safety look and feel like to you now?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Hearing my parents' voices in the living room while falling asleep.'"
     },
     {
         "id": "child-15",
@@ -579,7 +613,8 @@
             "What did they do that others didn't?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'When a teacher noticed I was struggling without calling me out.'"
     },
     {
         "id": "child-16",
@@ -595,7 +630,8 @@
             "What would it take to finally heal or release that weight?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Feeling like I have to earn rest by being productive first.'"
     },
     {
         "id": "child-17",
@@ -611,7 +647,8 @@
             "What have you had to consciously redefine about love?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'That it was shown through acts of service rather than words.'"
     },
     {
         "id": "child-18",
@@ -627,7 +664,8 @@
             "Can you give a piece of that validation to yourself right now?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'More patience when I was struggling in school.'"
     },
     {
         "id": "child-19",
@@ -643,7 +681,8 @@
             "How do you catch yourself when the old pattern kicks in?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'That disagreeing with someone doesn't mean a fight.'"
     },
     {
         "id": "child-20",
@@ -659,7 +698,8 @@
             "What reassurance do you still need to hear from yourself?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Stop worrying so much — it turns out okay in the end.'"
     },
     {
         "id": "friend-01",
@@ -676,7 +716,8 @@
             "Who in your life embodies that conversational safety?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'When they don't jump in to give advice right away.'"
     },
     {
         "id": "friend-02",
@@ -693,7 +734,8 @@
             "What makes shared downtime feel so restorative?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Grabbing takeout and talking for hours on the living room floor.'"
     },
     {
         "id": "friend-03",
@@ -710,7 +752,8 @@
             "Which role feels most natural to you?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'The loyal planner who always brings the snacks.'"
     },
     {
         "id": "friend-04",
@@ -727,7 +770,8 @@
             "How quickly can you sense that in someone?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'A dry sense of humor and unpretentious kindness.'"
     },
     {
         "id": "friend-05",
@@ -744,7 +788,8 @@
             "How hard did you laugh in that room?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Accidentally sending a voice memo singing to a group chat.'"
     },
     {
         "id": "friend-06",
@@ -761,7 +806,8 @@
             "What is one green flag that instantly signals integrity to you?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'When they defend people who aren't in the room.'"
     },
     {
         "id": "friend-07",
@@ -778,7 +824,8 @@
             "When have you felt like an outsider looking in?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Someone actively bringing me into a group conversation.'"
     },
     {
         "id": "friend-08",
@@ -795,7 +842,8 @@
             "Has making friends become harder or easier as you've gotten older?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Through shared projects or regular routine meetups.'"
     },
     {
         "id": "friend-09",
@@ -812,7 +860,8 @@
             "What is the foundation that keeps long-distance friendships alive?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Being able to pick right back up after months apart.'"
     },
     {
         "id": "friend-10",
@@ -829,7 +878,8 @@
             "What side of you emerges in their presence?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Curious people who ask interesting questions.'"
     },
     {
         "id": "friend-11",
@@ -846,7 +896,8 @@
             "Are you still in touch with that person today?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'One where we grew apart and learned to let go gently.'"
     },
     {
         "id": "friend-12",
@@ -863,7 +914,8 @@
             "What was it about their presence that stayed with you?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'The way they made me feel completely seen and valued.'"
     },
     {
         "id": "friend-13",
@@ -880,7 +932,8 @@
             "What makes that specific quality irreplaceable?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Never having to pretend to be upbeat when I'm exhausted.'"
     },
     {
         "id": "friend-14",
@@ -897,7 +950,8 @@
             "How does that closeness feel in your body?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'During late-night conversations when everyone drops their guard.'"
     },
     {
         "id": "friend-15",
@@ -914,7 +968,8 @@
             "What is an act of loyalty you will never forget?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Showing up consistently, especially when it's inconvenient.'"
     },
     {
         "id": "friend-16",
@@ -930,7 +985,8 @@
             "What did you have to forgive yourself for in that situation?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'That distance and effort have to be mutual to survive.'"
     },
     {
         "id": "friend-17",
@@ -946,7 +1002,8 @@
             "How did you process the grief of losing that shared world?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Yes, when our values and lifestyle stopped aligning.'"
     },
     {
         "id": "friend-18",
@@ -962,7 +1019,8 @@
             "If you could have one final conversation with them, what would you say?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'A childhood friend drifting away with no big argument.'"
     },
     {
         "id": "friend-19",
@@ -978,7 +1036,8 @@
             "How does that difficulty manifest between us?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Being vulnerable about my own struggles instead of just listening.'"
     },
     {
         "id": "friend-20",
@@ -994,7 +1053,8 @@
             "How can the people close to you support you when you're there?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'That going quiet usually means I'm overwhelmed, not distant.'"
     },
     {
         "id": "dream-01",
@@ -1011,7 +1071,8 @@
             "What image or feeling draws you to that specific destination?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'A quiet seaside village in northern Spain.'"
     },
     {
         "id": "dream-02",
@@ -1028,7 +1089,8 @@
             "What has kept you from diving into it so far?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Woodworking or playing the acoustic guitar.'"
     },
     {
         "id": "dream-03",
@@ -1045,7 +1107,8 @@
             "Who would you want beside you when you accomplish it?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Seeing the Northern Lights in winter.'"
     },
     {
         "id": "dream-04",
@@ -1062,7 +1125,8 @@
             "What is the best part of looking forward to that?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'An upcoming trip with close friends next month.'"
     },
     {
         "id": "dream-05",
@@ -1079,7 +1143,8 @@
             "What is holding you back from starting this weekend?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Ceramics and wheel throwing.'"
     },
     {
         "id": "dream-06",
@@ -1096,7 +1161,8 @@
             "When was the last time you felt truly successful inside?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Going to sleep without worrying about tomorrow's schedule.'"
     },
     {
         "id": "dream-07",
@@ -1113,7 +1179,8 @@
             "What helps you keep moving forward on days when motivation dips?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Saving up enough to have total peace of mind.'"
     },
     {
         "id": "dream-08",
@@ -1130,7 +1197,8 @@
             "What is the hardest part of the process right now?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Running a 10k race by the end of the year.'"
     },
     {
         "id": "dream-09",
@@ -1147,7 +1215,8 @@
             "What trade-offs are you willing to make to build that life?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Mornings with no rush and evenings cooking at home.'"
     },
     {
         "id": "dream-10",
@@ -1164,7 +1233,8 @@
             "What does that curiosity say about what you're seeking right now?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'How different architectural styles shape mood and community.'"
     },
     {
         "id": "dream-11",
@@ -1181,7 +1251,8 @@
             "Why has that desire refused to die out?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Designing and building a custom cabin in the woods.'"
     },
     {
         "id": "dream-12",
@@ -1198,7 +1269,8 @@
             "What kind of community or environment would you create around yourself?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Run a small neighborhood bookshop and café.'"
     },
     {
         "id": "dream-13",
@@ -1215,7 +1287,8 @@
             "Who is that creation meant to serve?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'A community space where people can gather and work together.'"
     },
     {
         "id": "dream-14",
@@ -1232,7 +1305,8 @@
             "How do you want people to feel when they remember your name?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Leaving people feeling lighter and more encouraged after talking.'"
     },
     {
         "id": "dream-15",
@@ -1249,7 +1323,8 @@
             "What do you hope you will feel once you catch it?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'A healthier balance between ambitious work and actual rest.'"
     },
     {
         "id": "dream-16",
@@ -1265,7 +1340,8 @@
             "How does it feel to finally share it with me tonight?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Starting my own studio and leaving corporate work behind.'"
     },
     {
         "id": "dream-17",
@@ -1281,7 +1357,8 @@
             "Is there still a small ember of hope left in your heart for it?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Writing and publishing a complete novel.'"
     },
     {
         "id": "dream-18",
@@ -1297,7 +1374,8 @@
             "What is one courageous step you could take toward it this month?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Doing work I respect and having daily dinners with people I love.'"
     },
     {
         "id": "dream-19",
@@ -1313,7 +1391,8 @@
             "How has enduring that struggle shaped your character?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Building deep relationships that withstand hard seasons.'"
     },
     {
         "id": "dream-20",
@@ -1329,7 +1408,8 @@
             "What promise can you make to yourself right now about that vision?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'A life with more financial peace and creative freedom.'"
     },
     {
         "id": "fear-01",
@@ -1346,7 +1426,8 @@
             "What is your go-to ritual for calming yourself down?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Speaking up in a room full of senior people.'"
     },
     {
         "id": "fear-02",
@@ -1363,7 +1444,8 @@
             "What is the most ridiculous situation it has caused for you?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Moths and checking behind the shower curtain.'"
     },
     {
         "id": "fear-03",
@@ -1380,7 +1462,8 @@
             "What is the smallest step you could take to face it?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Leading a major project completely on my own.'"
     },
     {
         "id": "fear-04",
@@ -1397,7 +1480,8 @@
             "How did you feel on the other side of that experience?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Attending a networking event where I know nobody.'"
     },
     {
         "id": "fear-05",
@@ -1414,7 +1498,8 @@
             "What has stopped you from taking that leap so far?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Switching careers into a field I have no formal degree in.'"
     },
     {
         "id": "fear-06",
@@ -1431,7 +1516,8 @@
             "What meaning do you attach to that potential failure?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Putting 100% effort into something and still falling short.'"
     },
     {
         "id": "fear-07",
@@ -1447,7 +1533,8 @@
             "How has your relationship with that fear changed as you've grown?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Not living up to the potential people saw in me as a kid.'"
     },
     {
         "id": "fear-08",
@@ -1463,7 +1550,8 @@
             "What helps restore your self-trust when doubt creeps in?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Comparing my timeline to people my age on social media.'"
     },
     {
         "id": "fear-09",
@@ -1480,7 +1568,8 @@
             "How does knowing you overcame it give you strength today?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Eating alone at a restaurant or going to movies solo.'"
     },
     {
         "id": "fear-10",
@@ -1496,7 +1585,8 @@
             "What would your life look like if that fear lost 50% of its power?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Making a life-altering choice that I can't undo.'"
     },
     {
         "id": "fear-11",
@@ -1512,7 +1602,8 @@
             "What decision would you make tomorrow if that fear vanished?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Financial instability making me hesitate to take big leaps.'"
     },
     {
         "id": "fear-12",
@@ -1528,7 +1619,8 @@
             "What would happen if you were open about it?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'That I appear confident on the outside while second-guessing.'"
     },
     {
         "id": "fear-13",
@@ -1544,7 +1636,8 @@
             "How does that fear shape the way you hold onto what you love?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'The close circle of friends I have right now as life moves on.'"
     },
     {
         "id": "fear-14",
@@ -1560,7 +1653,8 @@
             "What is the cost of staying where it is comfortable and predictable?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'The comfort of my current predictable routine.'"
     },
     {
         "id": "fear-15",
@@ -1576,7 +1670,8 @@
             "How has that insight made you more compassionate toward others?"
         ],
         "needsHandshake": false,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Fear of public speaking taught me thorough preparation.'"
     },
     {
         "id": "fear-16",
@@ -1592,7 +1687,8 @@
             "What helps you pull back and recommit to your values?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Bitter or closed-off because of past disappointments.'"
     },
     {
         "id": "fear-17",
@@ -1608,7 +1704,8 @@
             "What is one brave conversation that could begin that shift?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'The fear of putting my creative work out there publicly.'"
     },
     {
         "id": "fear-18",
@@ -1624,7 +1721,8 @@
             "What brings you comfort when that fear is loud?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'That I might look back and realize I played it too safe.'"
     },
     {
         "id": "fear-19",
@@ -1640,7 +1738,8 @@
             "What would it take to let it drop to the floor tonight?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Worrying constantly about what others think of my choices.'"
     },
     {
         "id": "fear-20",
@@ -1656,7 +1755,8 @@
             "How does it feel to share it with me right now?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Disappointing the people who believe in me.'"
     },
     {
         "id": "bible-partner-01",
@@ -1671,7 +1771,8 @@
             "What made it meaningful to you?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'When we're laughing quietly together after a long day.'"
     },
     {
         "id": "bible-partner-02",
@@ -1686,7 +1787,8 @@
             "What is something small I do that matters most?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Remembering the small things I mentioned in passing.'"
     },
     {
         "id": "bible-partner-03",
@@ -1701,7 +1803,8 @@
             "What support do you need from me?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'How nervous I was the first time we hung out one-on-one.'"
     },
     {
         "id": "bible-partner-04",
@@ -1716,7 +1819,8 @@
             "How can we navigate that together?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'That life gets too busy and we stop making time for just us.'"
     },
     {
         "id": "bible-partner-05",
@@ -1731,7 +1835,8 @@
             "How can I listen better when that happens?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'When I get quiet to process thoughts and it seems like coldness.'"
     },
     {
         "id": "bible-partner-06",
@@ -1746,7 +1851,8 @@
             "How can I hold space for you?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'An old habit of shutting down when I get stressed.'"
     },
     {
         "id": "bible-partner-07",
@@ -1761,7 +1867,8 @@
             "What excites you most about it?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'A home with a garden and time for spontaneous weekend trips.'"
     },
     {
         "id": "bible-partner-08",
@@ -1776,7 +1883,8 @@
             "What feels like it's standing in the way?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Taking a multi-month sabbatical to live by the coast.'"
     },
     {
         "id": "bible-partner-09",
@@ -1791,7 +1899,8 @@
             "How did our bond change afterward?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Navigating a hectic move under tight deadlines without arguing.'"
     },
     {
         "id": "bible-partner-10",
@@ -1807,7 +1916,8 @@
             "When do you feel most at ease with it?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'My need for quiet downtime without feeling guilty.'"
     },
     {
         "id": "bible-friend-01",
@@ -1822,7 +1932,8 @@
             "What helps you feel brave when it appears?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Feeling like an imposter even after achieving a milestone.'"
     },
     {
         "id": "bible-friend-02",
@@ -1837,7 +1948,8 @@
             "What has given you comfort or strength?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'The burnout from prioritizing work over my health last year.'"
     },
     {
         "id": "bible-friend-03",
@@ -1852,7 +1964,8 @@
             "What wisdom did you gain from it?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Choosing the safe career path first before switching to what I loved.'"
     },
     {
         "id": "bible-friend-04",
@@ -1867,7 +1980,8 @@
             "What would true understanding feel like?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'How often I overthink interactions long after they're over.'"
     },
     {
         "id": "bible-friend-05",
@@ -1882,7 +1996,8 @@
             "What would your life feel like if it came true?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Building something entirely my own from scratch.'"
     },
     {
         "id": "bible-friend-06",
@@ -1897,7 +2012,8 @@
             "What are you proud of regarding how you handled it?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Starting over after a job layoff and figuring out what mattered.'"
     },
     {
         "id": "bible-friend-07",
@@ -1912,7 +2028,8 @@
             "How has it shaped your friendships?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Honesty in difficult moments and treating everyone with respect.'"
     },
     {
         "id": "bible-friend-08",
@@ -1927,7 +2044,8 @@
             "How can the people close to you see it more?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'That I'm a lot warmer once the initial shyness passes.'"
     },
     {
         "id": "bible-friend-09",
@@ -1942,7 +2060,8 @@
             "Who do you want by your side?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'Having more autonomy over my daily schedule and projects.'"
     },
     {
         "id": "bible-friend-10",
@@ -1957,6 +2076,1054 @@
             "What do you appreciate most about our bond?"
         ],
         "needsHandshake": true,
-        "status": "APPROVED"
+        "status": "APPROVED",
+        "hint": "e.g. 'The time we got stranded in the rain and couldn't stop laughing.'"
+    },
+    {
+        "id": "d101",
+        "text": "What's something you're better at than most people realize?",
+        "category": "IDENTITY",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Who first noticed that in you?",
+            "Do you enjoy it as much as you're good at it?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'I'm surprisingly good at staying calm in a crisis.'"
+    },
+    {
+        "id": "d102",
+        "text": "What kind of people make you feel most like yourself?",
+        "category": "IDENTITY",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What do they do, exactly?",
+            "Do you have someone like that in your life right now?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'People who don't need me to perform for them.'"
+    },
+    {
+        "id": "d103",
+        "text": "What's a belief about yourself you're still testing?",
+        "category": "IDENTITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you start questioning it?",
+            "What would it mean if it turned out to be true?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'That I'm actually good at leading, not just following.'"
+    },
+    {
+        "id": "d104",
+        "text": "What's a part of yourself you've had to fight to keep?",
+        "category": "IDENTITY",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "Who or what was working against it?",
+            "What does keeping it cost you?"
+        ],
+        "needsHandshake": true,
+        "status": "DRAFT",
+        "hint": "e.g. 'My softness, in places that reward being hard.'"
+    },
+    {
+        "id": "d105",
+        "text": "What do you like about who you're becoming?",
+        "category": "IDENTITY",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What changed recently that made you notice?",
+            "Who's helped you get there?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'I'm slower to anger than I used to be.'"
+    },
+    {
+        "id": "d106",
+        "text": "What's a compliment you've never fully believed?",
+        "category": "IDENTITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "Why does it feel untrue?",
+            "What would it take to believe it?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'That I'm easy to talk to.'"
+    },
+    {
+        "id": "d107",
+        "text": "What do you do that nobody taught you?",
+        "category": "IDENTITY",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Where do you think it came from?",
+            "Has anyone else noticed it?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'I hum without noticing when I'm concentrating.'"
+    },
+    {
+        "id": "d108",
+        "text": "What's a label you've outgrown?",
+        "category": "IDENTITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "Who still sees you that way?",
+            "What replaced it?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'The quiet one.'"
+    },
+    {
+        "id": "d201",
+        "text": "What's a memory you didn't know you'd keep until years later?",
+        "category": "ORIGINS",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What makes it stick?",
+            "Who else was there?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'My dad humming while fixing something.'"
+    },
+    {
+        "id": "d202",
+        "text": "What's a story your family tells about you that you don't fully agree with?",
+        "category": "ORIGINS",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "What's your version of it?",
+            "Why do you think theirs stuck?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'That I was always brave — I remember being terrified.'"
+    },
+    {
+        "id": "d203",
+        "text": "What's a moment that quietly changed how you see the world?",
+        "category": "ORIGINS",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "Did you notice the change right away?",
+            "What did you see differently after?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'The first time I traveled somewhere alone.'"
+    },
+    {
+        "id": "d204",
+        "text": "What's something you had to go through alone that you wish you hadn't?",
+        "category": "ORIGINS",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "What would have helped?",
+            "How did you get through it?"
+        ],
+        "needsHandshake": true,
+        "status": "DRAFT",
+        "hint": "e.g. 'Moving to a new city knowing no one.'"
+    },
+    {
+        "id": "d205",
+        "text": "What's the best piece of advice you ignored at the time?",
+        "category": "ORIGINS",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "When did it finally land?",
+            "Who gave it to you?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'Slow down — I didn't, and I burned out.'"
+    },
+    {
+        "id": "d206",
+        "text": "What's a place that shaped you more than you'd expect?",
+        "category": "ORIGINS",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What did it teach you?",
+            "Do you still go back?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'My grandmother's kitchen.'"
+    },
+    {
+        "id": "d207",
+        "text": "What's something you had to forgive yourself for?",
+        "category": "ORIGINS",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "How long did it take?",
+            "What made forgiving yourself possible?"
+        ],
+        "needsHandshake": true,
+        "status": "DRAFT",
+        "hint": "e.g. 'Not visiting someone before they passed.'"
+    },
+    {
+        "id": "d208",
+        "text": "What's a rule you grew up with that you've since broken?",
+        "category": "ORIGINS",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you break it?",
+            "Any regret?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'Never talk about money.'"
+    },
+    {
+        "id": "d301",
+        "text": "What do you admire in people even when it costs them?",
+        "category": "VALUES",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Who showed you that first?",
+            "Do you practice it yourself?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'Telling the truth when a lie would be easier.'"
+    },
+    {
+        "id": "d302",
+        "text": "What's a principle you'd have a hard time compromising on?",
+        "category": "VALUES",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "Has it ever been tested?",
+            "Where did it come from?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'Never lying to people I love, even to protect them.'"
+    },
+    {
+        "id": "d303",
+        "text": "What does respect look like to you, in practice?",
+        "category": "VALUES",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What's the opposite of it?",
+            "When did you last feel it from someone?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'Someone remembering what I told them mattered.'"
+    },
+    {
+        "id": "d304",
+        "text": "What's a value you hold that most people around you don't share?",
+        "category": "VALUES",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "Does that ever feel lonely?",
+            "Would you want them to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'That rest is productive.'"
+    },
+    {
+        "id": "d305",
+        "text": "What would you stand up for even if you were the only one?",
+        "category": "VALUES",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "Have you had to?",
+            "What did it cost you?"
+        ],
+        "needsHandshake": true,
+        "status": "DRAFT",
+        "hint": "e.g. 'Someone being treated unfairly, even a stranger.'"
+    },
+    {
+        "id": "d306",
+        "text": "What's something you used to judge people for that you understand now?",
+        "category": "VALUES",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "What changed your mind?",
+            "Do you still catch yourself judging it?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'Leaving a stable job for something uncertain.'"
+    },
+    {
+        "id": "d307",
+        "text": "What kind of honesty is hardest for you to give?",
+        "category": "VALUES",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "What makes it hard?",
+            "What happens when you avoid it?"
+        ],
+        "needsHandshake": true,
+        "status": "DRAFT",
+        "hint": "e.g. 'Telling someone their plan won't work.'"
+    },
+    {
+        "id": "d308",
+        "text": "What's something small that tells you a lot about someone's character?",
+        "category": "VALUES",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Where did you learn to notice that?",
+            "Has it ever proven you wrong?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'How they treat a waiter.'"
+    },
+    {
+        "id": "d401",
+        "text": "What kind of life are you quietly building toward?",
+        "category": "FUTURE",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "What's the first real step?",
+            "Who knows about this?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'Something slower, with more time to make things.'"
+    },
+    {
+        "id": "d402",
+        "text": "What does 'enough' look like for you?",
+        "category": "FUTURE",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "How far are you from it?",
+            "Has that changed over time?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'Not checking my bank balance before saying yes to dinner.'"
+    },
+    {
+        "id": "d403",
+        "text": "What are you becoming, whether you meant to or not?",
+        "category": "FUTURE",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "How do you feel about it?",
+            "Is it who you wanted to become?"
+        ],
+        "needsHandshake": true,
+        "status": "DRAFT",
+        "hint": "e.g. 'More guarded than I used to be.'"
+    },
+    {
+        "id": "d404",
+        "text": "What's one step toward the life you want that you keep putting off?",
+        "category": "FUTURE",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "What's actually stopping you?",
+            "What would make it easier to start?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'Actually finishing the portfolio site.'"
+    },
+    {
+        "id": "d405",
+        "text": "What would you regret not trying?",
+        "category": "FUTURE",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What's stopped you so far?",
+            "What would trying even look like?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'Putting my music out publicly.'"
+    },
+    {
+        "id": "d406",
+        "text": "What matters to you now that didn't a few years ago?",
+        "category": "FUTURE",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What changed?",
+            "What used to matter more?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'Having people nearby, not just online.'"
+    },
+    {
+        "id": "d407",
+        "text": "What kind of impact do you want to leave, even in small ways?",
+        "category": "FUTURE",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "Who would notice it?",
+            "Are you already doing it?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'Making people feel less alone in a room.'"
+    },
+    {
+        "id": "d408",
+        "text": "What are you hoping doesn't run out of time?",
+        "category": "FUTURE",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "What's making you feel the clock?",
+            "What would you do about it if you could?"
+        ],
+        "needsHandshake": true,
+        "status": "DRAFT",
+        "hint": "e.g. 'Time with my parents while they're still healthy.'"
+    },
+    {
+        "id": "ec01",
+        "text": "Tell a story you'll still remember when you're 80.",
+        "category": "US",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "Why that one?",
+            "Who else is in it?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "isExperienceCard": true,
+        "hint": "e.g. 'The night we drove nowhere just to keep talking.'"
+    },
+    {
+        "id": "ec02",
+        "text": "Tell this person something you appreciate but rarely say out loud.",
+        "category": "GRATITUDE",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "Why haven't you said it before?",
+            "When did you first notice it?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "isExperienceCard": true,
+        "hint": "e.g. 'You make hard days feel smaller.'"
+    },
+    {
+        "id": "ec03",
+        "text": "Describe your ideal ordinary day, ten years from now.",
+        "category": "FUTURE",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "What part matters most?",
+            "What's one step toward it today?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "isExperienceCard": true,
+        "hint": "e.g. 'Coffee, a slow morning, work I chose, people nearby.'"
+    },
+    {
+        "id": "ec04",
+        "text": "What do you hope people remember about you?",
+        "category": "FUTURE",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "Why that, specifically?",
+            "Are you living toward it now?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "isExperienceCard": true,
+        "hint": "e.g. 'That I made people feel seen.'"
+    },
+    {
+        "id": "ec05",
+        "text": "Share something you've thought but never said out loud, to anyone.",
+        "category": "FEARS",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "What's made it hard to say?",
+            "How does it feel to say it now?"
+        ],
+        "needsHandshake": true,
+        "status": "DRAFT",
+        "isExperienceCard": true,
+        "hint": "e.g. 'That I'm scared I'll always feel behind.'"
+    },
+    {
+        "id": "grat-01",
+        "text": "What's a small luxury in your daily life you're grateful for?",
+        "category": "GRATITUDE",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "How long has that been part of your routine?",
+            "What would your day feel like without it?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'A hot cup of coffee before anyone else is awake.'"
+    },
+    {
+        "id": "grat-02",
+        "text": "Who is someone you're glad you met this past year?",
+        "category": "GRATITUDE",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What was your first impression of them?",
+            "Have you told them how much you appreciate them?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'A coworker who made the tough days feel lighter.'"
+    },
+    {
+        "id": "grat-03",
+        "text": "What's something about where you live that you appreciate?",
+        "category": "GRATITUDE",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What time of day do you enjoy it most?",
+            "Did you appreciate that when you first moved here?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'Being able to walk to a quiet park in five minutes.'"
+    },
+    {
+        "id": "grat-04",
+        "text": "What's an act of kindness someone did for you that you never forgot?",
+        "category": "GRATITUDE",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Did they realize how much it meant to you?",
+            "How did that change how you treat others?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'A friend dropping off food when I was sick with no questions asked.'"
+    },
+    {
+        "id": "grat-05",
+        "text": "What's a hardship you went through that you're now grateful happened?",
+        "category": "GRATITUDE",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "When did your perspective shift from frustration to gratitude?",
+            "What strength did you gain from it?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'Not getting that job, which forced me to pivot to what I love.'"
+    },
+    {
+        "id": "grat-06",
+        "text": "What's something about your current health or body you appreciate?",
+        "category": "GRATITUDE",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What reminds you not to take that for granted?",
+            "How do you care for that part of you?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'Being able to take long walks without pain.'"
+    },
+    {
+        "id": "grat-07",
+        "text": "What quality in your partner or closest friend are you most thankful for?",
+        "category": "GRATITUDE",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "When was the last time you saw that in action?",
+            "How has that quality shaped you?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'Their ability to make me laugh when I take myself too seriously.'"
+    },
+    {
+        "id": "grat-08",
+        "text": "What's a chapter of your life you wouldn't trade for anything?",
+        "category": "GRATITUDE",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made that time feel so special?",
+            "What do you miss most about that era?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'My early twenties living in a cramped apartment with roommates.'"
+    },
+    {
+        "id": "grat-09",
+        "text": "What's a compliment someone gave you that still warms your heart?",
+        "category": "GRATITUDE",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Who said that to you?",
+            "Did that match how you saw yourself?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'Being told that I make people feel immediately at ease.'"
+    },
+    {
+        "id": "grat-10",
+        "text": "What's something about our connection that you don't take for granted?",
+        "category": "GRATITUDE",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "When did you first realize we had that comfort?",
+            "What helps us protect that?"
+        ],
+        "needsHandshake": true,
+        "status": "DRAFT",
+        "hint": "e.g. 'That we can sit in total silence without it feeling awkward.'"
+    },
+    {
+        "id": "grat-11",
+        "text": "Who in your life helped you become who you are, and what would you thank them for?",
+        "category": "GRATITUDE",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "Have you ever shared that with them directly?",
+            "What holds you back if not?"
+        ],
+        "needsHandshake": true,
+        "status": "DRAFT",
+        "hint": "e.g. 'My older brother, for always having my back in tough spots.'"
+    },
+    {
+        "id": "conf-01",
+        "text": "What's a minor pet peeve that instantly annoys you?",
+        "category": "CONFLICT",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "How do you usually react in the moment?",
+            "Is that something you do yourself sometimes?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'People walking slowly in the middle of a narrow hallway.'"
+    },
+    {
+        "id": "conf-02",
+        "text": "When you're overwhelmed, what's the first thing you tend to snap at?",
+        "category": "CONFLICT",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "What's the signal that you're about to lose patience?",
+            "What helps you reset?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'Small logistical questions when I'm in the middle of a task.'"
+    },
+    {
+        "id": "conf-03",
+        "text": "How do you usually handle disagreement — confront immediately or withdraw first?",
+        "category": "CONFLICT",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Where did you learn that approach to conflict?",
+            "How does that impact the other person?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'I usually need twenty minutes alone before I can talk calmly.'"
+    },
+    {
+        "id": "conf-04",
+        "text": "What's something that makes an apology feel sincere to you?",
+        "category": "CONFLICT",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What ruins an apology fastest for you?",
+            "How good are you at giving that kind of apology?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'Acknowledging the specific impact without making excuses.'"
+    },
+    {
+        "id": "conf-05",
+        "text": "What's a topic where you find it hardest to compromise?",
+        "category": "CONFLICT",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "Why is that line so important to you?",
+            "Has holding that line ever caused friction?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'How we spend downtime on weekends.'"
+    },
+    {
+        "id": "conf-06",
+        "text": "What's a recurring misunderstanding you've had in relationships?",
+        "category": "CONFLICT",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "What is the root need beneath that reaction?",
+            "What would break the cycle?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'Feeling unappreciated when I do things quietly in the background.'"
+    },
+    {
+        "id": "conf-07",
+        "text": "When someone hurts your feelings, do you tend to show anger or go quiet?",
+        "category": "CONFLICT",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "What are you protecting when you do that?",
+            "What makes it safe for you to speak up?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'I go completely quiet and put up a polite wall.'"
+    },
+    {
+        "id": "conf-08",
+        "text": "What's something you find difficult to ask for directly?",
+        "category": "CONFLICT",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "Why does asking directly feel risky?",
+            "How do you signal it instead?"
+        ],
+        "needsHandshake": false,
+        "status": "DRAFT",
+        "hint": "e.g. 'Asking for verbal reassurance when I'm feeling insecure.'"
+    },
+    {
+        "id": "conf-09",
+        "text": "What's a conflict from your past you wish you had handled differently?",
+        "category": "CONFLICT",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "What kept you from reaching out at the time?",
+            "What would you do differently today?"
+        ],
+        "needsHandshake": true,
+        "status": "DRAFT",
+        "hint": "e.g. 'Letting an argument with a friend fester instead of reaching out first.'"
+    },
+    {
+        "id": "conf-10",
+        "text": "When we have tension, what's one thing I could do that would lower your defenses?",
+        "category": "CONFLICT",
+        "depth": 5,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "What triggers your defenses fastest during an argument?",
+            "How can we remember this next time?"
+        ],
+        "needsHandshake": true,
+        "status": "DRAFT",
+        "hint": "e.g. 'Reassuring me that we're okay even while we disagree.'"
+    },
+    {
+        "id": "wildcard-01",
+        "text": "Wildcard: Your turn to ask anything you've been curious about lately — no filters.",
+        "category": "PLAY",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "Take your time to think of something genuine.",
+            "Answer with complete honesty."
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "e.g. A question you've wondered about but never found the moment to ask"
+    },
+    {
+        "id": "wildcard-02",
+        "text": "Wildcard: Trade roles. You ask the question you most want them to answer tonight.",
+        "category": "US",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you choose that specific question?",
+            "How did their answer make you feel?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "e.g. Ask about a dream, a secret fear, or a funny memory"
     }
 ]

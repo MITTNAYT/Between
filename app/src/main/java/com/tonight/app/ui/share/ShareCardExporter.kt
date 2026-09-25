@@ -118,7 +118,12 @@ object ShareCardExporter {
         canvas.drawText("tonight", width / 2f, 720f, tonightLabelPaint)
 
         // 7. Duration Pill
-        val pillDuration = if (sessionLength.contains("DEEP", ignoreCase = true)) "30 min deep conversation" else "15 min gentle conversation"
+        val pillDuration = when {
+            sessionLength.contains("30") || sessionLength.contains("THIRTY", ignoreCase = true) || sessionLength.contains("DEEP", ignoreCase = true) -> "30 min deep conversation"
+            sessionLength.contains("10") || sessionLength.contains("TEN", ignoreCase = true) -> "10 min warm conversation"
+            sessionLength.contains("5") || sessionLength.contains("FIVE", ignoreCase = true) -> "5 min quick conversation"
+            else -> "15 min gentle conversation"
+        }
         val pillRect = RectF(340f, 800f, 740f, 875f)
         val pillPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             color = Color.parseColor("#0D0D0D")

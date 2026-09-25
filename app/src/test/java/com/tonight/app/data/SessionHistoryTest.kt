@@ -73,14 +73,14 @@ class SessionHistoryTest {
             recentlySeenIds = recentlySeenInitial,
             includeDrafts = true
         )
-        assertEquals(6, session1.size)
+        assertEquals(15, session1.size)
 
         // Mark questions from session 1 as seen
         fakeHistoryRepository.markSeen(session1.map { it.id })
 
         // --- SESSION 2 ---
         val recentlySeenAfterSession1 = fakeHistoryRepository.getRecentlySeen(limit = 50).toSet()
-        assertEquals(6, recentlySeenAfterSession1.size)
+        assertEquals(15, recentlySeenAfterSession1.size)
 
         val session2 = ArcEngine.buildSession(
             pool = testPool,
@@ -89,7 +89,7 @@ class SessionHistoryTest {
             recentlySeenIds = recentlySeenAfterSession1,
             includeDrafts = true
         )
-        assertEquals(6, session2.size)
+        assertEquals(15, session2.size)
 
         // Verify that feeding getRecentlySeen completely eliminated repeats across consecutive sessions
         val overlap = session2.map { it.id }.intersect(session1.map { it.id }.toSet())
@@ -103,7 +103,7 @@ class SessionHistoryTest {
 
         // --- SESSION 3 ---
         val recentlySeenAfterSession2 = fakeHistoryRepository.getRecentlySeen(limit = 50).toSet()
-        assertEquals(12, recentlySeenAfterSession2.size)
+        assertEquals(30, recentlySeenAfterSession2.size)
 
         val session3 = ArcEngine.buildSession(
             pool = testPool,
@@ -112,7 +112,7 @@ class SessionHistoryTest {
             recentlySeenIds = recentlySeenAfterSession2,
             includeDrafts = true
         )
-        assertEquals(6, session3.size)
+        assertEquals(15, session3.size)
 
         val overlapWith1and2 = session3.map { it.id }.intersect(recentlySeenAfterSession2)
         assertTrue(

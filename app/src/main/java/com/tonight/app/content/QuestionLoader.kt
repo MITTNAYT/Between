@@ -11,6 +11,7 @@ import javax.inject.Singleton
 
 interface QuestionRepository {
     fun getQuestions(): List<Question>
+    fun getGenericFollowUps(): Map<String, List<String>> = emptyMap()
 }
 
 @Singleton
@@ -22,7 +23,13 @@ class AssetQuestionRepository @Inject constructor(
         loadFromAssets()
     }
 
+    private val cachedFollowUps: Map<String, List<String>> by lazy {
+        loadFollowUpsFromAssets()
+    }
+
     override fun getQuestions(): List<Question> = cachedQuestions
+
+    override fun getGenericFollowUps(): Map<String, List<String>> = cachedFollowUps
 
     private fun loadFromAssets(): List<Question> {
         val jsonString = context.assets.open("questions.json").use { inputStream ->
@@ -31,5 +38,18 @@ class AssetQuestionRepository @Inject constructor(
             }
         }
         return ContentValidator.parseAndValidate(jsonString, isDebug = BuildConfig.DEBUG)
+    }
+
+    private fun loadFollowUpsFromAssets(): Map<String, List<String>> {
+        return try {
+            val jsonString = context.assets.open("follow_ups.json").use { inputStream ->
+                BufferedReader(InputStreamReader(inputStream)).use { reader ->
+                    reader.readText()
+                }
+            }
+            FollowUpEngine.parseFollowUpsJson(jsonString)
+        } catch (e: Exception) {
+            emptyMap()
+        }
     }
 }
