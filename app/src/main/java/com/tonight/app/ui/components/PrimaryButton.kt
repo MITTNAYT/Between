@@ -64,7 +64,7 @@ fun PrimaryButton(
 @Composable
 private fun PrimaryButtonPreview() {
     TonightTheme {
-        PrimaryButton(text = "Begin Ritual", onClick = {})
+        PrimaryButton(text = "Start conversation", onClick = {})
     }
 }
 
@@ -72,6 +72,6 @@ private fun PrimaryButtonPreview() {
 @Composable
 private fun PrimaryButtonLargeFontPreview() {
     TonightTheme {
-        PrimaryButton(text = "Begin Ritual", onClick = {})
+        PrimaryButton(text = "Start conversation", onClick = {})
     }
 }

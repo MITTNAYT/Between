@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -38,7 +39,8 @@ import kotlinx.coroutines.launch
 
 /**
  * OpeningAnimationScreen:
- * Cinematic opening ritual where two minimal circles slide and interlock into the Venn Loop mark.
+ * Apple-grade fluid opening sequence where two clean circles glide and interlock
+ * into the Venn Loop mark with critically damped physics and plain English branding.
  */
 @Composable
 fun OpeningAnimationScreen(
@@ -46,35 +48,41 @@ fun OpeningAnimationScreen(
     modifier: Modifier = Modifier
 ) {
     val view = LocalView.current
-    val circleOffset = remember { Animatable(50f) }
+    val circleOffset = remember { Animatable(44f) }
     val circlesAlpha = remember { Animatable(0f) }
-    val circlesScale = remember { Animatable(0.7f) }
+    val circlesScale = remember { Animatable(0.85f) }
+    val intersectionGlowAlpha = remember { Animatable(0f) }
     val textAlpha = remember { Animatable(0f) }
     val tagAlpha = remember { Animatable(0f) }
 
     LaunchedEffect(Unit) {
-        // Step 1: Fade in and slide circles together into interlocking Venn Loop
+        // Phase 1: Critically-damped glide into Venn Loop
         launch {
-            circlesAlpha.animateTo(1f, tween(500, easing = FastOutSlowInEasing))
+            circlesAlpha.animateTo(1f, tween(400, easing = FastOutSlowInEasing))
         }
         launch {
-            circlesScale.animateTo(1f, spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessMediumLow))
+            circlesScale.animateTo(1f, spring(dampingRatio = 1.0f, stiffness = Spring.StiffnessMediumLow))
         }
-        circleOffset.animateTo(16f, spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessLow))
+        circleOffset.animateTo(16f, spring(dampingRatio = 1.0f, stiffness = Spring.StiffnessLow))
 
         view.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
 
-        // Step 2: Fade in brand typography
+        // Phase 2: Gentle center glow
         launch {
-            textAlpha.animateTo(1f, tween(400, easing = FastOutSlowInEasing))
-        }
-        delay(200)
-        launch {
-            tagAlpha.animateTo(1f, tween(400, easing = FastOutSlowInEasing))
+            intersectionGlowAlpha.animateTo(0.12f, tween(300))
         }
 
-        // Step 3: Hold briefly, then transition to Home
-        delay(1100)
+        // Phase 3: Typography entrance
+        launch {
+            textAlpha.animateTo(1f, tween(350, easing = FastOutSlowInEasing))
+        }
+        delay(150)
+        launch {
+            tagAlpha.animateTo(1f, tween(350, easing = FastOutSlowInEasing))
+        }
+
+        // Phase 4: Settle and advance smoothly
+        delay(1000)
         onAnimationFinished()
     }
 
@@ -92,7 +100,7 @@ fun OpeningAnimationScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // Interlocking Venn Loop Circles
+            // Venn Loop Circles
             Box(
                 modifier = Modifier
                     .size(140.dp)
@@ -100,12 +108,21 @@ fun OpeningAnimationScreen(
                     .alpha(circlesAlpha.value),
                 contentAlignment = Alignment.Center
             ) {
+                // Subtle Center Glow
+                Box(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .scale(1.2f)
+                        .alpha(intersectionGlowAlpha.value)
+                        .background(TonightTheme.colors.ember, CircleShape)
+                )
+
                 // Left Circle
                 Box(
                     modifier = Modifier
                         .offset(x = (-circleOffset.value).dp)
                         .size(68.dp)
-                        .border(3.dp, TonightTheme.colors.ink, CircleShape)
+                        .border(2.5.dp, TonightTheme.colors.ink, CircleShape)
                 )
 
                 // Right Circle
@@ -113,7 +130,7 @@ fun OpeningAnimationScreen(
                     modifier = Modifier
                         .offset(x = circleOffset.value.dp)
                         .size(68.dp)
-                        .border(3.dp, TonightTheme.colors.ink, CircleShape)
+                        .border(2.5.dp, TonightTheme.colors.ink, CircleShape)
                 )
             }
 
@@ -123,8 +140,8 @@ fun OpeningAnimationScreen(
             Text(
                 text = "BETWEEN",
                 style = TonightTheme.typography.displayL.copy(
-                    fontSize = 24.sp,
-                    letterSpacing = 6.sp,
+                    fontSize = 22.sp,
+                    letterSpacing = 5.sp,
                     fontWeight = FontWeight.Bold
                 ),
                 color = TonightTheme.colors.ink,
@@ -133,12 +150,12 @@ fun OpeningAnimationScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Subtitle
+            // Plain English Subtitle
             Text(
-                text = "Mindful connection rituals",
+                text = "Questions that bring you closer.",
                 style = TonightTheme.typography.caption.copy(
                     fontSize = 13.sp,
-                    letterSpacing = 1.sp,
+                    letterSpacing = 0.4.sp,
                     color = TonightTheme.colors.muted
                 ),
                 modifier = Modifier.alpha(tagAlpha.value)

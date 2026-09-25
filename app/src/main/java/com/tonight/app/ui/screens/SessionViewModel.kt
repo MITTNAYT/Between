@@ -183,15 +183,14 @@ class SessionViewModel @Inject constructor(
 
             val firstQuestion = sessionQuestions.firstOrNull()
             val firstNeedsHandshake = config.handshakeEnabled && firstQuestion?.needsHandshake == true
-            val firstNeedsPaywall = firstNeedsHandshake && !isPremium
 
             _uiState.update {
                 it.copy(
                     questions = sessionQuestions,
                     currentIndex = 0,
-                    isHandshakePending = firstNeedsHandshake && isPremium,
-                    isPaywallPending = firstNeedsPaywall,
-                    paywallTrigger = if (firstNeedsPaywall) "depth_l4" else "",
+                    isHandshakePending = firstNeedsHandshake,
+                    isPaywallPending = false,
+                    paywallTrigger = "",
                     showFollowUps = false,
                     isSessionFinished = false,
                     relationshipType = relationshipType,
@@ -210,16 +209,14 @@ class SessionViewModel @Inject constructor(
         if (nextIdx < currentState.questions.size) {
             val nextQuestion = currentState.questions[nextIdx]
             val config = currentState.config
-            val isPremium = billingRepository.isPremiumActive()
             val needsHandshake = config.handshakeEnabled && nextQuestion.needsHandshake && nextIdx !in confirmedHandshakeIndices
-            val needsPaywall = needsHandshake && !isPremium
 
             _uiState.update {
                 it.copy(
                     currentIndex = nextIdx,
-                    isHandshakePending = needsHandshake && isPremium,
-                    isPaywallPending = needsPaywall,
-                    paywallTrigger = if (needsPaywall) "depth_l4" else "",
+                    isHandshakePending = needsHandshake,
+                    isPaywallPending = false,
+                    paywallTrigger = "",
                     showFollowUps = false
                 )
             }
@@ -256,21 +253,24 @@ class SessionViewModel @Inject constructor(
             sessionHistoryRepository.markSeen(listOf(result.newQuestion.id))
         }
 
-        val isPremium = billingRepository.isPremiumActive()
         val config = state.config
         val needsHandshake = config.handshakeEnabled && result.needsHandshake && currentIdx !in confirmedHandshakeIndices
-        val needsPaywall = needsHandshake && !isPremium
 
         _uiState.update {
             it.copy(
                 questions = result.updatedSession,
-                isHandshakePending = needsHandshake && isPremium,
-                isPaywallPending = needsPaywall,
-                paywallTrigger = if (needsPaywall) "depth_l4" else "",
+                isHandshakePending = needsHandshake,
+                isPaywallPending = false,
+                paywallTrigger = "",
                 showFollowUps = false
             )
         }
         saveToSavedState()
+    }
+
+    fun shuffleQuestion() {
+        // Swap current question for another question at the same depth
+        passQuestion()
     }
 
     fun lighterQuestion() {
@@ -294,17 +294,15 @@ class SessionViewModel @Inject constructor(
             sessionHistoryRepository.markSeen(listOf(result.newQuestion.id))
         }
 
-        val isPremium = billingRepository.isPremiumActive()
         val config = state.config
         val needsHandshake = config.handshakeEnabled && result.needsHandshake && currentIdx !in confirmedHandshakeIndices
-        val needsPaywall = needsHandshake && !isPremium
 
         _uiState.update {
             it.copy(
                 questions = result.updatedSession,
-                isHandshakePending = needsHandshake && isPremium,
-                isPaywallPending = needsPaywall,
-                paywallTrigger = if (needsPaywall) "depth_l4" else "",
+                isHandshakePending = needsHandshake,
+                isPaywallPending = false,
+                paywallTrigger = "",
                 showFollowUps = false
             )
         }
@@ -334,17 +332,15 @@ class SessionViewModel @Inject constructor(
             sessionHistoryRepository.markSeen(listOf(result.newQuestion.id))
         }
 
-        val isPremium = billingRepository.isPremiumActive()
         val config = state.config
         val needsHandshake = config.handshakeEnabled && result.needsHandshake && currentIdx !in confirmedHandshakeIndices
-        val needsPaywall = needsHandshake && !isPremium
 
         _uiState.update {
             it.copy(
                 questions = result.updatedSession,
-                isHandshakePending = needsHandshake && isPremium,
-                isPaywallPending = needsPaywall,
-                paywallTrigger = if (needsPaywall) "depth_l4" else "",
+                isHandshakePending = needsHandshake,
+                isPaywallPending = false,
+                paywallTrigger = "",
                 showFollowUps = false
             )
         }

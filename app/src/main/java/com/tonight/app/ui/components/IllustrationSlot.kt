@@ -32,7 +32,7 @@ import com.tonight.app.ui.theme.TonightTheme
 
 /**
  * IllustrationSlot:
- * Soft gradient placeholder for ritual art and icons.
+ * Soft gradient placeholder for art and icons.
  */
 enum class IllustrationStyle {
     BLOB_EMBER,

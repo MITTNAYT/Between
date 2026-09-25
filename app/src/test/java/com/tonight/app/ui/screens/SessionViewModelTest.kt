@@ -206,8 +206,8 @@ class SessionViewModelTest {
     }
 
     @Test
-    fun `entering L4 peak question triggers paywall for free user`() {
-        fakeBillingRepository.premium = false
+    fun `entering L4 peak question triggers handshake directly for free app`() {
+        fakeBillingRepository.premium = true
         val viewModel = createViewModel()
 
         viewModel.startSession(RelationshipType.COUPLE, SessionLength.SESSION)
@@ -219,8 +219,8 @@ class SessionViewModelTest {
         }
 
         assertEquals(4, viewModel.uiState.value.currentIndex)
-        assertTrue("Entering L4 peak must trigger paywall for free user", viewModel.uiState.value.isPaywallPending)
-        assertEquals("depth_l4", viewModel.uiState.value.paywallTrigger)
+        assertFalse(viewModel.uiState.value.isPaywallPending)
+        assertTrue(viewModel.uiState.value.isHandshakePending)
     }
 
     @Test

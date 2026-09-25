@@ -149,7 +149,7 @@ fun ClosingScreen(
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Text(
-                                    text = "CLOSING RITUAL",
+                                    text = "WRAP UP",
                                     style = TonightTheme.typography.caption.copy(
                                         fontSize = 12.sp,
                                         letterSpacing = 1.2.sp,
@@ -736,7 +736,7 @@ fun ClosingScreen(
                     }
                     ClosingStep.SESSION_SUMMARY -> {
                         SparkButton(
-                            text = "Share Ritual Card",
+                            text = "Share Summary Card",
                             onClick = {
                                 ShareCardExporter.shareSessionCard(
                                     context = context,

@@ -435,6 +435,16 @@ fun HomeScreen(
                             style = TonightTheme.typography.body.copy(fontSize = 13.sp),
                             color = TonightTheme.colors.muted
                         )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        PrimaryButton(
+                            text = "Discuss this together",
+                            onClick = {
+                                onBeginSession(RelationshipType.COUPLE, SessionLength.SESSION)
+                            },
+                            contentDescription = "Discuss today's prompt"
+                        )
                     }
                 }
             }
@@ -563,14 +573,7 @@ fun HomeScreen(
                             if (selectedType == RelationshipType.JUST_MET) {
                                 showJustMetSheet = true
                             } else {
-                                viewModel.checkCanBeginSession(
-                                    onAllowed = {
-                                        onBeginSession(selectedType, uiState.sessionLength)
-                                    },
-                                    onLimitReached = { trigger ->
-                                        onOpenPaywall(trigger)
-                                    }
-                                )
+                                onBeginSession(selectedType, uiState.sessionLength)
                             }
                         },
                         contentDescription = "Continue with selected relationship type"
@@ -579,7 +582,7 @@ fun HomeScreen(
                     Spacer(modifier = Modifier.height(12.dp))
 
                     SecondaryButton(
-                        text = "Not tonight",
+                        text = "Not now",
                         onClick = { showPartnerSheet = false },
                         contentDescription = "Dismiss conversation sheet"
                     )
@@ -634,14 +637,7 @@ fun HomeScreen(
                         text = "Start",
                         onClick = {
                             showJustMetSheet = false
-                            viewModel.checkCanBeginSession(
-                                onAllowed = {
-                                    onBeginSession(RelationshipType.JUST_MET, uiState.sessionLength)
-                                },
-                                onLimitReached = { trigger ->
-                                    onOpenPaywall(trigger)
-                                }
-                            )
+                            onBeginSession(RelationshipType.JUST_MET, uiState.sessionLength)
                         },
                         contentDescription = "Start session for someone new"
                     )

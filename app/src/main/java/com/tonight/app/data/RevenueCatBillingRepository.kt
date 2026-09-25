@@ -29,7 +29,8 @@ class RevenueCatBillingRepository @Inject constructor(
     @ApplicationContext private val context: Context
 ) : BillingRepository {
 
-    private val _isPremium = MutableStateFlow(false)
+    // App is currently completely free - all features, depths, and modes unlocked
+    private val _isPremium = MutableStateFlow(true)
     override val isPremium: StateFlow<Boolean> = _isPremium.asStateFlow()
 
     private var cachedPackages: List<Package> = emptyList()
@@ -63,13 +64,12 @@ class RevenueCatBillingRepository @Inject constructor(
     }
 
     private fun updatePremiumState(customerInfo: CustomerInfo) {
-        val entitlement = customerInfo.entitlements[BuildConfig.REVENUECAT_ENTITLEMENT_ID]
-        val active = entitlement?.isActive == true
-        _isPremium.value = active
+        // App is free for now
+        _isPremium.value = true
     }
 
     override fun isPremiumActive(): Boolean {
-        return _isPremium.value
+        return true
     }
 
     override suspend fun refreshPurchases() {

@@ -82,7 +82,7 @@ object ShareCardExporter {
             letterSpacing = 0.16f
             typeface = Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD)
         }
-        canvas.drawText("A RITUAL FOR TWO", width / 2f, 360f, subBrandPaint)
+        canvas.drawText("A CONVERSATION FOR TWO", width / 2f, 360f, subBrandPaint)
 
         // 5. Divider Line
         val linePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -118,7 +118,7 @@ object ShareCardExporter {
         canvas.drawText("tonight", width / 2f, 720f, tonightLabelPaint)
 
         // 7. Duration Pill
-        val pillDuration = if (sessionLength.contains("DEEP", ignoreCase = true)) "30 min deep ritual" else "15 min gentle ritual"
+        val pillDuration = if (sessionLength.contains("DEEP", ignoreCase = true)) "30 min deep conversation" else "15 min gentle conversation"
         val pillRect = RectF(340f, 800f, 740f, 875f)
         val pillPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             color = Color.parseColor("#0D0D0D")
@@ -156,7 +156,7 @@ object ShareCardExporter {
     ) {
         val bitmap = createShareCardBitmap(depthReached, sessionLength)
         val shareDir = File(context.cacheDir, "shares").apply { mkdirs() }
-        val imageFile = File(shareDir, "between_ritual.png")
+        val imageFile = File(shareDir, "between_summary.png")
 
         FileOutputStream(imageFile).use { out ->
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)

@@ -79,14 +79,7 @@ class SetupViewModel @Inject constructor(
         onAllowed: () -> Unit,
         onLimitReached: (String) -> Unit
     ) {
-        viewModelScope.launch {
-            val isPrem = billingRepository.isPremiumActive()
-            val count = sessionRecordRepository.getSessionCountThisMonth()
-            if (!isPrem && count >= 2) {
-                onLimitReached("monthly_limit")
-            } else {
-                onAllowed()
-            }
-        }
+        // App is free - always allow sessions
+        onAllowed()
     }
 }

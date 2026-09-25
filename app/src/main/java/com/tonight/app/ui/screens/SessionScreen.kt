@@ -113,18 +113,6 @@ fun SessionScreen(
         }
     }
 
-    // Paywall Interstitial
-    if (uiState.isPaywallPending) {
-        val paywallViewModel: PaywallViewModel = androidx.hilt.navigation.compose.hiltViewModel()
-        PaywallScreen(
-            viewModel = paywallViewModel,
-            trigger = uiState.paywallTrigger,
-            onDismiss = { viewModel.dismissPaywall() },
-            onSuccess = { viewModel.onPaywallPurchased() }
-        )
-        return
-    }
-
     // Handshake Interstitial
     if (uiState.isHandshakePending) {
         HandshakeScreen(

@@ -14,6 +14,7 @@ import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -70,7 +71,7 @@ class FreeTierLimitsTest {
     }
 
     @Test
-    fun `free tier user is allowed 2 sessions in calendar month offline`() = runBlocking {
+    fun `free user has unlimited sessions while app is free`() = runBlocking<Unit> {
         val viewModel = SetupViewModel(fakeBillingRepository, fakeSessionRecordRepository, fakeQuestionRepository)
 
         var allowedCount = 0
@@ -84,7 +85,6 @@ class FreeTierLimitsTest {
         testDispatcher.scheduler.advanceUntilIdle()
         fakeSessionRecordRepository.recordSession("SESSION", "COUPLE", 3)
         assertEquals(1, allowedCount)
-        assertFalse(fakeBillingRepository.isPremiumActive())
 
         // 2nd session: Allowed
         viewModel.checkCanBeginSession(
@@ -95,20 +95,20 @@ class FreeTierLimitsTest {
         fakeSessionRecordRepository.recordSession("SESSION", "COUPLE", 3)
         assertEquals(2, allowedCount)
 
-        // 3rd session: Blocked with monthly_limit
+        // 3rd session: Also Allowed (App is free)
         viewModel.checkCanBeginSession(
             onAllowed = { allowedCount++ },
             onLimitReached = { blockedReason = it }
         )
         testDispatcher.scheduler.advanceUntilIdle()
-        assertEquals("Should block 3rd session on free tier", 2, allowedCount)
-        assertEquals("monthly_limit", blockedReason)
+        assertEquals(3, allowedCount)
+        assertNull(blockedReason)
     }
 
     @Test
-    fun `premium user has unlimited monthly sessions`() = runBlocking {
+    fun `premium user has unlimited monthly sessions`() = runBlocking<Unit> {
         fakeBillingRepository.premium = true
-        fakeSessionRecordRepository.count = 15 // Already used 15 sessions this month
+        fakeSessionRecordRepository.count = 15
 
         val viewModel = SetupViewModel(fakeBillingRepository, fakeSessionRecordRepository, fakeQuestionRepository)
 
@@ -119,6 +119,6 @@ class FreeTierLimitsTest {
         )
         testDispatcher.scheduler.advanceUntilIdle()
 
-        assertTrue("Premium user must have unlimited sessions", allowed)
+        assertTrue("User must have unlimited sessions", allowed)
     }
 }
