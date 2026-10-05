@@ -70,6 +70,7 @@ import com.tonight.app.ui.components.PageDots
 import com.tonight.app.ui.components.PrimaryButton
 import com.tonight.app.ui.components.SecondaryButton
 import com.tonight.app.ui.components.TonightScreen
+import com.tonight.app.ui.components.WildcardQuestionCard
 import com.tonight.app.ui.theme.PillShape
 import com.tonight.app.ui.theme.SheetTopShape
 import com.tonight.app.ui.theme.TonightMotionTokens
@@ -228,42 +229,50 @@ fun SessionScreen(
                     },
                     label = "question_crossfade"
                 ) { question ->
+                    val isWildcard = question.id.startsWith("wildcard") || question.text.startsWith("Wildcard:")
+
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 24.dp),
+                            .padding(vertical = if (isWildcard) 12.dp else 24.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        Text(
-                            text = question.text,
-                            style = TonightTheme.typography.questionXL,
-                            color = TonightTheme.colors.ink,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 8.dp)
-                                .semantics { heading() }
-                        )
+                        if (isWildcard) {
+                            WildcardQuestionCard(
+                                relationshipType = uiState.relationshipType,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        } else {
+                            Text(
+                                text = question.text,
+                                style = TonightTheme.typography.questionXL,
+                                color = TonightTheme.colors.ink,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 8.dp)
+                                    .semantics { heading() }
+                            )
 
-                        if (!question.hint.isNullOrBlank()) {
-                            Spacer(modifier = Modifier.height(12.dp))
+                            if (!question.hint.isNullOrBlank()) {
+                                Spacer(modifier = Modifier.height(12.dp))
 
-                            var isHintExpanded by remember(question.id) { mutableStateOf(false) }
+                                var isHintExpanded by remember(question.id) { mutableStateOf(false) }
 
-                            AnimatedContent(
-                                targetState = isHintExpanded,
-                                transitionSpec = {
-                                    fadeIn(animationSpec = tween(durationMillis = 250, easing = TonightMotionTokens.CalmEaseInOut)) togetherWith
-                                        fadeOut(animationSpec = tween(durationMillis = 200, easing = TonightMotionTokens.CalmEaseInOut))
-                                },
-                                label = "hint_crossfade"
-                            ) { expanded ->
-                                if (!expanded) {
-                                    Row(
-                                        modifier = Modifier
-                                            .clip(PillShape)
-                                            .clickable {
+                                AnimatedContent(
+                                    targetState = isHintExpanded,
+                                    transitionSpec = {
+                                        fadeIn(animationSpec = tween(durationMillis = 250, easing = TonightMotionTokens.CalmEaseInOut)) togetherWith
+                                            fadeOut(animationSpec = tween(durationMillis = 200, easing = TonightMotionTokens.CalmEaseInOut))
+                                    },
+                                    label = "hint_crossfade"
+                                ) { expanded ->
+                                    if (!expanded) {
+                                        Row(
+                                            modifier = Modifier
+                                                .clip(PillShape)
+                                                .clickable {
                                                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                                                 isHintExpanded = true
                                                 viewModel.onHintOpened(question.depth)
@@ -332,14 +341,18 @@ fun SessionScreen(
                                 }
                             }
 
-                            Spacer(modifier = Modifier.height(20.dp))
-                        } else {
-                            Spacer(modifier = Modifier.height(28.dp))
+                                Spacer(modifier = Modifier.height(20.dp))
+                            } else {
+                                Spacer(modifier = Modifier.height(28.dp))
+                            }
                         }
+
+                        Spacer(modifier = Modifier.height(if (isWildcard) 16.dp else 0.dp))
 
                         var turnSwap by remember(uiState.currentIndex) { mutableStateOf(false) }
                         val isPersonA = if (!turnSwap) (uiState.currentIndex % 2 == 0) else (uiState.currentIndex % 2 != 0)
-                        val turnText = if (isPersonA) "Person A's turn to answer" else "Person B's turn to answer"
+                        val turnActionVerb = if (isWildcard) "ask" else "answer"
+                        val turnText = if (isPersonA) "Person A's turn to $turnActionVerb" else "Person B's turn to $turnActionVerb"
 
                         Box(
                             modifier = Modifier
