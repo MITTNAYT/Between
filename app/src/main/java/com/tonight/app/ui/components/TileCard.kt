@@ -1,8 +1,14 @@
 package com.tonight.app.ui.components
 
+import android.view.HapticFeedbackConstants
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,12 +25,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
@@ -37,7 +47,9 @@ import androidx.compose.ui.unit.sp
 import com.tonight.app.ui.theme.AppIcons
 import com.tonight.app.ui.theme.PillShape
 import com.tonight.app.ui.theme.TileCornerShape
+import com.tonight.app.ui.theme.TonightMotionTokens
 import com.tonight.app.ui.theme.TonightTheme
+import com.tonight.app.ui.theme.isReducedMotion
 import com.tonight.app.ui.theme.softShadow
 
 /**
@@ -57,14 +69,42 @@ fun RelationshipOptionCard(
     isSelected: Boolean = false,
     isAvailable: Boolean = true
 ) {
-    val borderColor = if (isSelected) TonightTheme.colors.ember else TonightTheme.colors.hairline
+    val view = LocalView.current
+    val reducedMotion = isReducedMotion()
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+
+    val borderColor by animateColorAsState(
+        targetValue = if (isSelected) TonightTheme.colors.ember else TonightTheme.colors.hairline,
+        animationSpec = tween(durationMillis = 240, easing = TonightMotionTokens.CalmEaseInOut),
+        label = "option_border_color"
+    )
+    val backgroundColor by animateColorAsState(
+        targetValue = if (isSelected) TonightTheme.colors.ember.copy(alpha = 0.06f) else TonightTheme.colors.surface,
+        animationSpec = tween(durationMillis = 240, easing = TonightMotionTokens.CalmEaseInOut),
+        label = "option_bg_color"
+    )
+    val badgeBgColor by animateColorAsState(
+        targetValue = if (isSelected) accentColor else accentColor.copy(alpha = 0.14f),
+        animationSpec = tween(durationMillis = 240, easing = TonightMotionTokens.CalmEaseInOut),
+        label = "option_badge_bg"
+    )
+
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed && isAvailable && !reducedMotion) 0.98f
+        else if (isSelected && !reducedMotion) 1.012f
+        else 1.0f,
+        animationSpec = TonightMotionTokens.CardSpring,
+        label = "option_scale"
+    )
+
     val borderWidth = if (isSelected) 2.dp else 1.dp
-    val backgroundColor = if (isSelected) TonightTheme.colors.ember.copy(alpha = 0.05f) else TonightTheme.colors.surface
     val alphaModifier = if (isAvailable) Modifier else Modifier.alpha(0.45f)
 
     Box(
         modifier = modifier
             .fillMaxWidth()
+            .scale(scale)
             .softShadow(
                 borderRadius = 20.dp,
                 blurRadius = if (isSelected) 14.dp else 8.dp,
@@ -74,7 +114,15 @@ fun RelationshipOptionCard(
             .background(backgroundColor)
             .border(borderWidth, borderColor, RoundedCornerShape(20.dp))
             .then(alphaModifier)
-            .clickable(enabled = isAvailable, onClick = onClick)
+            .clickable(
+                enabled = isAvailable,
+                interactionSource = interactionSource,
+                indication = null,
+                onClick = {
+                    view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                    onClick()
+                }
+            )
             .padding(horizontal = 18.dp, vertical = if (caption.isNullOrBlank()) 18.dp else 16.dp)
             .semantics {
                 role = Role.Button
@@ -101,9 +149,7 @@ fun RelationshipOptionCard(
                             offsetY = 2.dp
                         )
                         .clip(CircleShape)
-                        .background(
-                            if (isSelected) accentColor else accentColor.copy(alpha = 0.14f)
-                        )
+                        .background(badgeBgColor)
                         .border(
                             width = if (isSelected) 2.dp else 1.5.dp,
                             color = if (isSelected) accentColor else accentColor.copy(alpha = 0.38f),
