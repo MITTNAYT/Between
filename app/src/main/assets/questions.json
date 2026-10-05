@@ -3125,5 +3125,283 @@
         "needsHandshake": false,
         "status": "APPROVED",
         "hint": "e.g. Ask about a dream, a secret fear, or a funny memory"
+    },
+    {
+        "id": "wildcard-03",
+        "text": "Wildcard: Ask any question you are genuinely curious about right now.",
+        "category": "IDENTITY",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET",
+            "FRIEND",
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made that question come to mind?",
+            "How does their answer compare to what you expected?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "e.g. A hidden talent, favorite memory, or unexpected life chapter"
+    },
+    {
+        "id": "wildcard-04",
+        "text": "Wildcard: What is one thing you have always wanted to know about me?",
+        "category": "US",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Why was that on your mind?",
+            "What did you guess the answer was before asking?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "e.g. 'How you knew what career path to take, or what your childhood was like.'"
+    },
+    {
+        "id": "dreams-pack-01",
+        "text": "If money and obligations weren't a factor, what kind of life would we be living five years from now?",
+        "category": "DREAMS",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What is the very first detail that popped into your mind?",
+            "Which part of that vision could we actually start moving toward today?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "e.g. 'A small house near the coast with a huge garden and slow mornings.'"
+    },
+    {
+        "id": "dreams-pack-02",
+        "text": "What is a creative project or ambition you haven't given yourself permission to chase yet?",
+        "category": "DREAMS",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What holds you back from starting it?",
+            "What would making the first step look like?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "e.g. 'Writing a screenplay, learning ceramic pottery, or opening a cafe.'"
+    },
+    {
+        "id": "dreams-pack-03",
+        "text": "What is a place in the world where your soul feels most rested and alive?",
+        "category": "DREAMS",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Have you already visited, or is it a place you long to go?",
+            "What sensory detail comes to mind when you picture it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "e.g. 'A foggy pine forest in autumn or a quiet seaside village.'"
+    },
+    {
+        "id": "future-pack-01",
+        "text": "What is an experience or milestone you want us to share before this year ends?",
+        "category": "FUTURE",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "Why is that milestone meaningful to you?",
+            "How can we make sure it actually happens?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "e.g. 'A weekend road trip with zero itinerary, or cooking a complex meal together.'"
+    },
+    {
+        "id": "future-pack-02",
+        "text": "When you picture getting older, what kind of person do you hope to become?",
+        "category": "FUTURE",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Who in your life embodies the kind of older age you admire?",
+            "What habits are you building now that will shape that future self?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "e.g. 'Someone with deep calm, generous laughter, and zero lingering regrets.'"
+    },
+    {
+        "id": "play-pack-01",
+        "text": "What is an absurd or funny habit of yours that you only do when you're completely alone?",
+        "category": "PLAY",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "When did this habit start?",
+            "Has anyone ever accidentally caught you doing it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "e.g. 'Narrating cooking like a high-stakes competitive reality show.'"
+    },
+    {
+        "id": "play-pack-02",
+        "text": "If we were forced to compete as a duo on a reality TV game show, what show would we dominate?",
+        "category": "PLAY",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "What would our secret team strategy be?",
+            "What would be our hilarious downfall or weakness?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "e.g. 'The Amazing Race because of navigation, or trivia night.'"
+    },
+    {
+        "id": "play-pack-03",
+        "text": "What is a completely useless skill or piece of trivia you're bizarrely proud of possessing?",
+        "category": "PLAY",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "How did you end up acquiring this niche knowledge?",
+            "When was the last time it actually came in handy?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "e.g. 'Identifying any song within the first 1.5 seconds of intro.'"
+    },
+    {
+        "id": "us-pack-01",
+        "text": "What was a moment between us where you felt completely understood without needing many words?",
+        "category": "US",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made that moment feel so safe?",
+            "How did it change how close you felt to me?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED",
+        "hint": "e.g. 'A quiet car ride home where we just held hands after a long day.'"
+    },
+    {
+        "id": "us-pack-02",
+        "text": "What is a small, everyday gesture of mine that never fails to soften your heart?",
+        "category": "US",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "Do I realize I'm doing it when it happens?",
+            "What feeling does it bring up for you?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "e.g. 'Bringing over a warm cup of tea without being asked.'"
+    },
+    {
+        "id": "values-pack-01",
+        "text": "What is a non-negotiable boundary or core value that guides how you treat people you love?",
+        "category": "VALUES",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Was this value shaped by a specific life experience or role model?",
+            "How do you feel when that boundary is tested?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "e.g. 'Total emotional transparency and never leaving conflicts unresolved overnight.'"
+    },
+    {
+        "id": "gratitude-pack-01",
+        "text": "What is something I did recently that helped you, even if I didn't realize how much it meant?",
+        "category": "GRATITUDE",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "Why did that particular action stand out to you?",
+            "How can I support you like that more often?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "e.g. 'Listening to me vent about work without trying to immediately fix it.'"
+    },
+    {
+        "id": "fears-pack-01",
+        "text": "What is a fear you hold about the future that you rarely admit because you don't want to worry anyone?",
+        "category": "FEARS",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND"
+        ],
+        "followUps": [
+            "How long have you carried that quiet thought?",
+            "What would bring you a sense of grounding or reassurance around it?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED",
+        "hint": "e.g. 'Worrying that time is slipping by faster than I can live it.'"
+    },
+    {
+        "id": "identity-pack-01",
+        "text": "What is a compliment someone gave you that surprised you because you didn't see that in yourself?",
+        "category": "IDENTITY",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE",
+            "FRIEND",
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Did it change the way you perceive yourself afterward?",
+            "Do you believe that compliment now?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "e.g. 'Being told my presence is calming and puts strangers at ease.'"
     }
 ]
