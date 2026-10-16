@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { Sparkles, Bookmark, Copy, Check, Heart, ArrowRight, Home } from 'lucide-react';
+import React, { useEffect, useState, useRef } from 'react';
+import { Sparkles, Bookmark, Copy, Check, Heart, ArrowRight, Home, Download, Image as ImageIcon } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { playClickSound, playHandshakeSound } from '../utils/audio';
+import { RELATIONSHIP_TYPES } from '../utils/engine';
 
 export default function ClosingScreen({
   bookmarkedMoments = [],
@@ -12,11 +13,11 @@ export default function ClosingScreen({
   const [copiedMoments, setCopiedMoments] = useState(false);
   const [appreciationNote, setAppreciationNote] = useState('');
   const [noteSent, setNoteSent] = useState(false);
+  const [isGeneratingKeepsake, setIsGeneratingKeepsake] = useState(false);
 
   useEffect(() => {
     playHandshakeSound();
 
-    // High-end subtle confetti
     try {
       confetti({
         particleCount: 55,
@@ -36,6 +37,164 @@ export default function ClosingScreen({
     }).catch(() => {
       prompt('Copy your saved moments:', text);
     });
+  };
+
+  // High-Resolution 1080x1440 Keepsake Canvas Generator
+  const handleDownloadKeepsake = () => {
+    playClickSound();
+    setIsGeneratingKeepsake(true);
+
+    const canvas = document.createElement('canvas');
+    canvas.width = 1080;
+    canvas.height = 1440;
+    const ctx = canvas.getContext('2d');
+
+    // 1. Beige Background
+    ctx.fillStyle = '#F4ECE2';
+    ctx.fillRect(0, 0, 1080, 1440);
+
+    // 2. Elegant Border
+    ctx.strokeStyle = '#DFD5C6';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(60, 60, 960, 1320);
+
+    ctx.strokeStyle = '#D5C7B5';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(72, 72, 936, 1296);
+
+    // 3. Draw Between Logo at top
+    const centerX = 540;
+    const logoY = 160;
+
+    // Outer squircle
+    ctx.fillStyle = '#FFFFFF';
+    ctx.beginPath();
+    ctx.roundRect(centerX - 45, logoY - 45, 90, 90, 20);
+    ctx.fill();
+
+    // Venn left circle (#C2673B)
+    ctx.strokeStyle = '#C2673B';
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.arc(centerX - 13, logoY, 20, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Venn right circle (#18181B)
+    ctx.strokeStyle = '#18181B';
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.arc(centerX + 13, logoY, 20, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // 4. Header Titles
+    ctx.fillStyle = '#1C1917';
+    ctx.font = 'bold 36px "Plus Jakarta Sans", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('B E T W E E N', centerX, logoY + 95);
+
+    ctx.fillStyle = '#8C8278';
+    ctx.font = '600 20px "Plus Jakarta Sans", sans-serif';
+    ctx.fillText('RITUALS OF CLOSENESS', centerX, logoY + 130);
+
+    // Date & Mode Pill
+    const dateStr = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    const relLabel = RELATIONSHIP_TYPES[relationshipType]?.label || 'Partner';
+    ctx.fillStyle = '#4A443E';
+    ctx.font = '500 22px "Plus Jakarta Sans", sans-serif';
+    ctx.fillText(`${relLabel} Session · ${dateStr}`, centerX, logoY + 175);
+
+    // Divider Line
+    ctx.strokeStyle = '#DFD5C6';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(180, logoY + 215);
+    ctx.lineTo(900, logoY + 215);
+    ctx.stroke();
+
+    // 5. Starred Questions / Saved Moments
+    ctx.fillStyle = '#1C1917';
+    ctx.font = '600 24px "Plus Jakarta Sans", sans-serif';
+    ctx.fillText('MOMENTS WE REMEMBER', centerX, logoY + 275);
+
+    let currentY = logoY + 340;
+    const questionsToDraw = bookmarkedMoments.slice(0, 3);
+
+    if (questionsToDraw.length === 0) {
+      ctx.fillStyle = '#8C8278';
+      ctx.font = 'italic 26px "Source Serif 4", serif';
+      ctx.fillText('“A quiet ritual of deep presence and shared time.”', centerX, currentY + 60);
+      currentY += 160;
+    } else {
+      questionsToDraw.forEach((item, index) => {
+        ctx.fillStyle = '#1C1917';
+        ctx.font = 'italic 28px "Source Serif 4", serif';
+        
+        // Wrap text
+        const words = item.text.split(' ');
+        let line = '';
+        for (let n = 0; n < words.length; n++) {
+          const testLine = line + words[n] + ' ';
+          const metrics = ctx.measureText(testLine);
+          if (metrics.width > 780 && n > 0) {
+            ctx.fillText(line, centerX, currentY);
+            line = words[n] + ' ';
+            currentY += 42;
+          } else {
+            line = testLine;
+          }
+        }
+        ctx.fillText(line, centerX, currentY);
+        currentY += 75;
+      });
+    }
+
+    // 6. Appreciation Note Box
+    if (appreciationNote.trim()) {
+      currentY += 20;
+      ctx.fillStyle = '#FFFFFF';
+      ctx.beginPath();
+      ctx.roundRect(160, currentY, 760, 200, 16);
+      ctx.fill();
+      ctx.strokeStyle = '#DFD5C6';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      ctx.fillStyle = '#D94E34';
+      ctx.font = 'bold 18px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText('HEARTFELT TAKEAWAY', centerX, currentY + 45);
+
+      ctx.fillStyle = '#1C1917';
+      ctx.font = 'italic 24px "Source Serif 4", serif';
+
+      const noteWords = appreciationNote.trim().split(' ');
+      let noteLine = '';
+      let noteY = currentY + 95;
+      for (let n = 0; n < noteWords.length; n++) {
+        const testLine = noteLine + noteWords[n] + ' ';
+        if (ctx.measureText(testLine).width > 680 && n > 0) {
+          ctx.fillText(noteLine, centerX, noteY);
+          noteLine = noteWords[n] + ' ';
+          noteY += 36;
+        } else {
+          noteLine = testLine;
+        }
+      }
+      ctx.fillText(noteLine, centerX, noteY);
+    }
+
+    // 7. Footer
+    ctx.fillStyle = '#8C8278';
+    ctx.font = '500 18px "Plus Jakarta Sans", sans-serif';
+    ctx.fillText('Rendered with love across the distance · Between App', centerX, 1330);
+
+    // Download PNG
+    setTimeout(() => {
+      const link = document.createElement('a');
+      link.download = `Between-Keepsake-${new Date().toISOString().slice(0, 10)}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      setIsGeneratingKeepsake(false);
+    }, 400);
   };
 
   return (
@@ -230,6 +389,25 @@ export default function ClosingScreen({
           </button>
         )}
       </div>
+
+      {/* Keepsake Generator Button */}
+      <button
+        onClick={handleDownloadKeepsake}
+        disabled={isGeneratingKeepsake}
+        className="btn-secondary"
+        style={{
+          width: '100%',
+          padding: '14px',
+          gap: '8px',
+          borderColor: 'var(--color-hairline-strong)',
+          boxShadow: 'var(--shadow-sm)'
+        }}
+      >
+        <Download size={17} strokeWidth={2.4} color="var(--color-ember)" />
+        <span style={{ fontWeight: '700' }}>
+          {isGeneratingKeepsake ? 'Rendering Keepsake...' : 'Download Letterpress Keepsake Card (PNG)'}
+        </span>
+      </button>
 
       {/* Navigation Actions */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>

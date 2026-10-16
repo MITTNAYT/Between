@@ -411,3 +411,82 @@ html, body {
 .swipe-in-left {
   animation: cardSwipeInLeft 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
 }
+
+/* ==========================================================================
+   CANDLELIGHT / BEDTIME NIGHT MODE THEME
+   ========================================================================== */
+[data-theme="candlelight"] {
+  --color-canvas: #12100E;
+  --color-canvas-rgb: 18, 16, 14;
+  --color-surface: #1B1815;
+  --color-surface-subtle: #24201C;
+  --color-hairline: #332D27;
+  --color-hairline-strong: #483F37;
+
+  --color-ink: #F7F1EB;
+  --color-body: #C4B9AD;
+  --color-muted: #8E8377;
+  --color-subtle: #675E54;
+
+  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 6px 18px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.65), 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="candlelight"] .app-backdrop {
+  background: 
+    radial-gradient(circle at 50% 12%, rgba(217, 78, 52, 0.14) 0%, rgba(18, 16, 14, 0) 70%),
+    radial-gradient(circle at 85% 85%, rgba(229, 169, 60, 0.09) 0%, rgba(18, 16, 14, 0) 65%);
+}
+
+[data-theme="candlelight"] .btn-primary {
+  background: #F4ECE2;
+  color: #12100E;
+}
+
+[data-theme="candlelight"] .btn-primary:hover {
+  background: #FFFFFF;
+}
+
+[data-theme="candlelight"] .soft-card {
+  background: #1B1815;
+  border-color: #332D27;
+}
+
+[data-theme="candlelight"] input,
+[data-theme="candlelight"] textarea {
+  color: #F7F1EB !important;
+  background: #24201C !important;
+  border-color: #332D27 !important;
+}
+
+/* ==========================================================================
+   REAL-TIME PRESENCE TOUCH RIPPLE
+   ========================================================================== */
+@keyframes touchRippleExpand {
+  0% {
+    transform: translate(-50%, -50%) scale(0.2);
+    opacity: 0.95;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.8);
+    opacity: 0;
+  }
+}
+
+.presence-touch-ripple {
+  position: fixed;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99999;
+  background: radial-gradient(circle, rgba(229, 169, 60, 0.45) 0%, rgba(217, 78, 52, 0.25) 50%, rgba(217, 78, 52, 0) 70%);
+  border: 1.5px solid rgba(229, 169, 60, 0.7);
+  box-shadow: 0 0 25px rgba(229, 169, 60, 0.45);
+  animation: touchRippleExpand 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+

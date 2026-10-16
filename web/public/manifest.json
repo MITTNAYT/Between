@@ -1,0 +1,18 @@
+{
+  "name": "Between — Rituals of Closeness",
+  "short_name": "Between",
+  "description": "A synchronized space for long-distance partners and friends to slow down, listen, and truly be seen.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F4ECE2",
+  "theme_color": "#F4ECE2",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

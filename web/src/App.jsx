@@ -5,6 +5,7 @@ import LobbyScreen from './components/LobbyScreen';
 import QuestionCard from './components/QuestionCard';
 import ReactionBar from './components/ReactionBar';
 import HandshakeModal from './components/HandshakeModal';
+import ArrivalPauseModal from './components/ArrivalPauseModal';
 import ClosingScreen from './components/ClosingScreen';
 import ThreeCanvas from './components/ThreeCanvas';
 import { buildSession, swapQuestion, RELATIONSHIP_TYPES } from './utils/engine';
@@ -16,8 +17,13 @@ export default function App() {
   const [roomCode, setRoomCode] = useState('');
   const [isHost, setIsHost] = useState(false);
   const [isSolo, setIsSolo] = useState(false);
-  const [connectionStatus, setConnectionStatus] = useState('IDLE'); // 'IDLE' | 'WAITING_FOR_GUEST' | 'CONNECTING' | 'CONNECTED' | 'DISCONNECTED'
+  const [connectionStatus, setConnectionStatus] = useState('IDLE');
   
+  // Theme: 'sandstone' | 'candlelight'
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('between_theme') || 'sandstone';
+  });
+
   const [relationshipType, setRelationshipType] = useState('COUPLE');
   const [sessionLength, setSessionLength] = useState('FIFTEEN_MIN');
   const [questions, setQuestions] = useState([]);
@@ -27,11 +33,40 @@ export default function App() {
   const [floatingReactions, setFloatingReactions] = useState([]);
   const [swipeClass, setSwipeClass] = useState('');
 
+  // Presence Touch Ripples
+  const [touchRipples, setTouchRipples] = useState([]);
+
+  // Arrival Pause Grounding breath
+  const [arrivalPauseOpen, setArrivalPauseOpen] = useState(false);
+
+  // Blind Reveal state
+  const [blindState, setBlindState] = useState({
+    myAnswer: '',
+    peerAnswer: '',
+    mySubmitted: false,
+    peerSubmitted: false
+  });
+
   // Deep questions handshake state
   const [handshakeOpen, setHandshakeOpen] = useState(false);
   const [myReady, setMyReady] = useState(false);
   const [peerReady, setPeerReady] = useState(false);
   const [pendingTargetIndex, setPendingTargetIndex] = useState(null);
+
+  // WebRTC Voice Call State
+  const [voiceCallState, setVoiceCallState] = useState('IDLE');
+  const [isVoiceMuted, setIsVoiceMuted] = useState(false);
+  const remoteAudioRef = useRef(null);
+
+  // Synchronize document theme
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('between_theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'candlelight' ? 'sandstone' : 'candlelight');
+  };
 
   // Keep a ref to current state for peer callbacks
   const stateRef = useRef({
@@ -45,7 +80,8 @@ export default function App() {
     questions,
     currentIndex,
     currentTurn,
-    bookmarkedMoments
+    bookmarkedMoments,
+    blindState
   });
 
   useEffect(() => {
@@ -60,18 +96,29 @@ export default function App() {
       questions,
       currentIndex,
       currentTurn,
-      bookmarkedMoments
+      bookmarkedMoments,
+      blindState
     };
-  }, [screen, roomCode, isHost, isSolo, connectionStatus, relationshipType, sessionLength, questions, currentIndex, currentTurn, bookmarkedMoments]);
+  }, [screen, roomCode, isHost, isSolo, connectionStatus, relationshipType, sessionLength, questions, currentIndex, currentTurn, bookmarkedMoments, blindState]);
 
   // Floating reaction spawner
   const spawnReaction = useCallback((emoji, sender) => {
     const id = `${Date.now()}-${Math.random()}`;
-    const xPos = 38 + Math.random() * 24; // 38% - 62%
+    const xPos = 38 + Math.random() * 24;
     setFloatingReactions(prev => [...prev, { id, emoji, sender, xPos }]);
     setTimeout(() => {
       setFloatingReactions(prev => prev.filter(r => r.id !== id));
     }, 2600);
+  }, []);
+
+  // Spawn presence touch ripple
+  const spawnTouchRipple = useCallback((xPercent, yPercent) => {
+    const id = `${Date.now()}-${Math.random()}`;
+    setTouchRipples(prev => [...prev, { id, x: xPercent, y: yPercent }]);
+    playClickSound();
+    setTimeout(() => {
+      setTouchRipples(prev => prev.filter(r => r.id !== id));
+    }, 1600);
   }, []);
 
   // Peer Event Handlers
@@ -80,7 +127,6 @@ export default function App() {
     if (statusData.roomCode) setRoomCode(statusData.roomCode);
     if (typeof statusData.isHost === 'boolean') setIsHost(statusData.isHost);
 
-    // If host and peer just connected, send current state
     if (statusData.isHost && statusData.status === 'CONNECTED') {
       const cur = stateRef.current;
       multiplayerSync.syncState({
@@ -112,6 +158,7 @@ export default function App() {
         setCurrentIndex(incoming.currentIndex);
         setSwipeClass(isNext ? 'swipe-in-right' : 'swipe-in-left');
         playChimeSound();
+        setBlindState({ myAnswer: '', peerAnswer: '', mySubmitted: false, peerSubmitted: false });
         setTimeout(() => setSwipeClass(''), 360);
       }, 230);
     }
@@ -122,6 +169,26 @@ export default function App() {
 
     if (incoming.bookmarkedMoments) {
       setBookmarkedMoments(incoming.bookmarkedMoments);
+    }
+
+    // Arrival pause sync
+    if (incoming.arrivalPauseComplete) {
+      setArrivalPauseOpen(false);
+    }
+
+    // Blind Reveal sync
+    if (incoming.blindAction === 'SUBMIT') {
+      setBlindState(prev => {
+        const next = {
+          ...prev,
+          peerSubmitted: true,
+          peerAnswer: incoming.answer || ''
+        };
+        if (prev.mySubmitted) {
+          playHandshakeSound();
+        }
+        return next;
+      });
     }
 
     // Handshake sync
@@ -148,6 +215,22 @@ export default function App() {
     }
   }, [spawnReaction]);
 
+  const handleTouchRippleReceived = useCallback((payload) => {
+    if (payload?.x !== undefined && payload?.y !== undefined) {
+      spawnTouchRipple(payload.x, payload.y);
+    }
+  }, [spawnTouchRipple]);
+
+  const handleRemoteStream = useCallback((stream) => {
+    if (remoteAudioRef.current) {
+      remoteAudioRef.current.srcObject = stream;
+    }
+  }, []);
+
+  const handleCallState = useCallback((state) => {
+    setVoiceCallState(state);
+  }, []);
+
   // URL Query Param auto-join detection
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -172,7 +255,10 @@ export default function App() {
     const code = multiplayerSync.initHost(
       handleStatusChange,
       handleStateChange,
-      handleReactionReceived
+      handleReactionReceived,
+      handleTouchRippleReceived,
+      handleRemoteStream,
+      handleCallState
     );
     setRoomCode(code);
     setConnectionStatus('WAITING_FOR_GUEST');
@@ -189,7 +275,10 @@ export default function App() {
       code,
       handleStatusChange,
       handleStateChange,
-      handleReactionReceived
+      handleReactionReceived,
+      handleTouchRippleReceived,
+      handleRemoteStream,
+      handleCallState
     );
   };
 
@@ -210,6 +299,7 @@ export default function App() {
   // Start Session (From Host Lobby waiting room)
   const handleStartSession = () => {
     setScreen('SESSION');
+    setArrivalPauseOpen(true);
     if (!isSolo) {
       multiplayerSync.syncState({
         screen: 'SESSION',
@@ -223,11 +313,17 @@ export default function App() {
     }
   };
 
+  const handleCompleteArrivalPause = () => {
+    setArrivalPauseOpen(false);
+    if (!isSolo) {
+      multiplayerSync.syncState({ arrivalPauseComplete: true });
+    }
+  };
+
   // Next Card / Advance
   const handleAdvanceCard = () => {
     const nextIdx = currentIndex + 1;
 
-    // Check if session completed
     if (nextIdx >= questions.length) {
       setScreen('CLOSING');
       if (!isSolo) {
@@ -237,7 +333,6 @@ export default function App() {
     }
 
     const nextQ = questions[nextIdx];
-    // If next question is Depth 4 or 5 and not in solo mode, require handshake confirmation
     if (!isSolo && nextQ && nextQ.depth >= 4 && !handshakeOpen) {
       setPendingTargetIndex(nextIdx);
       setHandshakeOpen(true);
@@ -250,7 +345,6 @@ export default function App() {
       return;
     }
 
-    // Trigger card swiping animation
     playClickSound();
     setSwipeClass('swipe-out-left');
 
@@ -259,6 +353,7 @@ export default function App() {
       const nextTurn = currentTurn === 'host' ? 'guest' : 'host';
       setCurrentIndex(nextIdx);
       setCurrentTurn(nextTurn);
+      setBlindState({ myAnswer: '', peerAnswer: '', mySubmitted: false, peerSubmitted: false });
       setSwipeClass('swipe-in-right');
 
       if (!isSolo) {
@@ -283,6 +378,7 @@ export default function App() {
     setTimeout(() => {
       const prevIdx = currentIndex - 1;
       setCurrentIndex(prevIdx);
+      setBlindState({ myAnswer: '', peerAnswer: '', mySubmitted: false, peerSubmitted: false });
       setSwipeClass('swipe-in-left');
       if (!isSolo) {
         multiplayerSync.syncState({ currentIndex: prevIdx });
@@ -304,7 +400,7 @@ export default function App() {
     }
   };
 
-  // Swap Question (Lighter or Deeper)
+  // Swap Question
   const handleSwap = (direction) => {
     playClickSound();
     const currentQ = questions[currentIndex];
@@ -349,13 +445,68 @@ export default function App() {
     }
   };
 
+  // Presence Touch Ripple on screen
+  const handleScreenPointerDown = (e) => {
+    if (screen !== 'SESSION') return;
+    // Don't trigger on clicks to buttons/inputs
+    if (e.target.closest('button') || e.target.closest('input') || e.target.closest('textarea')) {
+      return;
+    }
+    const xPercent = (e.clientX / window.innerWidth) * 100;
+    const yPercent = (e.clientY / window.innerHeight) * 100;
+    spawnTouchRipple(xPercent, yPercent);
+
+    if (!isSolo) {
+      multiplayerSync.sendPresenceTouch(xPercent, yPercent);
+    }
+  };
+
+  // Blind Reveal Handlers
+  const handleUpdateBlindAnswer = (val) => {
+    setBlindState(prev => ({ ...prev, myAnswer: val }));
+  };
+
+  const handleSubmitBlindAnswer = () => {
+    setBlindState(prev => {
+      const next = { ...prev, mySubmitted: true };
+      if (prev.peerSubmitted) {
+        playHandshakeSound();
+      }
+      return next;
+    });
+
+    if (!isSolo) {
+      multiplayerSync.syncState({
+        blindAction: 'SUBMIT',
+        answer: blindState.myAnswer
+      });
+    }
+  };
+
+  // WebRTC Voice Call Controls
+  const handleToggleVoiceCall = async () => {
+    playClickSound();
+    if (voiceCallState === 'CONNECTED' || voiceCallState === 'CALLING') {
+      multiplayerSync.endVoiceCall();
+      setVoiceCallState('ENDED');
+    } else {
+      const ok = await multiplayerSync.startVoiceCall();
+      if (!ok) setVoiceCallState('FAILED');
+    }
+  };
+
+  const handleToggleVoiceMute = () => {
+    playClickSound();
+    const muted = multiplayerSync.toggleMute();
+    setIsVoiceMuted(muted);
+  };
+
   // Handshake Confirmation
   const handleConfirmHandshake = () => {
     playHandshakeSound();
     setMyReady(true);
 
     if (peerReady) {
-      // Both are ready! Advance
       setHandshakeOpen(false);
       const target = pendingTargetIndex !== null ? pendingTargetIndex : currentIndex + 1;
       const nextTurn = currentTurn === 'host' ? 'guest' : 'host';
@@ -373,7 +524,6 @@ export default function App() {
         });
       }
     } else {
-      // Broadcast that I am ready
       if (!isSolo) {
         multiplayerSync.syncState({ handshakeAction: 'PEER_READY' });
       }
@@ -386,8 +536,6 @@ export default function App() {
     setMyReady(false);
     setPeerReady(false);
     setPendingTargetIndex(null);
-
-    // Swap to a lighter question instead
     handleSwap('LIGHTER');
 
     if (!isSolo) {
@@ -409,7 +557,6 @@ export default function App() {
     window.history.replaceState({}, document.title, window.location.pathname);
   };
 
-  // Active question calculation
   const currentQuestion = questions[currentIndex] || {
     id: 'placeholder',
     text: 'Preparing your intimate questions...',
@@ -419,7 +566,6 @@ export default function App() {
 
   const isCurrentBookmarked = bookmarkedMoments.some(b => b.id === currentQuestion.id);
 
-  // Turn string display
   let turnString = 'Your Turn to Speak';
   if (isSolo) {
     turnString = currentTurn === 'host' ? 'Partner 1 Speaks' : 'Partner 2 Speaks';
@@ -429,14 +575,26 @@ export default function App() {
   }
 
   return (
-    <div className="wellness-canvas">
+    <div className="wellness-canvas" onPointerDown={handleScreenPointerDown}>
+      {/* Hidden audio element for incoming WebRTC voice call */}
+      <audio ref={remoteAudioRef} autoPlay playsInline style={{ display: 'none' }} />
+
       {/* Interactive 3D Background with Three.js */}
       <ThreeCanvas relationshipType={relationshipType} />
 
-      {/* Atmospheric Blush Glow Backdrop */}
+      {/* Atmospheric Radial Backdrop */}
       <div className="app-backdrop" />
 
-      {/* Floating live reactions with subtle drift */}
+      {/* Presence Touch Ripples */}
+      {touchRipples.map(r => (
+        <div
+          key={r.id}
+          className="presence-touch-ripple"
+          style={{ left: `${r.x}%`, top: `${r.y}%` }}
+        />
+      ))}
+
+      {/* Floating live reactions */}
       <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 9999 }}>
         {floatingReactions.map(r => (
           <div
@@ -458,6 +616,12 @@ export default function App() {
           phaseName={currentQuestion?.phase || 'WARMUP'}
           onExit={handleExitToLobby}
           isSessionActive={screen === 'SESSION'}
+          theme={theme}
+          onToggleTheme={toggleTheme}
+          voiceCallState={voiceCallState}
+          isVoiceMuted={isVoiceMuted}
+          onToggleVoiceCall={handleToggleVoiceCall}
+          onToggleVoiceMute={handleToggleVoiceMute}
         />
 
         {/* SCREEN 1: LOBBY */}
@@ -516,7 +680,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* Central 3D Question Card with Physical Swipe Gesture & Animation */}
+            {/* Central 3D Question Card with Physical Swipe, 3D Double Flip, and Blind Reveal */}
             <div style={{ width: '100%', margin: '4px 0' }}>
               <QuestionCard
                 question={currentQuestion}
@@ -528,6 +692,9 @@ export default function App() {
                 swipeClass={swipeClass}
                 onSwipeLeft={handleAdvanceCard}
                 onSwipeRight={handlePreviousCard}
+                blindState={blindState}
+                onUpdateBlindAnswer={handleUpdateBlindAnswer}
+                onSubmitBlindAnswer={handleSubmitBlindAnswer}
               />
             </div>
 
@@ -607,6 +774,7 @@ export default function App() {
               setCurrentIndex(0);
               setCurrentTurn('host');
               setBookmarkedMoments([]);
+              setBlindState({ myAnswer: '', peerAnswer: '', mySubmitted: false, peerSubmitted: false });
               setScreen('SESSION');
               if (!isSolo) {
                 multiplayerSync.syncState({
@@ -620,6 +788,12 @@ export default function App() {
             }}
           />
         )}
+
+        {/* Arrival Pause Modal (Synchronized Grounding Breath) */}
+        <ArrivalPauseModal
+          isOpen={arrivalPauseOpen}
+          onComplete={handleCompleteArrivalPause}
+        />
 
         {/* Mutual Handshake Modal for Depth 4 & 5 */}
         <HandshakeModal

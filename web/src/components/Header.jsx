@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sparkles, Radio, Volume2, VolumeX, Copy, Check, LogOut } from 'lucide-react';
+import { Sparkles, Radio, Volume2, VolumeX, Copy, Check, LogOut, Moon, Sun, Mic, MicOff, Phone, PhoneOff } from 'lucide-react';
 import BetweenLogo from './BetweenLogo';
 import { toggleAmbientSoundscape, playClickSound } from '../utils/audio';
 
@@ -9,7 +9,13 @@ export default function Header({
   isHost, 
   phaseName, 
   onExit,
-  isSessionActive = false 
+  isSessionActive = false,
+  theme = 'sandstone',
+  onToggleTheme,
+  voiceCallState = 'IDLE',
+  isVoiceMuted = false,
+  onToggleVoiceCall,
+  onToggleVoiceMute
 }) {
   const [isPlayingSoundscape, setIsPlayingSoundscape] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -116,38 +122,64 @@ export default function Header({
         )}
       </div>
 
-      {/* Right Controls: Connection Status Dot & Soundscape Toggle */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        {/* P2P Live Status Indicator */}
-        {roomCode && (
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '6px 10px',
-              borderRadius: 'var(--radius-pill)',
-              background: isConnected ? 'rgba(56, 123, 106, 0.08)' : 'rgba(217, 78, 52, 0.08)',
-              border: `1px solid ${isConnected ? 'rgba(56, 123, 106, 0.25)' : 'rgba(217, 78, 52, 0.2)'}`,
-              fontSize: '11px',
-              fontWeight: '700',
-              color: isConnected ? 'var(--color-sage)' : 'var(--color-ember)'
-            }}
-            title={isConnected ? 'Connected in real-time' : 'Waiting for your friend to connect'}
-          >
-            <span style={{
-              width: '7px',
-              height: '7px',
-              borderRadius: '50%',
-              background: isConnected ? 'var(--color-sage)' : 'var(--color-ember)',
-              boxShadow: isConnected ? '0 0 8px rgba(56, 123, 106, 0.6)' : '0 0 8px rgba(217, 78, 52, 0.6)',
-              animation: isConnected ? 'none' : 'audioPulse 1.4s infinite ease-in-out'
-            }} />
-            <span style={{ textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-              {isConnected ? 'Synced' : 'Waiting'}
-            </span>
+      {/* Right Controls: Voice Call, Candlelight Toggle, Ambient Sound */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+        {/* P2P Live Voice Call Toggle */}
+        {roomCode && isConnected && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            {voiceCallState === 'CONNECTED' ? (
+              <>
+                <button
+                  className="btn-icon"
+                  onClick={onToggleVoiceMute}
+                  title={isVoiceMuted ? 'Unmute microphone' : 'Mute microphone'}
+                  style={{
+                    color: isVoiceMuted ? 'var(--color-ember)' : 'var(--color-sage)',
+                    borderColor: isVoiceMuted ? 'var(--color-ember)' : 'var(--color-sage)'
+                  }}
+                >
+                  {isVoiceMuted ? <MicOff size={16} strokeWidth={2.2} /> : <Mic size={16} strokeWidth={2.2} />}
+                </button>
+
+                <button
+                  className="btn-icon"
+                  onClick={onToggleVoiceCall}
+                  title="End voice call"
+                  style={{ color: '#D94E34', borderColor: 'rgba(217, 78, 52, 0.4)' }}
+                >
+                  <PhoneOff size={16} strokeWidth={2.2} />
+                </button>
+              </>
+            ) : (
+              <button
+                className="btn-icon"
+                onClick={onToggleVoiceCall}
+                title={voiceCallState === 'CALLING' ? 'Calling...' : 'Start Voice Call with Friend'}
+                style={{
+                  color: voiceCallState === 'CALLING' ? 'var(--color-ember)' : 'var(--color-body)'
+                }}
+              >
+                <Phone size={16} strokeWidth={2.2} />
+              </button>
+            )}
           </div>
         )}
+
+        {/* Candlelight / Bedtime Night Mode Toggle */}
+        <button
+          className="btn-icon"
+          onClick={() => {
+            playClickSound();
+            onToggleTheme?.();
+          }}
+          aria-label="Toggle Candlelight Bedtime Mode"
+          title={theme === 'candlelight' ? 'Switch to Warm Sandstone' : 'Switch to Candlelight Night Mode'}
+          style={{
+            color: theme === 'candlelight' ? '#E5A93C' : 'var(--color-body)'
+          }}
+        >
+          {theme === 'candlelight' ? <Sun size={17} strokeWidth={2.2} /> : <Moon size={17} strokeWidth={2.2} />}
+        </button>
 
         {/* Ambient Soundscape Toggle */}
         <button
@@ -160,7 +192,7 @@ export default function Header({
             color: isPlayingSoundscape ? 'var(--color-ember)' : 'var(--color-body)'
           }}
         >
-          {isPlayingSoundscape ? <Volume2 size={18} strokeWidth={2.2} /> : <VolumeX size={18} strokeWidth={2.2} />}
+          {isPlayingSoundscape ? <Volume2 size={17} strokeWidth={2.2} /> : <VolumeX size={17} strokeWidth={2.2} />}
         </button>
       </div>
     </header>

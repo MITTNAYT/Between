@@ -2,6 +2,9 @@ import React, { useState, useRef } from 'react';
 
 export default function InteractiveCard3D({ 
   children, 
+  frontContent,
+  backContent,
+  isFlipped = false,
   isWildcard = false, 
   className = '', 
   swipeClass = '',
@@ -15,7 +18,6 @@ export default function InteractiveCard3D({
   const dragStartRef = useRef({ x: 0, y: 0 });
 
   const handlePointerDown = (e) => {
-    // Avoid dragging when clicking interactive buttons
     if (e.target.closest('button') || e.target.closest('input') || e.target.closest('textarea')) {
       return;
     }
@@ -67,11 +69,12 @@ export default function InteractiveCard3D({
     setTilt(prev => ({ ...prev, rotateX: 0, rotateY: 0, isHovered: false }));
   };
 
-  // Determine current 3D transform combining tilt, drag physics, and swipe animations
   const dragRotation = dragOffset * 0.05;
+  const baseFlipAngle = isFlipped ? 180 : 0;
+  
   const currentTransform = isDragging
-    ? `translateX(${dragOffset}px) rotateZ(${dragRotation}deg) rotateX(${tilt.rotateX * 0.5}deg) rotateY(${tilt.rotateY * 0.5}deg) scale(0.985)`
-    : `rotateX(${tilt.rotateX}deg) rotateY(${tilt.rotateY}deg) ${tilt.isHovered ? 'scale3d(1.015, 1.015, 1.015)' : 'scale3d(1, 1, 1)'}`;
+    ? `translateX(${dragOffset}px) rotateZ(${dragRotation}deg) rotateX(${tilt.rotateX * 0.5}deg) rotateY(${baseFlipAngle + tilt.rotateY * 0.5}deg) scale(0.985)`
+    : `rotateX(${tilt.rotateX}deg) rotateY(${baseFlipAngle + tilt.rotateY}deg) ${tilt.isHovered ? 'scale3d(1.015, 1.015, 1.015)' : 'scale3d(1, 1, 1)'}`;
 
   return (
     <div
@@ -98,16 +101,13 @@ export default function InteractiveCard3D({
           transform: currentTransform,
           transition: isDragging 
             ? 'none' 
-            : (tilt.isHovered 
-                ? 'transform 0.12s cubic-bezier(0.2, 0.8, 0.4, 1), box-shadow 0.2s ease-out' 
-                : 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease-out'),
+            : 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease-out',
           boxShadow: isDragging
             ? '0 32px 72px -12px rgba(28, 25, 23, 0.2), 0 20px 32px -8px rgba(28, 25, 23, 0.12)'
             : (tilt.isHovered
                 ? '0 28px 64px -12px rgba(28, 25, 23, 0.14), 0 16px 24px -8px rgba(28, 25, 23, 0.08)'
                 : 'var(--shadow-md)'),
-          cursor: isDragging ? 'grabbing' : 'grab',
-          overflow: 'hidden'
+          cursor: isDragging ? 'grabbing' : 'grab'
         }}
       >
         {/* Dynamic Specular Sheen (Curved Light Reflection) */}
@@ -119,23 +119,58 @@ export default function InteractiveCard3D({
             background: `radial-gradient(circle 380px at ${tilt.glareX}% ${tilt.glareY}%, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0.12) 45%, rgba(255, 255, 255, 0) 75%)`,
             opacity: tilt.isHovered || isDragging ? 1 : 0,
             transition: 'opacity 0.25s ease-out',
-            zIndex: 1
+            zIndex: 1,
+            borderRadius: 'inherit'
           }}
           aria-hidden="true"
         />
 
-        {/* Inner Content with Subtle 3D Depth Layer */}
-        <div style={{
-          position: 'relative',
-          zIndex: 2,
-          transform: 'translateZ(26px)',
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column'
-        }}>
-          {children}
-        </div>
+        {/* If double-sided front and back are passed */}
+        {frontContent && backContent ? (
+          <>
+            {/* FRONT FACE */}
+            <div style={{
+              width: '100%',
+              height: '100%',
+              backfaceVisibility: 'hidden',
+              WebkitBackfaceVisibility: 'hidden',
+              transform: 'translateZ(26px)',
+              position: 'relative',
+              zIndex: 2,
+              display: isFlipped ? 'none' : 'flex',
+              flexDirection: 'column'
+            }}>
+              {frontContent}
+            </div>
+
+            {/* BACK FACE (Rotated 180deg) */}
+            <div style={{
+              width: '100%',
+              height: '100%',
+              backfaceVisibility: 'hidden',
+              WebkitBackfaceVisibility: 'hidden',
+              transform: 'rotateY(180deg) translateZ(26px)',
+              position: 'relative',
+              zIndex: 2,
+              display: isFlipped ? 'flex' : 'none',
+              flexDirection: 'column'
+            }}>
+              {backContent}
+            </div>
+          </>
+        ) : (
+          <div style={{
+            position: 'relative',
+            zIndex: 2,
+            transform: 'translateZ(26px)',
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column'
+          }}>
+            {children}
+          </div>
+        )}
       </div>
     </div>
   );

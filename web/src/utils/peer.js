@@ -10,7 +10,16 @@ class MultiplayerSync {
     this.onStateChangeCallback = null;
     this.onReactionCallback = null;
     this.onStatusChangeCallback = null;
+    this.onTouchRippleCallback = null;
     this.isConnected = false;
+
+    // WebRTC Voice Call
+    this.mediaCall = null;
+    this.localStream = null;
+    this.onCallStreamCallback = null;
+    this.onCallStateCallback = null;
+    this.isMuted = false;
+    this.remotePeerId = null;
   }
 
   generateRoomCode() {
@@ -22,12 +31,15 @@ class MultiplayerSync {
     return code;
   }
 
-  initHost(onStatusChange, onStateChange, onReaction) {
+  initHost(onStatusChange, onStateChange, onReaction, onTouchRipple, onCallStream, onCallState) {
     this.cleanup();
     this.isHost = true;
     this.onStatusChangeCallback = onStatusChange;
     this.onStateChangeCallback = onStateChange;
     this.onReactionCallback = onReaction;
+    this.onTouchRippleCallback = onTouchRipple;
+    this.onCallStreamCallback = onCallStream;
+    this.onCallStateCallback = onCallState;
 
     this.roomCode = this.generateRoomCode();
     const peerId = `between-v1-${this.roomCode.toLowerCase()}`;
@@ -54,12 +66,34 @@ class MultiplayerSync {
       });
 
       this.peer.on('connection', (conn) => {
+        this.remotePeerId = conn.peer;
         this.setupConnection(conn);
+      });
+
+      // Handle incoming voice call
+      this.peer.on('call', async (call) => {
+        this.mediaCall = call;
+        try {
+          if (!this.localStream) {
+            this.localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+          }
+          call.answer(this.localStream);
+          this.onCallStateCallback?.('CONNECTED');
+
+          call.on('stream', (remoteStream) => {
+            this.onCallStreamCallback?.(remoteStream);
+          });
+
+          call.on('close', () => {
+            this.onCallStateCallback?.('ENDED');
+          });
+        } catch (e) {
+          console.warn('Voice call auto-answer error:', e);
+        }
       });
 
       this.peer.on('error', (err) => {
         console.warn('Host Peer error:', err);
-        // Fallback to broadcast channel if offline or network issue
         this.onStatusChangeCallback?.({
           status: this.isConnected ? 'CONNECTED' : 'WAITING_FOR_GUEST',
           roomCode: this.roomCode,
@@ -73,17 +107,21 @@ class MultiplayerSync {
     return this.roomCode;
   }
 
-  joinRoom(code, onStatusChange, onStateChange, onReaction) {
+  joinRoom(code, onStatusChange, onStateChange, onReaction, onTouchRipple, onCallStream, onCallState) {
     this.cleanup();
     this.isHost = false;
     this.roomCode = code.toUpperCase().trim();
     this.onStatusChangeCallback = onStatusChange;
     this.onStateChangeCallback = onStateChange;
     this.onReactionCallback = onReaction;
+    this.onTouchRippleCallback = onTouchRipple;
+    this.onCallStreamCallback = onCallStream;
+    this.onCallStateCallback = onCallState;
 
     this.setupBroadcastChannel(this.roomCode);
 
     const targetPeerId = `between-v1-${this.roomCode.toLowerCase()}`;
+    this.remotePeerId = targetPeerId;
     const guestPeerId = `between-guest-${Math.random().toString(36).substring(2, 7)}`;
 
     try {
@@ -102,6 +140,28 @@ class MultiplayerSync {
         this.setupConnection(conn);
       });
 
+      // Handle incoming voice call on guest
+      this.peer.on('call', async (call) => {
+        this.mediaCall = call;
+        try {
+          if (!this.localStream) {
+            this.localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+          }
+          call.answer(this.localStream);
+          this.onCallStateCallback?.('CONNECTED');
+
+          call.on('stream', (remoteStream) => {
+            this.onCallStreamCallback?.(remoteStream);
+          });
+
+          call.on('close', () => {
+            this.onCallStateCallback?.('ENDED');
+          });
+        } catch (e) {
+          console.warn('Guest voice answer error:', e);
+        }
+      });
+
       this.peer.on('error', (err) => {
         console.warn('Guest Peer error:', err);
       });
@@ -109,7 +169,6 @@ class MultiplayerSync {
       console.warn('Guest PeerJS error, using local channel:', e);
     }
 
-    // Ping host via broadcast channel in case both are in same browser/tabs
     this.sendBroadcast({ type: 'GUEST_HELLO' });
   }
 
@@ -126,6 +185,7 @@ class MultiplayerSync {
 
   setupConnection(conn) {
     this.connection = conn;
+    this.remotePeerId = conn.peer;
 
     conn.on('open', () => {
       this.isConnected = true;
@@ -135,7 +195,6 @@ class MultiplayerSync {
         isHost: this.isHost
       });
 
-      // If guest connected, host should send initial greeting
       if (this.isHost) {
         this.broadcastMessage({ type: 'HOST_CONNECTED' });
       }
@@ -186,11 +245,12 @@ class MultiplayerSync {
       this.onStateChangeCallback?.(data.payload);
     } else if (data.type === 'REACTION') {
       this.onReactionCallback?.(data.payload);
+    } else if (data.type === 'TOUCH_RIPPLE') {
+      this.onTouchRippleCallback?.(data.payload);
     }
   }
 
   broadcastMessage(message) {
-    // Send over PeerJS WebRTC DataChannel
     if (this.connection && this.connection.open) {
       try {
         this.connection.send(message);
@@ -198,8 +258,6 @@ class MultiplayerSync {
         console.warn('Failed to send over WebRTC:', e);
       }
     }
-
-    // Also send over local BroadcastChannel
     this.sendBroadcast(message);
   }
 
@@ -225,7 +283,69 @@ class MultiplayerSync {
     });
   }
 
+  sendPresenceTouch(xPercent, yPercent) {
+    this.broadcastMessage({
+      type: 'TOUCH_RIPPLE',
+      payload: { x: xPercent, y: yPercent, sender: this.isHost ? 'host' : 'guest', timestamp: Date.now() }
+    });
+  }
+
+  // Voice Call
+  async startVoiceCall() {
+    if (!this.peer || !this.remotePeerId) {
+      console.warn('Cannot start call: peer not connected');
+      return false;
+    }
+    try {
+      this.onCallStateCallback?.('CALLING');
+      this.localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+      
+      const call = this.peer.call(this.remotePeerId, this.localStream);
+      this.mediaCall = call;
+
+      call.on('stream', (remoteStream) => {
+        this.onCallStateCallback?.('CONNECTED');
+        this.onCallStreamCallback?.(remoteStream);
+      });
+
+      call.on('close', () => {
+        this.endVoiceCall();
+      });
+
+      return true;
+    } catch (e) {
+      console.warn('Could not start voice call:', e);
+      this.onCallStateCallback?.('FAILED');
+      return false;
+    }
+  }
+
+  endVoiceCall() {
+    if (this.mediaCall) {
+      try { this.mediaCall.close(); } catch (e) {}
+      this.mediaCall = null;
+    }
+    if (this.localStream) {
+      this.localStream.getTracks().forEach(track => track.stop());
+      this.localStream = null;
+    }
+    this.onCallStateCallback?.('ENDED');
+  }
+
+  toggleMute() {
+    if (this.localStream) {
+      const audioTrack = this.localStream.getAudioTracks()[0];
+      if (audioTrack) {
+        audioTrack.enabled = !audioTrack.enabled;
+        this.isMuted = !audioTrack.enabled;
+        return this.isMuted;
+      }
+    }
+    return false;
+  }
+
   cleanup() {
+    this.endVoiceCall();
     try {
       if (this.connection) {
         this.connection.close();

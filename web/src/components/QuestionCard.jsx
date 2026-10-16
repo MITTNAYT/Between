@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { ArrowRightLeft, Bookmark, Sparkles, Shuffle, ChevronDown, ChevronUp, Quote } from 'lucide-react';
+import { ArrowRightLeft, Bookmark, Sparkles, Shuffle, ChevronDown, ChevronUp, RotateCw, Eye, EyeOff, Send, Check } from 'lucide-react';
 import InteractiveCard3D from './InteractiveCard3D';
 import { WILDCARD_INSPIRATIONS } from '../utils/engine';
-import { playClickSound } from '../utils/audio';
+import { playClickSound, playChimeSound, playHandshakeSound } from '../utils/audio';
 
 export default function QuestionCard({
   question,
@@ -13,11 +13,17 @@ export default function QuestionCard({
   onToggleBookmark,
   swipeClass = '',
   onSwipeLeft,
-  onSwipeRight
+  onSwipeRight,
+  blindState = { myAnswer: '', peerAnswer: '', mySubmitted: false, peerSubmitted: false },
+  onUpdateBlindAnswer,
+  onSubmitBlindAnswer
 }) {
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [backTab, setBackTab] = useState('BLIND'); // 'BLIND' | 'NOTES'
   const [hintExpanded, setHintExpanded] = useState(false);
   const [selectedWildcardPrompt, setSelectedWildcardPrompt] = useState(null);
   const [wildcardOffset, setWildcardOffset] = useState(0);
+  const [noteText, setNoteText] = useState('');
 
   const isWildcard = question?.isWildcard || question?.id?.startsWith('wildcard');
   const allPrompts = WILDCARD_INSPIRATIONS[relationshipType] || WILDCARD_INSPIRATIONS.COUPLE;
@@ -38,51 +44,63 @@ export default function QuestionCard({
     setSelectedWildcardPrompt(prev => prev === prompt ? null : prompt);
   };
 
-  return (
-    <InteractiveCard3D 
-      isWildcard={isWildcard} 
-      swipeClass={swipeClass}
-      onSwipeLeft={onSwipeLeft}
-      onSwipeRight={onSwipeRight}
-      className="question-card-inner"
-    >
+  const toggleFlip = () => {
+    playClickSound();
+    setIsFlipped(prev => !prev);
+  };
+
+  const isBothRevealed = blindState.mySubmitted && blindState.peerSubmitted;
+
+  // FRONT CONTENT
+  const frontContent = (
+    <div style={{
+      padding: '30px 26px',
+      minHeight: '360px',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      textAlign: 'center'
+    }}>
+      {/* Top Header Row */}
       <div style={{
-        padding: '32px 28px',
-        minHeight: '360px',
+        width: '100%',
         display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
         alignItems: 'center',
-        textAlign: 'center'
+        justifyContent: 'space-between',
+        marginBottom: '20px'
       }}>
-        {/* Top Header Row: Turn indicator pill + Bookmark button */}
-        <div style={{
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          marginBottom: '24px'
-        }}>
-          {/* Turn Switcher Pill */}
+        {/* Turn Switcher Pill */}
+        <button
+          onClick={() => {
+            playClickSound();
+            onPassTurn?.();
+          }}
+          className={`pill-badge ${isWildcard ? 'pill-badge-ember' : 'pill-badge-surface'}`}
+          style={{
+            cursor: 'pointer',
+            transition: 'transform 0.15s, background-color 0.2s',
+            boxShadow: 'var(--shadow-sm)',
+            gap: '6px'
+          }}
+          title="Click to pass turn to your friend"
+        >
+          <ArrowRightLeft size={13} strokeWidth={2.4} />
+          <span>{turnIndicator}</span>
+        </button>
+
+        {/* Right Corner Buttons: Flip & Bookmark */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
           <button
-            onClick={() => {
-              playClickSound();
-              onPassTurn?.();
-            }}
-            className={`pill-badge ${isWildcard ? 'pill-badge-ember' : 'pill-badge-surface'}`}
-            style={{
-              cursor: 'pointer',
-              transition: 'transform 0.15s, background-color 0.2s',
-              boxShadow: 'var(--shadow-sm)',
-              gap: '6px'
-            }}
-            title="Click to pass turn to your friend"
+            onClick={toggleFlip}
+            className="pill-badge pill-badge-surface"
+            style={{ cursor: 'pointer', gap: '4px', fontSize: '11px', padding: '5px 10px' }}
+            title="Flip card for Notes & Blind Reveal"
           >
-            <ArrowRightLeft size={13} strokeWidth={2.4} />
-            <span>{turnIndicator}</span>
+            <RotateCw size={12} strokeWidth={2.4} />
+            <span>Flip</span>
           </button>
 
-          {/* Bookmark Moment Star */}
           <button
             onClick={() => {
               playClickSound();
@@ -104,176 +122,382 @@ export default function QuestionCard({
             title={isBookmarked ? 'Moment saved' : 'Save this moment'}
           >
             <Bookmark
-              size={20}
+              size={19}
               strokeWidth={2.2}
               fill={isBookmarked ? 'currentColor' : 'none'}
               color={isBookmarked ? 'var(--color-ember)' : 'var(--color-muted)'}
             />
           </button>
         </div>
+      </div>
 
-        {/* Wildcard Badge if applicable */}
-        {isWildcard && (
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '6px',
-            padding: '5px 14px',
-            borderRadius: 'var(--radius-pill)',
-            background: 'rgba(217, 78, 52, 0.1)',
-            border: '1px solid rgba(217, 78, 52, 0.25)',
-            color: 'var(--color-ember)',
-            fontSize: '11px',
-            fontWeight: '700',
-            letterSpacing: '0.08em',
-            textTransform: 'uppercase',
-            marginBottom: '16px'
-          }}>
-            <Sparkles size={13} strokeWidth={2.5} />
-            <span>WILDCARD · ASK ANYTHING</span>
-          </div>
-        )}
-
-        {/* Main Question Text with Editorial Serif */}
+      {/* Wildcard Badge */}
+      {isWildcard && (
         <div style={{
-          flex: '1',
-          display: 'flex',
-          flexDirection: 'column',
+          display: 'inline-flex',
           alignItems: 'center',
-          justifyContent: 'center',
-          width: '100%',
-          padding: '12px 0'
+          gap: '6px',
+          padding: '4px 12px',
+          borderRadius: 'var(--radius-pill)',
+          background: 'rgba(217, 78, 52, 0.1)',
+          border: '1px solid rgba(217, 78, 52, 0.25)',
+          color: 'var(--color-ember)',
+          fontSize: '11px',
+          fontWeight: '700',
+          letterSpacing: '0.08em',
+          textTransform: 'uppercase',
+          marginBottom: '16px'
         }}>
-          <h2 className="question-serif">
-            {isWildcard 
-              ? (selectedWildcardPrompt ? `“${selectedWildcardPrompt}”` : question.text)
-              : question.text
-            }
-          </h2>
+          <Sparkles size={13} strokeWidth={2.5} />
+          <span>WILDCARD · ASK ANYTHING</span>
+        </div>
+      )}
+
+      {/* Main Question Text */}
+      <div style={{
+        flex: '1',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+        padding: '10px 0'
+      }}>
+        <h2 className="question-serif">
+          {isWildcard 
+            ? (selectedWildcardPrompt ? `“${selectedWildcardPrompt}”` : question.text)
+            : question.text
+          }
+        </h2>
+      </div>
+
+      {/* Hint Drawer */}
+      {!isWildcard && question.hint && (
+        <div style={{ width: '100%', marginTop: '16px' }}>
+          {!hintExpanded ? (
+            <button
+              onClick={() => {
+                playClickSound();
+                setHintExpanded(true);
+              }}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: 'var(--color-muted)',
+                fontSize: '13px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '6px 12px',
+                borderRadius: 'var(--radius-pill)',
+                transition: 'color 0.2s'
+              }}
+            >
+              <span>Gentle guidance</span>
+              <ChevronDown size={14} strokeWidth={2.4} />
+            </button>
+          ) : (
+            <div style={{
+              background: 'var(--color-surface-subtle)',
+              border: '1px solid var(--color-hairline)',
+              borderRadius: 'var(--radius-md)',
+              padding: '14px 16px',
+              textAlign: 'left',
+              animation: 'fadeIn 0.2s ease-out'
+            }}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                marginBottom: '6px'
+              }}>
+                <span style={{ fontSize: '11px', fontWeight: '700', color: 'var(--color-ember)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                  Reflection Prompt
+                </span>
+                <button
+                  onClick={() => {
+                    playClickSound();
+                    setHintExpanded(false);
+                  }}
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-muted)', padding: '2px' }}
+                >
+                  <ChevronUp size={14} strokeWidth={2.4} />
+                </button>
+              </div>
+              <p style={{ fontSize: '13px', color: 'var(--color-body)', lineHeight: '1.5' }}>
+                {question.hint}
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Wildcard inspirations */}
+      {isWildcard && (
+        <div style={{ width: '100%', marginTop: '18px' }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: '10px'
+          }}>
+            <span style={{ fontSize: '11px', fontWeight: '700', color: 'var(--color-muted)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+              Inspirations:
+            </span>
+            <button
+              onClick={handleShuffleWildcard}
+              style={{
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                color: 'var(--color-ember)',
+                fontSize: '12px',
+                fontWeight: '700',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px'
+              }}
+            >
+              <Shuffle size={13} strokeWidth={2.4} />
+              <span>Shuffle</span>
+            </button>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {currentVisiblePrompts.map((promptText, idx) => {
+              const isSelected = selectedWildcardPrompt === promptText;
+              return (
+                <button
+                  key={idx}
+                  onClick={() => handleSelectPrompt(promptText)}
+                  style={{
+                    padding: '10px 14px',
+                    borderRadius: 'var(--radius-sm)',
+                    border: isSelected ? '1.5px solid var(--color-ember)' : '1px solid var(--color-hairline)',
+                    background: isSelected ? 'rgba(217, 78, 52, 0.05)' : 'var(--color-surface-subtle)',
+                    color: isSelected ? 'var(--color-ember)' : 'var(--color-ink)',
+                    fontSize: '13px',
+                    textAlign: 'left',
+                    lineHeight: '1.4',
+                    cursor: 'pointer',
+                    transition: 'all 0.15s'
+                  }}
+                >
+                  “{promptText}”
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
+  // BACK CONTENT (3D Flipped Side: Blind Reveal & Notes)
+  const backContent = (
+    <div style={{
+      padding: '28px 24px',
+      minHeight: '360px',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      textAlign: 'left'
+    }}>
+      {/* Back Header */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: '16px'
+      }}>
+        {/* Sub Tabs */}
+        <div style={{ display: 'flex', gap: '6px', background: 'var(--color-surface-subtle)', padding: '3px', borderRadius: 'var(--radius-pill)' }}>
+          <button
+            onClick={() => { playClickSound(); setBackTab('BLIND'); }}
+            style={{
+              border: 'none',
+              padding: '6px 12px',
+              borderRadius: 'var(--radius-pill)',
+              fontSize: '12px',
+              fontWeight: backTab === 'BLIND' ? '700' : '500',
+              background: backTab === 'BLIND' ? 'var(--color-surface)' : 'transparent',
+              color: backTab === 'BLIND' ? 'var(--color-ink)' : 'var(--color-muted)',
+              cursor: 'pointer'
+            }}
+          >
+            Blind Reveal
+          </button>
+          <button
+            onClick={() => { playClickSound(); setBackTab('NOTES'); }}
+            style={{
+              border: 'none',
+              padding: '6px 12px',
+              borderRadius: 'var(--radius-pill)',
+              fontSize: '12px',
+              fontWeight: backTab === 'NOTES' ? '700' : '500',
+              background: backTab === 'NOTES' ? 'var(--color-surface)' : 'transparent',
+              color: backTab === 'NOTES' ? 'var(--color-ink)' : 'var(--color-muted)',
+              cursor: 'pointer'
+            }}
+          >
+            Scratchpad
+          </button>
         </div>
 
-        {/* Hint Drawer for standard questions */}
-        {!isWildcard && question.hint && (
-          <div style={{ width: '100%', marginTop: '16px' }}>
-            {!hintExpanded ? (
-              <button
-                onClick={() => {
-                  playClickSound();
-                  setHintExpanded(true);
-                }}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: 'var(--color-muted)',
-                  fontSize: '13px',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: '6px 12px',
-                  borderRadius: 'var(--radius-pill)',
-                  transition: 'color 0.2s, background-color 0.2s'
-                }}
-              >
-                <span>Gentle guidance</span>
-                <ChevronDown size={14} strokeWidth={2.4} />
-              </button>
-            ) : (
-              <div style={{
-                background: 'var(--color-surface-subtle)',
-                border: '1px solid var(--color-hairline)',
-                borderRadius: 'var(--radius-md)',
-                padding: '14px 16px',
-                textAlign: 'left',
-                animation: 'fadeIn 0.2s ease-out'
-              }}>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  marginBottom: '6px'
-                }}>
-                  <span style={{ fontSize: '11px', fontWeight: '700', color: 'var(--color-ember)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-                    Reflection Prompt
-                  </span>
-                  <button
-                    onClick={() => {
-                      playClickSound();
-                      setHintExpanded(false);
-                    }}
-                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-muted)', padding: '2px' }}
-                  >
-                    <ChevronUp size={14} strokeWidth={2.4} />
-                  </button>
-                </div>
-                <p style={{ fontSize: '13px', color: 'var(--color-body)', lineHeight: '1.5' }}>
-                  {question.hint}
-                </p>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Wildcard Inspiration Cards & Shuffle */}
-        {isWildcard && (
-          <div style={{ width: '100%', marginTop: '18px' }}>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              marginBottom: '10px'
-            }}>
-              <span style={{ fontSize: '11px', fontWeight: '700', color: 'var(--color-muted)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-                Or pick an inspiration:
-              </span>
-              <button
-                onClick={handleShuffleWildcard}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  color: 'var(--color-ember)',
-                  fontSize: '12px',
-                  fontWeight: '700',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '4px'
-                }}
-              >
-                <Shuffle size={13} strokeWidth={2.4} />
-                <span>Shuffle</span>
-              </button>
-            </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              {currentVisiblePrompts.map((promptText, idx) => {
-                const isSelected = selectedWildcardPrompt === promptText;
-                return (
-                  <button
-                    key={idx}
-                    onClick={() => handleSelectPrompt(promptText)}
-                    style={{
-                      padding: '10px 14px',
-                      borderRadius: 'var(--radius-sm)',
-                      border: isSelected ? '1.5px solid var(--color-ember)' : '1px solid var(--color-hairline)',
-                      background: isSelected ? 'rgba(217, 78, 52, 0.05)' : 'var(--color-surface-subtle)',
-                      color: isSelected ? 'var(--color-ember)' : 'var(--color-ink)',
-                      fontSize: '13px',
-                      textAlign: 'left',
-                      lineHeight: '1.4',
-                      cursor: 'pointer',
-                      transition: 'all 0.15s'
-                    }}
-                  >
-                    “{promptText}”
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        )}
+        <button
+          onClick={toggleFlip}
+          className="pill-badge pill-badge-surface"
+          style={{ cursor: 'pointer', gap: '4px', fontSize: '11px', padding: '5px 10px' }}
+        >
+          <RotateCw size={12} strokeWidth={2.4} />
+          <span>Flip to Front</span>
+        </button>
       </div>
-    </InteractiveCard3D>
+
+      {/* TAB 1: BLIND REVEAL */}
+      {backTab === 'BLIND' && (
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div>
+            <div style={{ fontSize: '11px', fontWeight: '700', color: 'var(--color-ember)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+              Double Blind Reveal
+            </div>
+            <p style={{ fontSize: '13px', color: 'var(--color-body)', marginTop: '2px' }}>
+              Both write your honest answer in secret. Neither sees until both press submit!
+            </p>
+          </div>
+
+          {!isBothRevealed ? (
+            <>
+              <textarea
+                rows={3}
+                value={blindState.myAnswer}
+                onChange={(e) => onUpdateBlindAnswer?.(e.target.value)}
+                disabled={blindState.mySubmitted}
+                placeholder="Type your private answer here..."
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  borderRadius: 'var(--radius-sm)',
+                  border: '1px solid var(--color-hairline)',
+                  background: 'var(--color-surface-subtle)',
+                  fontSize: '14px',
+                  outline: 'none',
+                  resize: 'none',
+                  fontFamily: 'inherit'
+                }}
+              />
+
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '4px' }}>
+                <div style={{ fontSize: '12px', color: 'var(--color-muted)' }}>
+                  {blindState.peerSubmitted ? (
+                    <span style={{ color: 'var(--color-sage)', fontWeight: '600' }}>✓ Friend has written!</span>
+                  ) : (
+                    <span>Waiting for friend to write...</span>
+                  )}
+                </div>
+
+                <button
+                  onClick={() => {
+                    playHandshakeSound();
+                    onSubmitBlindAnswer?.();
+                  }}
+                  disabled={!blindState.myAnswer.trim() || blindState.mySubmitted}
+                  className="btn-primary"
+                  style={{
+                    padding: '8px 16px',
+                    fontSize: '13px',
+                    width: 'auto',
+                    minHeight: '38px',
+                    opacity: blindState.myAnswer.trim() && !blindState.mySubmitted ? 1 : 0.6
+                  }}
+                >
+                  <Send size={13} strokeWidth={2.4} />
+                  <span>{blindState.mySubmitted ? 'Submitted!' : 'Submit Answer'}</span>
+                </button>
+              </div>
+            </>
+          ) : (
+            // Both have submitted: Simultaneous Reveal!
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', animation: 'fadeIn 0.3s ease-out' }}>
+              <div style={{
+                padding: '12px 14px',
+                borderRadius: 'var(--radius-sm)',
+                background: 'rgba(217, 78, 52, 0.08)',
+                border: '1px solid rgba(217, 78, 52, 0.25)'
+              }}>
+                <div style={{ fontSize: '11px', fontWeight: '700', color: 'var(--color-ember)', textTransform: 'uppercase' }}>
+                  Your Answer
+                </div>
+                <div style={{ fontSize: '14px', color: 'var(--color-ink)', marginTop: '4px', fontStyle: 'italic' }}>
+                  “{blindState.myAnswer}”
+                </div>
+              </div>
+
+              <div style={{
+                padding: '12px 14px',
+                borderRadius: 'var(--radius-sm)',
+                background: 'rgba(56, 123, 106, 0.08)',
+                border: '1px solid rgba(56, 123, 106, 0.25)'
+              }}>
+                <div style={{ fontSize: '11px', fontWeight: '700', color: 'var(--color-sage)', textTransform: 'uppercase' }}>
+                  Friend's Answer
+                </div>
+                <div style={{ fontSize: '14px', color: 'var(--color-ink)', marginTop: '4px', fontStyle: 'italic' }}>
+                  “{blindState.peerAnswer || 'Both answers unlocked!'}”
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* TAB 2: SCRATCHPAD */}
+      {backTab === 'NOTES' && (
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <div>
+            <div style={{ fontSize: '11px', fontWeight: '700', color: 'var(--color-muted)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+              Scratchpad
+            </div>
+            <p style={{ fontSize: '13px', color: 'var(--color-body)' }}>
+              Jot down quick thoughts, jokes, or key takeaways from this card.
+            </p>
+          </div>
+
+          <textarea
+            rows={5}
+            value={noteText}
+            onChange={(e) => setNoteText(e.target.value)}
+            placeholder="Jot down notes or quotes here..."
+            style={{
+              width: '100%',
+              flex: 1,
+              padding: '12px',
+              borderRadius: 'var(--radius-sm)',
+              border: '1px solid var(--color-hairline)',
+              background: 'var(--color-surface-subtle)',
+              fontSize: '14px',
+              outline: 'none',
+              resize: 'none',
+              fontFamily: 'inherit'
+            }}
+          />
+        </div>
+      )}
+    </div>
+  );
+
+  return (
+    <InteractiveCard3D 
+      isWildcard={isWildcard} 
+      swipeClass={swipeClass}
+      onSwipeLeft={onSwipeLeft}
+      onSwipeRight={onSwipeRight}
+      isFlipped={isFlipped}
+      frontContent={frontContent}
+      backContent={backContent}
+      className="question-card-inner"
+    />
   );
 }
