@@ -22,7 +22,7 @@ export default function ReactionBar({ onSendReaction }) {
       alignItems: 'center',
       gap: '8px',
       padding: '6px 14px',
-      background: 'rgba(255, 255, 255, 0.88)',
+      background: 'var(--color-surface)',
       backdropFilter: 'blur(16px)',
       WebkitBackdropFilter: 'blur(16px)',
       border: '1px solid var(--color-hairline)',

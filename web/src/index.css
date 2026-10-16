@@ -3,9 +3,7 @@
    Inspired by Oil UI, Light Wellness & Tactile Sensory Feedback
    ========================================================================== */
 
-:root,
-[data-theme="unisex"],
-[data-theme="sandstone"] {
+:root {
   --color-canvas: #F4ECE2;
   --color-canvas-rgb: 244, 236, 226;
   --color-surface: #FFFFFF;
@@ -49,63 +47,6 @@
   --ease-decelerate: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* THEME 2: MEN / MASCULINE (Obsidian Slate & Midnight Cedar) */
-[data-theme="masculine"],
-[data-theme="candlelight"] {
-  --color-canvas: #121418;
-  --color-canvas-rgb: 18, 20, 24;
-  --color-surface: #1B1E24;
-  --color-surface-subtle: #242932;
-  --color-hairline: #2F3642;
-  --color-hairline-strong: #3D4656;
-  
-  --color-ink: #F1F4F9;
-  --color-body: #C2CAD8;
-  --color-muted: #7E899F;
-  --color-subtle: #566074;
-
-  --color-ember: #D98236;
-  --color-ember-rgb: 217, 130, 54;
-  --color-rose: #C75B7A;
-  --color-gold: #D4A373;
-  --color-sage: #4E8779;
-  --color-blue: #4A82C4;
-
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.35);
-  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
-  --shadow-lg: 0 18px 48px rgba(0, 0, 0, 0.6);
-  --shadow-ember: 0 8px 24px rgba(217, 130, 54, 0.25);
-  --shadow-float: 0 20px 48px rgba(0, 0, 0, 0.65);
-}
-
-/* THEME 3: WOMEN / FEMININE (Blush Cashmere & Rose Velvet) */
-[data-theme="feminine"] {
-  --color-canvas: #FBF4F2;
-  --color-canvas-rgb: 251, 244, 242;
-  --color-surface: #FFFFFF;
-  --color-surface-subtle: #F5E5E2;
-  --color-hairline: #E8D2CE;
-  --color-hairline-strong: #DCBEB9;
-  
-  --color-ink: #261A1D;
-  --color-body: #594348;
-  --color-muted: #997F85;
-  --color-subtle: #BD9DA3;
-
-  --color-ember: #D64562;
-  --color-ember-rgb: 214, 69, 98;
-  --color-rose: #E85B78;
-  --color-gold: #D9885E;
-  --color-sage: #548C7B;
-  --color-blue: #6478A6;
-
-  --shadow-sm: 0 2px 6px rgba(78, 40, 48, 0.04), 0 1px 2px rgba(78, 40, 48, 0.03);
-  --shadow-md: 0 6px 18px rgba(78, 40, 48, 0.07), 0 2px 5px rgba(78, 40, 48, 0.03);
-  --shadow-lg: 0 16px 40px rgba(78, 40, 48, 0.09), 0 4px 12px rgba(78, 40, 48, 0.04);
-  --shadow-ember: 0 8px 24px rgba(214, 69, 98, 0.2);
-  --shadow-float: 0 20px 48px rgba(78, 40, 48, 0.14);
-}
-
 /* Base Resets */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -124,10 +65,9 @@ html, body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Atmospheric Backdrops */
+/* Radial Warm Sandstone Beige Backdrop */
 .app-backdrop {
   position: fixed;
   inset: 0;
@@ -136,20 +76,6 @@ html, body {
     radial-gradient(circle at 50% 12%, rgba(235, 220, 200, 0.45) 0%, rgba(244, 236, 226, 0) 65%),
     radial-gradient(circle at 85% 85%, rgba(228, 212, 192, 0.35) 0%, rgba(244, 236, 226, 0) 60%);
   z-index: 0;
-  transition: background 0.35s ease;
-}
-
-[data-theme="masculine"] .app-backdrop,
-[data-theme="candlelight"] .app-backdrop {
-  background: 
-    radial-gradient(circle at 50% 12%, rgba(42, 53, 72, 0.35) 0%, rgba(18, 20, 24, 0) 65%),
-    radial-gradient(circle at 85% 85%, rgba(35, 43, 58, 0.3) 0%, rgba(18, 20, 24, 0) 60%);
-}
-
-[data-theme="feminine"] .app-backdrop {
-  background: 
-    radial-gradient(circle at 50% 12%, rgba(248, 222, 218, 0.5) 0%, rgba(251, 244, 242, 0) 65%),
-    radial-gradient(circle at 85% 85%, rgba(243, 214, 210, 0.4) 0%, rgba(251, 244, 242, 0) 60%);
 }
 
 /* Main App Wrapper */
@@ -490,48 +416,97 @@ html, body {
    CANDLELIGHT / BEDTIME NIGHT MODE THEME
    ========================================================================== */
 [data-theme="candlelight"] {
-  --color-canvas: #12100E;
-  --color-canvas-rgb: 18, 16, 14;
-  --color-surface: #1B1815;
-  --color-surface-subtle: #24201C;
-  --color-hairline: #332D27;
-  --color-hairline-strong: #483F37;
+  --color-canvas: #0F0E0D;
+  --color-canvas-rgb: 15, 14, 13;
+  --color-surface: #181614;
+  --color-surface-subtle: #221F1C;
+  --color-hairline: #2E2924;
+  --color-hairline-strong: #3D3730;
 
-  --color-ink: #F7F1EB;
-  --color-body: #C4B9AD;
-  --color-muted: #8E8377;
+  --color-ink: #FBF6F0;
+  --color-body: #C9BEB2;
+  --color-muted: #94887C;
   --color-subtle: #675E54;
 
-  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 6px 18px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.35);
-  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.65), 0 4px 12px rgba(0, 0, 0, 0.4);
+  --color-ember: #E05638;
+  --color-gold: #E5A93C;
+
+  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.65), 0 2px 6px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 18px 44px rgba(0, 0, 0, 0.8), 0 4px 14px rgba(0, 0, 0, 0.5);
 }
 
 [data-theme="candlelight"] .app-backdrop {
   background: 
-    radial-gradient(circle at 50% 12%, rgba(217, 78, 52, 0.14) 0%, rgba(18, 16, 14, 0) 70%),
-    radial-gradient(circle at 85% 85%, rgba(229, 169, 60, 0.09) 0%, rgba(18, 16, 14, 0) 65%);
+    radial-gradient(circle at 50% 12%, rgba(224, 86, 56, 0.18) 0%, rgba(15, 14, 13, 0) 65%),
+    radial-gradient(circle at 85% 85%, rgba(229, 169, 60, 0.12) 0%, rgba(15, 14, 13, 0) 60%);
 }
 
 [data-theme="candlelight"] .btn-primary {
-  background: #F4ECE2;
+  background: #E5A93C;
   color: #12100E;
 }
 
 [data-theme="candlelight"] .btn-primary:hover {
-  background: #FFFFFF;
+  background: #F3BC55;
+  box-shadow: 0 6px 20px rgba(229, 169, 60, 0.3);
+}
+
+[data-theme="candlelight"] .btn-secondary {
+  background: #181614;
+  color: #FBF6F0;
+  border-color: #2E2924;
+}
+
+[data-theme="candlelight"] .btn-secondary:hover {
+  background: #221F1C;
+  border-color: #3D3730;
 }
 
 [data-theme="candlelight"] .soft-card {
-  background: #1B1815;
-  border-color: #332D27;
+  background: #181614;
+  border-color: rgba(229, 169, 60, 0.15);
+  box-shadow: 0 10px 30px -8px rgba(0, 0, 0, 0.75), 0 0 20px rgba(224, 86, 56, 0.06);
+}
+
+[data-theme="candlelight"] .soft-card:hover {
+  border-color: rgba(229, 169, 60, 0.3);
+  box-shadow: 0 14px 40px -8px rgba(0, 0, 0, 0.85), 0 0 25px rgba(224, 86, 56, 0.1);
 }
 
 [data-theme="candlelight"] input,
 [data-theme="candlelight"] textarea {
-  color: #F7F1EB !important;
-  background: #24201C !important;
-  border-color: #332D27 !important;
+  color: #FBF6F0 !important;
+  background: #221F1C !important;
+  border-color: #2E2924 !important;
+}
+
+[data-theme="candlelight"] input:focus,
+[data-theme="candlelight"] textarea:focus {
+  border-color: #E5A93C !important;
+  box-shadow: 0 0 0 3px rgba(229, 169, 60, 0.15) !important;
+}
+
+[data-theme="candlelight"] .pill-badge-surface {
+  background: #221F1C;
+  color: #C9BEB2;
+  border-color: #2E2924;
+}
+
+[data-theme="candlelight"] .pill-badge-ember {
+  background: rgba(224, 86, 56, 0.15);
+  color: #E5A93C;
+  border-color: rgba(224, 86, 56, 0.35);
+}
+
+[data-theme="candlelight"] .modal-overlay {
+  background: rgba(0, 0, 0, 0.78);
+}
+
+[data-theme="candlelight"] .modal-content {
+  background: #181614;
+  border-color: rgba(229, 169, 60, 0.2);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 30px rgba(229, 169, 60, 0.08);
 }
 
 /* ==========================================================================

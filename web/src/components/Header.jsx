@@ -1,34 +1,7 @@
 import React, { useState } from 'react';
-import { Sparkles, Radio, Volume2, VolumeX, Copy, Check, LogOut, Mic, MicOff, Phone, PhoneOff, Palette } from 'lucide-react';
+import { Sparkles, Radio, Volume2, VolumeX, Copy, Check, LogOut, Flame, Sun, Moon, Mic, MicOff, Phone, PhoneOff } from 'lucide-react';
 import BetweenLogo from './BetweenLogo';
 import { toggleAmbientSoundscape, playClickSound } from '../utils/audio';
-
-export const THEMES = [
-  {
-    id: 'unisex',
-    label: 'Unisex',
-    sublabel: 'Sandstone Linen',
-    icon: '🌿',
-    bg: '#F4ECE2',
-    accent: '#D94E34'
-  },
-  {
-    id: 'masculine',
-    label: 'Men',
-    sublabel: 'Obsidian Slate',
-    icon: '🌑',
-    bg: '#121418',
-    accent: '#D98236'
-  },
-  {
-    id: 'feminine',
-    label: 'Women',
-    sublabel: 'Blush Cashmere',
-    icon: '🌸',
-    bg: '#FBF4F2',
-    accent: '#D64562'
-  }
-];
 
 export default function Header({ 
   roomCode, 
@@ -37,8 +10,8 @@ export default function Header({
   phaseName, 
   onExit,
   isSessionActive = false,
-  theme = 'unisex',
-  onSelectTheme,
+  theme = 'candlelight',
+  onToggleTheme,
   voiceCallState = 'IDLE',
   isVoiceMuted = false,
   onToggleVoiceCall,
@@ -46,10 +19,6 @@ export default function Header({
 }) {
   const [isPlayingSoundscape, setIsPlayingSoundscape] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [themeMenuOpen, setThemeMenuOpen] = useState(false);
-
-  const normalizedTheme = (theme === 'candlelight' ? 'masculine' : (theme === 'sandstone' ? 'unisex' : theme)) || 'unisex';
-  const currentThemeObj = THEMES.find(t => t.id === normalizedTheme) || THEMES[0];
 
   const handleCopyLink = () => {
     playClickSound();
@@ -196,115 +165,23 @@ export default function Header({
           </div>
         )}
 
-        {/* Theme Selector (Unisex / Men / Women) */}
-        <div style={{ position: 'relative' }}>
-          <button
-            className="btn-icon"
-            onClick={() => {
-              playClickSound();
-              setThemeMenuOpen(prev => !prev);
-            }}
-            aria-label="Select Theme"
-            title={`Atmosphere: ${currentThemeObj.label} (${currentThemeObj.sublabel})`}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '15px'
-            }}
-          >
-            <span>{currentThemeObj.icon}</span>
-          </button>
-
-          {themeMenuOpen && (
-            <>
-              {/* Invisible Backdrop to close on tap outside */}
-              <div
-                onClick={() => setThemeMenuOpen(false)}
-                style={{ position: 'fixed', inset: 0, zIndex: 90 }}
-              />
-
-              {/* Theme Popover Menu */}
-              <div
-                style={{
-                  position: 'absolute',
-                  top: 'calc(100% + 8px)',
-                  right: 0,
-                  width: '210px',
-                  background: 'var(--color-surface)',
-                  border: '1.5px solid var(--color-hairline)',
-                  borderRadius: 'var(--radius-md)',
-                  boxShadow: 'var(--shadow-lg)',
-                  padding: '6px',
-                  zIndex: 91,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '4px',
-                  animation: 'fadeIn 0.18s ease-out'
-                }}
-              >
-                <div style={{
-                  fontSize: '10px',
-                  fontWeight: '700',
-                  letterSpacing: '0.08em',
-                  textTransform: 'uppercase',
-                  color: 'var(--color-muted)',
-                  padding: '6px 10px 4px'
-                }}>
-                  Visual Theme
-                </div>
-
-                {THEMES.map((t) => {
-                  const isSelected = normalizedTheme === t.id;
-                  return (
-                    <button
-                      key={t.id}
-                      type="button"
-                      onClick={() => {
-                        playClickSound();
-                        onSelectTheme?.(t.id);
-                        setThemeMenuOpen(false);
-                      }}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        width: '100%',
-                        padding: '8px 10px',
-                        borderRadius: 'var(--radius-sm)',
-                        border: isSelected ? '1px solid var(--color-hairline-strong)' : '1px solid transparent',
-                        background: isSelected ? 'var(--color-surface-subtle)' : 'transparent',
-                        cursor: 'pointer',
-                        textAlign: 'left',
-                        transition: 'background-color 0.15s'
-                      }}
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span style={{ fontSize: '15px' }}>{t.icon}</span>
-                        <div>
-                          <div style={{ fontSize: '13px', fontWeight: isSelected ? '700' : '600', color: 'var(--color-ink)' }}>
-                            {t.label}
-                          </div>
-                          <div style={{ fontSize: '11px', color: 'var(--color-muted)' }}>
-                            {t.sublabel}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div style={{
-                        width: '12px',
-                        height: '12px',
-                        borderRadius: '50%',
-                        background: t.accent,
-                        boxShadow: isSelected ? '0 0 0 2px var(--color-surface), 0 0 0 3.5px var(--color-ink)' : 'none'
-                      }} />
-                    </button>
-                  );
-                })}
-              </div>
-            </>
-          )}
-        </div>
+        {/* Candlelight Theme Toggle */}
+        <button
+          className="btn-icon"
+          onClick={() => {
+            playClickSound();
+            onToggleTheme?.();
+          }}
+          aria-label="Toggle Candlelight Mode"
+          title={theme === 'candlelight' ? 'Candlelight Theme Active (Click for Sandstone)' : 'Switch to Candlelight Theme'}
+          style={{
+            borderColor: theme === 'candlelight' ? 'rgba(229, 169, 60, 0.45)' : 'var(--color-hairline)',
+            color: theme === 'candlelight' ? '#E5A93C' : 'var(--color-body)',
+            boxShadow: theme === 'candlelight' ? '0 0 14px rgba(229, 169, 60, 0.28)' : 'var(--shadow-sm)'
+          }}
+        >
+          <Flame size={17} strokeWidth={2.2} fill={theme === 'candlelight' ? '#E5A93C' : 'none'} />
+        </button>
 
         {/* Ambient Soundscape Toggle */}
         <button

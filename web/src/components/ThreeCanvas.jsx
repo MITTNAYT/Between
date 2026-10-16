@@ -1,70 +1,37 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
-const THEME_PALETTES = {
-  unisex: {
-    COUPLE: {
-      primary: new THREE.Color('#E6A15C'),   // Warm Honey Amber
-      secondary: new THREE.Color('#D48243'), // Candlelit Terracotta
-      accent: new THREE.Color('#FFF2DC')     // Soft Champagne Pearl
-    },
-    FRIEND: {
-      primary: new THREE.Color('#E5B869'),   // Sunlit Golden Topaz
-      secondary: new THREE.Color('#C89B48'), // Warm Ochre
-      accent: new THREE.Color('#FFF8E7')     // Golden Mist
-    },
-    JUST_MET: {
-      primary: new THREE.Color('#94AAA0'),   // Earthy Soft Sage Stone
-      secondary: new THREE.Color('#C4B49F'), // Warm Driftwood
-      accent: new THREE.Color('#F7F2EB')     // Sandstone Ivory
-    }
+const AURA_COLORS = {
+  COUPLE: {
+    primary: new THREE.Color('#E6A15C'),   // Warm Honey Amber
+    secondary: new THREE.Color('#D48243'), // Candlelit Terracotta
+    accent: new THREE.Color('#FFF2DC')     // Soft Champagne Pearl
   },
-  masculine: {
-    COUPLE: {
-      primary: new THREE.Color('#D98236'),   // Bronze Flame
-      secondary: new THREE.Color('#4E71BA'), // Midnight Petrol Blue
-      accent: new THREE.Color('#E2E8F0')     // Platinum Starlight
-    },
-    FRIEND: {
-      primary: new THREE.Color('#3B82F6'),   // Electric Sapphire
-      secondary: new THREE.Color('#64748B'), // Slate Mist
-      accent: new THREE.Color('#F8FAFC')     // Ice Silver
-    },
-    JUST_MET: {
-      primary: new THREE.Color('#475569'),   // Graphite Smoke
-      secondary: new THREE.Color('#D97706'), // Warm Amber Spark
-      accent: new THREE.Color('#CBD5E1')     // Starlight
-    }
+  FRIEND: {
+    primary: new THREE.Color('#E5B869'),   // Sunlit Golden Topaz
+    secondary: new THREE.Color('#C89B48'), // Warm Ochre
+    accent: new THREE.Color('#FFF8E7')     // Golden Mist
   },
-  feminine: {
-    COUPLE: {
-      primary: new THREE.Color('#E85B78'),   // Velvet Rose
-      secondary: new THREE.Color('#D64562'), // Deep Ruby Mauve
-      accent: new THREE.Color('#FFE4E8')     // Pearlescent Rose Mist
-    },
-    FRIEND: {
-      primary: new THREE.Color('#F472B6'),   // Radiant Peach Blossom
-      secondary: new THREE.Color('#FB7185'), // Soft Coral
-      accent: new THREE.Color('#FFF1F2')     // Luminous Silk
-    },
-    JUST_MET: {
-      primary: new THREE.Color('#A855F7'),   // Lavender Dream
-      secondary: new THREE.Color('#EC4899'), // Wild Orchid
-      accent: new THREE.Color('#FAF5FF')     // Frosted Violet
-    }
+  JUST_MET: {
+    primary: new THREE.Color('#94AAA0'),   // Earthy Soft Sage Stone
+    secondary: new THREE.Color('#C4B49F'), // Warm Driftwood
+    accent: new THREE.Color('#F7F2EB')     // Sandstone Ivory
   }
 };
 
-export default function ThreeCanvas({ relationshipType = 'COUPLE', theme = 'unisex' }) {
+const CANDLE_COLORS = {
+  primary: new THREE.Color('#FF9E3B'),   // Radiant Golden Candle Flame
+  secondary: new THREE.Color('#FF5E13'), // Deep Ember Flame Orange
+  accent: new THREE.Color('#FFE29A'),    // Warm Candle Glow Yellow
+  spark: new THREE.Color('#FFAA33')     // Golden Spark
+};
+
+export default function ThreeCanvas({ relationshipType = 'COUPLE', theme = 'candlelight' }) {
   const mountRef = useRef(null);
 
   useEffect(() => {
     const mount = mountRef.current;
     if (!mount) return;
-
-    const normalizedTheme = (theme === 'candlelight' ? 'masculine' : (theme === 'sandstone' ? 'unisex' : theme)) || 'unisex';
-    const themeAuras = THEME_PALETTES[normalizedTheme] || THEME_PALETTES.unisex;
-    const activeAura = themeAuras[relationshipType] || themeAuras.COUPLE;
 
     // Scene, Camera, Renderer
     const scene = new THREE.Scene();
@@ -76,28 +43,31 @@ export default function ThreeCanvas({ relationshipType = 'COUPLE', theme = 'unis
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     mount.appendChild(renderer.domElement);
 
-    // Create Soft Glow Particle Texture dynamically
+    // Create Soft Glow Particle Texture dynamically (Candle flame ember profile)
     const canvas = document.createElement('canvas');
     canvas.width = 64;
     canvas.height = 64;
     const ctx = canvas.getContext('2d');
     const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
     gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
-    gradient.addColorStop(0.2, 'rgba(255, 255, 255, 0.8)');
-    gradient.addColorStop(0.6, 'rgba(255, 255, 255, 0.15)');
-    gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    gradient.addColorStop(0.2, 'rgba(255, 240, 200, 0.9)');
+    gradient.addColorStop(0.55, 'rgba(255, 160, 50, 0.3)');
+    gradient.addColorStop(1, 'rgba(255, 100, 20, 0)');
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, 64, 64);
 
     const particleTexture = new THREE.CanvasTexture(canvas);
 
     // Particles Geometry
-    const particleCount = 75;
+    const isCandle = theme === 'candlelight';
+    const particleCount = isCandle ? 90 : 75;
     const geometry = new THREE.BufferGeometry();
     const positions = new Float32Array(particleCount * 3);
     const colors = new Float32Array(particleCount * 3);
     const scales = new Float32Array(particleCount);
     const originalPositions = [];
+
+    const activeAura = isCandle ? CANDLE_COLORS : (AURA_COLORS[relationshipType] || AURA_COLORS.COUPLE);
 
     for (let i = 0; i < particleCount; i++) {
       const x = (Math.random() - 0.5) * 36;
@@ -108,16 +78,26 @@ export default function ThreeCanvas({ relationshipType = 'COUPLE', theme = 'unis
       positions[i * 3 + 1] = y;
       positions[i * 3 + 2] = z;
 
-      originalPositions.push({ x, y, z, speed: 0.2 + Math.random() * 0.4, phase: Math.random() * Math.PI * 2 });
+      originalPositions.push({
+        x,
+        y,
+        z,
+        speed: 0.25 + Math.random() * 0.45,
+        phase: Math.random() * Math.PI * 2,
+        driftSpeed: 0.015 + Math.random() * 0.03
+      });
 
-      // Color interpolation based on aura
-      const colorChoice = Math.random();
-      const col = colorChoice > 0.6 ? activeAura.primary : (colorChoice > 0.3 ? activeAura.secondary : activeAura.accent);
+      // Color selection
+      const rand = Math.random();
+      const col = isCandle
+        ? (rand > 0.6 ? activeAura.primary : (rand > 0.3 ? activeAura.secondary : (rand > 0.1 ? activeAura.accent : activeAura.spark)))
+        : (rand > 0.6 ? activeAura.primary : (rand > 0.3 ? activeAura.secondary : activeAura.accent));
+
       colors[i * 3] = col.r;
       colors[i * 3 + 1] = col.g;
       colors[i * 3 + 2] = col.b;
 
-      scales[i] = 1.0 + Math.random() * 2.2;
+      scales[i] = 1.0 + Math.random() * 2.4;
     }
 
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
@@ -125,11 +105,11 @@ export default function ThreeCanvas({ relationshipType = 'COUPLE', theme = 'unis
 
     // Points Material
     const material = new THREE.PointsMaterial({
-      size: 1.8,
+      size: isCandle ? 2.4 : 1.8,
       map: particleTexture,
       vertexColors: true,
       transparent: true,
-      opacity: 0.45,
+      opacity: isCandle ? 0.72 : 0.45,
       blending: THREE.AdditiveBlending,
       depthWrite: false
     });
@@ -137,13 +117,13 @@ export default function ThreeCanvas({ relationshipType = 'COUPLE', theme = 'unis
     const particles = new THREE.Points(geometry, material);
     scene.add(particles);
 
-    // Floating subtle 3D Icosahedron wireframe (subtle sacred geometry / closeness token)
+    // Floating subtle 3D Icosahedron wireframe
     const geoIco = new THREE.IcosahedronGeometry(7.5, 1);
     const matIco = new THREE.MeshBasicMaterial({
       color: activeAura.primary,
       wireframe: true,
       transparent: true,
-      opacity: 0.04
+      opacity: isCandle ? 0.07 : 0.04
     });
     const icoMesh = new THREE.Mesh(geoIco, matIco);
     icoMesh.position.set(0, 0, -4);
@@ -192,12 +172,25 @@ export default function ThreeCanvas({ relationshipType = 'COUPLE', theme = 'unis
       icoMesh.rotation.x = time * 0.05;
       icoMesh.rotation.y = time * 0.07;
 
-      // Animate particles with gentle organic breath
+      // Animate particles
       const posArray = geometry.attributes.position.array;
       for (let i = 0; i < particleCount; i++) {
         const orig = originalPositions[i];
-        posArray[i * 3 + 1] = orig.y + Math.sin(time * orig.speed + orig.phase) * 1.2;
-        posArray[i * 3] = orig.x + Math.cos(time * (orig.speed * 0.8) + orig.phase) * 0.8;
+
+        if (isCandle) {
+          // Upward rising candle ember drift
+          orig.y += orig.driftSpeed;
+          if (orig.y > 18) {
+            orig.y = -18;
+            orig.x = (Math.random() - 0.5) * 36;
+          }
+          posArray[i * 3 + 1] = orig.y + Math.sin(time * orig.speed + orig.phase) * 0.5;
+          posArray[i * 3] = orig.x + Math.sin(time * 0.8 + orig.phase) * 0.9;
+        } else {
+          // Organic breath
+          posArray[i * 3 + 1] = orig.y + Math.sin(time * orig.speed + orig.phase) * 1.2;
+          posArray[i * 3] = orig.x + Math.cos(time * (orig.speed * 0.8) + orig.phase) * 0.8;
+        }
       }
       geometry.attributes.position.needsUpdate = true;
 
@@ -231,7 +224,7 @@ export default function ThreeCanvas({ relationshipType = 'COUPLE', theme = 'unis
         inset: 0,
         pointerEvents: 'none',
         zIndex: 0,
-        opacity: 0.85,
+        opacity: theme === 'candlelight' ? 0.95 : 0.85,
         transition: 'opacity 0.5s ease-out'
       }}
       aria-hidden="true"

@@ -3,7 +3,6 @@ import { Heart, Users, Compass, Sparkles, ShieldCheck, Copy, Check, ArrowRight, 
 import { RELATIONSHIP_TYPES, SESSION_LENGTHS } from '../utils/engine';
 import { playClickSound } from '../utils/audio';
 import { generateRandomCode } from '../utils/peer';
-import { THEMES } from './Header';
 
 const REL_ICONS = {
   COUPLE: Heart,
@@ -20,9 +19,7 @@ export default function LobbyScreen({
   roomCode = '',
   isConnected = false,
   onStartSession,
-  peerName = '',
-  theme = 'unisex',
-  onSelectTheme
+  peerName = ''
 }) {
   const [tab, setTab] = useState(initialRoomCode ? 'JOIN' : 'CREATE');
   const [selectedRel, setSelectedRel] = useState('COUPLE');
@@ -250,7 +247,7 @@ export default function LobbyScreen({
           {/* Main Segmented Switcher: CREATE ROOM vs JOIN ROOM */}
           <div style={{
             display: 'flex',
-            background: 'rgba(0, 0, 0, 0.04)',
+            background: 'var(--color-surface-subtle)',
             padding: '4px',
             borderRadius: 'var(--radius-pill)'
           }}>
@@ -443,63 +440,6 @@ export default function LobbyScreen({
                       </div>
                       <div style={{ fontSize: '10px', color: 'var(--color-muted)', marginTop: '2px' }}>
                         {len.count} cards
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Visual Atmosphere Theme Selector */}
-              <label style={{
-                display: 'block',
-                fontSize: '11px',
-                fontWeight: '700',
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase',
-                color: 'var(--color-muted)',
-                marginBottom: '10px'
-              }}>
-                Visual Atmosphere
-              </label>
-
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(3, 1fr)',
-                gap: '8px',
-                marginBottom: '20px'
-              }}>
-                {THEMES.map((t) => {
-                  const normalizedTheme = (theme === 'candlelight' ? 'masculine' : (theme === 'sandstone' ? 'unisex' : theme)) || 'unisex';
-                  const isSelected = normalizedTheme === t.id;
-                  return (
-                    <button
-                      key={t.id}
-                      type="button"
-                      onClick={() => {
-                        playClickSound();
-                        onSelectTheme?.(t.id);
-                      }}
-                      style={{
-                        padding: '12px 6px',
-                        borderRadius: 'var(--radius-md)',
-                        border: isSelected ? '2px solid var(--color-ink)' : '1px solid var(--color-hairline)',
-                        background: isSelected ? 'var(--color-surface)' : 'var(--color-surface-subtle)',
-                        boxShadow: isSelected ? 'var(--shadow-sm)' : 'none',
-                        cursor: 'pointer',
-                        textAlign: 'center',
-                        transition: 'all 0.15s',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        gap: '3px'
-                      }}
-                    >
-                      <span style={{ fontSize: '18px' }}>{t.icon}</span>
-                      <div style={{ fontSize: '13px', fontWeight: isSelected ? '700' : '600', color: 'var(--color-ink)' }}>
-                        {t.label}
-                      </div>
-                      <div style={{ fontSize: '10px', color: 'var(--color-muted)' }}>
-                        {t.sublabel}
                       </div>
                     </button>
                   );
