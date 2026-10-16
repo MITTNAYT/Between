@@ -16,7 +16,12 @@ export default function QuestionCard({
   onSwipeRight,
   blindState = { myAnswer: '', peerAnswer: '', mySubmitted: false, peerSubmitted: false },
   onUpdateBlindAnswer,
-  onSubmitBlindAnswer
+  onSubmitBlindAnswer,
+  myName = 'You',
+  peerName = 'Partner',
+  isSolo = false,
+  hostName = 'Partner 1',
+  guestName = 'Partner 2'
 }) {
   const [isFlipped, setIsFlipped] = useState(false);
   const [backTab, setBackTab] = useState('BLIND'); // 'BLIND' | 'NOTES'
@@ -392,9 +397,9 @@ export default function QuestionCard({
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '4px' }}>
                 <div style={{ fontSize: '12px', color: 'var(--color-muted)' }}>
                   {blindState.peerSubmitted ? (
-                    <span style={{ color: 'var(--color-sage)', fontWeight: '600' }}>✓ Friend has written!</span>
+                    <span style={{ color: 'var(--color-sage)', fontWeight: '600' }}>✓ {peerName} has written!</span>
                   ) : (
-                    <span>Waiting for friend to write...</span>
+                    <span>Waiting for {peerName} to write...</span>
                   )}
                 </div>
 
@@ -428,7 +433,7 @@ export default function QuestionCard({
                 border: '1px solid rgba(217, 78, 52, 0.25)'
               }}>
                 <div style={{ fontSize: '11px', fontWeight: '700', color: 'var(--color-ember)', textTransform: 'uppercase' }}>
-                  Your Answer
+                  {isSolo ? `${hostName}'s Answer` : `${myName}'s Answer`}
                 </div>
                 <div style={{ fontSize: '14px', color: 'var(--color-ink)', marginTop: '4px', fontStyle: 'italic' }}>
                   “{blindState.myAnswer}”
@@ -442,7 +447,7 @@ export default function QuestionCard({
                 border: '1px solid rgba(56, 123, 106, 0.25)'
               }}>
                 <div style={{ fontSize: '11px', fontWeight: '700', color: 'var(--color-sage)', textTransform: 'uppercase' }}>
-                  Friend's Answer
+                  {isSolo ? `${guestName}'s Answer` : `${peerName}'s Answer`}
                 </div>
                 <div style={{ fontSize: '14px', color: 'var(--color-ink)', marginTop: '4px', fontStyle: 'italic' }}>
                   “{blindState.peerAnswer || 'Both answers unlocked!'}”

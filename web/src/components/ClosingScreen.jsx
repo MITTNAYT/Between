@@ -8,7 +8,10 @@ export default function ClosingScreen({
   bookmarkedMoments = [],
   relationshipType = 'COUPLE',
   onReturnHome,
-  onStartNew
+  onStartNew,
+  hostName = 'Partner 1',
+  guestName = 'Partner 2',
+  peerName = 'Partner'
 }) {
   const [copiedMoments, setCopiedMoments] = useState(false);
   const [appreciationNote, setAppreciationNote] = useState('');
@@ -92,23 +95,27 @@ export default function ClosingScreen({
     ctx.textAlign = 'center';
     ctx.fillText('B E T W E E N', centerX, logoY + 95);
 
+    ctx.fillStyle = '#C2673B';
+    ctx.font = 'bold 24px "Plus Jakarta Sans", sans-serif';
+    ctx.fillText(`${hostName} & ${guestName}`, centerX, logoY + 130);
+
     ctx.fillStyle = '#8C8278';
-    ctx.font = '600 20px "Plus Jakarta Sans", sans-serif';
-    ctx.fillText('RITUALS OF CLOSENESS', centerX, logoY + 130);
+    ctx.font = '600 18px "Plus Jakarta Sans", sans-serif';
+    ctx.fillText('RITUALS OF CLOSENESS', centerX, logoY + 160);
 
     // Date & Mode Pill
     const dateStr = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
     const relLabel = RELATIONSHIP_TYPES[relationshipType]?.label || 'Partner';
     ctx.fillStyle = '#4A443E';
-    ctx.font = '500 22px "Plus Jakarta Sans", sans-serif';
-    ctx.fillText(`${relLabel} Session · ${dateStr}`, centerX, logoY + 175);
+    ctx.font = '500 20px "Plus Jakarta Sans", sans-serif';
+    ctx.fillText(`${relLabel} Session · ${dateStr}`, centerX, logoY + 195);
 
     // Divider Line
     ctx.strokeStyle = '#DFD5C6';
     ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.moveTo(180, logoY + 215);
-    ctx.lineTo(900, logoY + 215);
+    ctx.moveTo(180, logoY + 225);
+    ctx.lineTo(900, logoY + 225);
     ctx.stroke();
 
     // 5. Starred Questions / Saved Moments
@@ -328,14 +335,14 @@ export default function ClosingScreen({
         </div>
         
         <p style={{ fontSize: '13px', color: 'var(--color-body)', marginBottom: '12px' }}>
-          What is one thing you appreciate about your partner or friend after this conversation?
+          What is one thing you appreciate about {peerName || 'your partner'} after this conversation?
         </p>
 
         <textarea
           rows={3}
           value={appreciationNote}
           onChange={(e) => setAppreciationNote(e.target.value)}
-          placeholder="E.g., Thank you for opening up about your dreams today. It was so peaceful listening to you..."
+          placeholder={`E.g., Thank you for opening up today, ${peerName || ''}. It was so peaceful listening to you...`}
           style={{
             width: '100%',
             padding: '12px',

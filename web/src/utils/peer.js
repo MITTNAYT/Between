@@ -1,5 +1,14 @@
 import { Peer } from 'peerjs';
 
+export function generateRandomCode(length = 5) {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code = '';
+  for (let i = 0; i < length; i++) {
+    code += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return code;
+}
+
 class MultiplayerSync {
   constructor() {
     this.peer = null;
@@ -7,6 +16,8 @@ class MultiplayerSync {
     this.broadcastChannel = null;
     this.roomCode = null;
     this.isHost = false;
+    this.myName = 'Partner 1';
+    this.peerName = 'Partner 2';
     this.onStateChangeCallback = null;
     this.onReactionCallback = null;
     this.onStatusChangeCallback = null;
@@ -22,18 +33,31 @@ class MultiplayerSync {
     this.remotePeerId = null;
   }
 
-  generateRoomCode() {
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-    let code = '';
-    for (let i = 0; i < 4; i++) {
-      code += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return code;
+  generateRoomCode(length = 5) {
+    return generateRandomCode(length);
   }
 
-  initHost(onStatusChange, onStateChange, onReaction, onTouchRipple, onCallStream, onCallState) {
+  initHost(optsOrOnStatus, ...rest) {
+    let opts = {};
+    let onStatusChange, onStateChange, onReaction, onTouchRipple, onCallStream, onCallState;
+
+    if (typeof optsOrOnStatus === 'object' && optsOrOnStatus !== null) {
+      opts = optsOrOnStatus;
+      onStatusChange = opts.onStatusChange;
+      onStateChange = opts.onStateChange;
+      onReaction = opts.onReaction;
+      onTouchRipple = opts.onTouchRipple;
+      onCallStream = opts.onCallStream;
+      onCallState = opts.onCallState;
+    } else {
+      onStatusChange = optsOrOnStatus;
+      [onStateChange, onReaction, onTouchRipple, onCallStream, onCallState] = rest;
+    }
+
     this.cleanup();
     this.isHost = true;
+    this.myName = opts.userName || 'Partner 1';
+    this.peerName = 'Partner 2';
     this.onStatusChangeCallback = onStatusChange;
     this.onStateChangeCallback = onStateChange;
     this.onReactionCallback = onReaction;
@@ -41,7 +65,7 @@ class MultiplayerSync {
     this.onCallStreamCallback = onCallStream;
     this.onCallStateCallback = onCallState;
 
-    this.roomCode = this.generateRoomCode();
+    this.roomCode = (opts.roomCode || this.generateRoomCode()).toUpperCase().trim();
     const peerId = `between-v1-${this.roomCode.toLowerCase()}`;
 
     this.setupBroadcastChannel(this.roomCode);
@@ -107,10 +131,30 @@ class MultiplayerSync {
     return this.roomCode;
   }
 
-  joinRoom(code, onStatusChange, onStateChange, onReaction, onTouchRipple, onCallStream, onCallState) {
+  joinRoom(optsOrCode, ...rest) {
+    let opts = {};
+    let code = '';
+    let onStatusChange, onStateChange, onReaction, onTouchRipple, onCallStream, onCallState;
+
+    if (typeof optsOrCode === 'object' && optsOrCode !== null) {
+      opts = optsOrCode;
+      code = opts.roomCode || '';
+      onStatusChange = opts.onStatusChange;
+      onStateChange = opts.onStateChange;
+      onReaction = opts.onReaction;
+      onTouchRipple = opts.onTouchRipple;
+      onCallStream = opts.onCallStream;
+      onCallState = opts.onCallState;
+    } else {
+      code = optsOrCode;
+      [onStatusChange, onStateChange, onReaction, onTouchRipple, onCallStream, onCallState] = rest;
+    }
+
     this.cleanup();
     this.isHost = false;
-    this.roomCode = code.toUpperCase().trim();
+    this.myName = opts.userName || 'Partner 2';
+    this.peerName = 'Partner 1';
+    this.roomCode = (code || '').toUpperCase().trim();
     this.onStatusChangeCallback = onStatusChange;
     this.onStateChangeCallback = onStateChange;
     this.onReactionCallback = onReaction;
@@ -169,7 +213,7 @@ class MultiplayerSync {
       console.warn('Guest PeerJS error, using local channel:', e);
     }
 
-    this.sendBroadcast({ type: 'GUEST_HELLO' });
+    this.sendBroadcast({ type: 'GUEST_HELLO', name: this.myName });
   }
 
   setupBroadcastChannel(roomCode) {
@@ -192,11 +236,15 @@ class MultiplayerSync {
       this.onStatusChangeCallback?.({
         status: 'CONNECTED',
         roomCode: this.roomCode,
-        isHost: this.isHost
+        isHost: this.isHost,
+        myName: this.myName,
+        peerName: this.peerName
       });
 
       if (this.isHost) {
-        this.broadcastMessage({ type: 'HOST_CONNECTED' });
+        this.broadcastMessage({ type: 'HOST_CONNECTED', name: this.myName });
+      } else {
+        this.broadcastMessage({ type: 'GUEST_HELLO', name: this.myName });
       }
     });
 
@@ -209,7 +257,9 @@ class MultiplayerSync {
       this.onStatusChangeCallback?.({
         status: 'DISCONNECTED',
         roomCode: this.roomCode,
-        isHost: this.isHost
+        isHost: this.isHost,
+        myName: this.myName,
+        peerName: this.peerName
       });
     });
 
@@ -221,22 +271,31 @@ class MultiplayerSync {
   handleIncomingData(data) {
     if (!data || typeof data !== 'object') return;
 
-    if (data.type === 'GUEST_HELLO' && this.isHost) {
+    if (data.type === 'GUEST_HELLO') {
       this.isConnected = true;
+      if (data.name) this.peerName = data.name;
+      if (this.isHost) {
+        this.broadcastMessage({ type: 'HOST_CONNECTED', name: this.myName });
+      }
       this.onStatusChangeCallback?.({
         status: 'CONNECTED',
         roomCode: this.roomCode,
-        isHost: true
+        isHost: this.isHost,
+        peerName: this.peerName,
+        myName: this.myName
       });
       return;
     }
 
     if (data.type === 'HOST_CONNECTED') {
       this.isConnected = true;
+      if (data.name) this.peerName = data.name;
       this.onStatusChangeCallback?.({
         status: 'CONNECTED',
         roomCode: this.roomCode,
-        isHost: false
+        isHost: false,
+        peerName: this.peerName,
+        myName: this.myName
       });
       return;
     }

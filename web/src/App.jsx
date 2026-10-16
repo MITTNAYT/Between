@@ -19,6 +19,10 @@ export default function App() {
   const [isSolo, setIsSolo] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState('IDLE');
   
+  // Player Names
+  const [hostName, setHostName] = useState(() => localStorage.getItem('between_host_name') || localStorage.getItem('between_user_name') || 'Partner 1');
+  const [guestName, setGuestName] = useState(() => localStorage.getItem('between_guest_name') || 'Partner 2');
+
   // Theme: 'sandstone' | 'candlelight'
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem('between_theme') || 'sandstone';
@@ -74,6 +78,8 @@ export default function App() {
     roomCode,
     isHost,
     isSolo,
+    hostName,
+    guestName,
     connectionStatus,
     relationshipType,
     sessionLength,
@@ -90,6 +96,8 @@ export default function App() {
       roomCode,
       isHost,
       isSolo,
+      hostName,
+      guestName,
       connectionStatus,
       relationshipType,
       sessionLength,
@@ -99,7 +107,7 @@ export default function App() {
       bookmarkedMoments,
       blindState
     };
-  }, [screen, roomCode, isHost, isSolo, connectionStatus, relationshipType, sessionLength, questions, currentIndex, currentTurn, bookmarkedMoments, blindState]);
+  }, [screen, roomCode, isHost, isSolo, hostName, guestName, connectionStatus, relationshipType, sessionLength, questions, currentIndex, currentTurn, bookmarkedMoments, blindState]);
 
   // Floating reaction spawner
   const spawnReaction = useCallback((emoji, sender) => {
@@ -127,6 +135,15 @@ export default function App() {
     if (statusData.roomCode) setRoomCode(statusData.roomCode);
     if (typeof statusData.isHost === 'boolean') setIsHost(statusData.isHost);
 
+    if (statusData.myName) {
+      if (statusData.isHost) setHostName(statusData.myName);
+      else setGuestName(statusData.myName);
+    }
+    if (statusData.peerName) {
+      if (statusData.isHost) setGuestName(statusData.peerName);
+      else setHostName(statusData.peerName);
+    }
+
     if (statusData.isHost && statusData.status === 'CONNECTED') {
       const cur = stateRef.current;
       multiplayerSync.syncState({
@@ -136,7 +153,9 @@ export default function App() {
         questions: cur.questions,
         currentIndex: cur.currentIndex,
         currentTurn: cur.currentTurn,
-        bookmarkedMoments: cur.bookmarkedMoments
+        bookmarkedMoments: cur.bookmarkedMoments,
+        hostName: cur.hostName,
+        guestName: statusData.peerName || cur.guestName
       });
     }
   }, []);
@@ -150,6 +169,8 @@ export default function App() {
     if (incoming.relationshipType) setRelationshipType(incoming.relationshipType);
     if (incoming.sessionLength) setSessionLength(incoming.sessionLength);
     if (incoming.questions) setQuestions(incoming.questions);
+    if (incoming.hostName) setHostName(incoming.hostName);
+    if (incoming.guestName) setGuestName(incoming.guestName);
 
     if (incoming.currentIndex !== undefined && incoming.currentIndex !== stateRef.current.currentIndex) {
       const isNext = incoming.currentIndex > stateRef.current.currentIndex;
@@ -235,59 +256,82 @@ export default function App() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const roomParam = params.get('room');
-    if (roomParam && roomParam.trim().length === 4) {
-      handleJoinRoom(roomParam.trim().toUpperCase());
+    if (roomParam && roomParam.trim().length >= 4) {
+      handleJoinRoom({
+        roomCode: roomParam.trim().toUpperCase(),
+        userName: localStorage.getItem('between_user_name') || 'Partner 2'
+      });
     }
   }, []);
 
   // HOST: Create Room
-  const handleCreateRoom = ({ relationshipType: rel, sessionLength: len }) => {
+  const handleCreateRoom = ({ relationshipType: rel, sessionLength: len, roomCode: customCode, userName }) => {
     setIsHost(true);
     setIsSolo(false);
     setRelationshipType(rel);
     setSessionLength(len);
+    const myName = userName || 'Partner 1';
+    setHostName(myName);
+    localStorage.setItem('between_host_name', myName);
+    localStorage.setItem('between_user_name', myName);
 
     const initialDeck = buildSession(rel, len);
     setQuestions(initialDeck);
     setCurrentIndex(0);
     setCurrentTurn('host');
 
-    const code = multiplayerSync.initHost(
-      handleStatusChange,
-      handleStateChange,
-      handleReactionReceived,
-      handleTouchRippleReceived,
-      handleRemoteStream,
-      handleCallState
-    );
+    const code = multiplayerSync.initHost({
+      roomCode: customCode,
+      userName: myName,
+      onStatusChange: handleStatusChange,
+      onStateChange: handleStateChange,
+      onReaction: handleReactionReceived,
+      onTouchRipple: handleTouchRippleReceived,
+      onCallStream: handleRemoteStream,
+      onCallState: handleCallState
+    });
     setRoomCode(code);
     setConnectionStatus('WAITING_FOR_GUEST');
   };
 
   // GUEST: Join Room
-  const handleJoinRoom = (code) => {
+  const handleJoinRoom = (paramsOrCode) => {
     setIsHost(false);
     setIsSolo(false);
+    let code = typeof paramsOrCode === 'string' ? paramsOrCode : (paramsOrCode.roomCode || '');
+    let userName = typeof paramsOrCode === 'object' && paramsOrCode.userName ? paramsOrCode.userName : (localStorage.getItem('between_user_name') || 'Partner 2');
+    code = code.trim().toUpperCase();
     setRoomCode(code);
+    setGuestName(userName);
+    localStorage.setItem('between_guest_name', userName);
+    localStorage.setItem('between_user_name', userName);
     setConnectionStatus('CONNECTING');
 
-    multiplayerSync.joinRoom(
-      code,
-      handleStatusChange,
-      handleStateChange,
-      handleReactionReceived,
-      handleTouchRippleReceived,
-      handleRemoteStream,
-      handleCallState
-    );
+    multiplayerSync.joinRoom({
+      roomCode: code,
+      userName: userName,
+      onStatusChange: handleStatusChange,
+      onStateChange: handleStateChange,
+      onReaction: handleReactionReceived,
+      onTouchRipple: handleTouchRippleReceived,
+      onCallStream: handleRemoteStream,
+      onCallState: handleCallState
+    });
   };
 
   // SOLO / PASS THE PHONE
-  const handleStartSolo = ({ relationshipType: rel, sessionLength: len }) => {
+  const handleStartSolo = ({ relationshipType: rel, sessionLength: len, p1Name, p2Name }) => {
     setIsHost(true);
     setIsSolo(true);
     setRelationshipType(rel);
     setSessionLength(len);
+    const p1 = p1Name || 'Partner 1';
+    const p2 = p2Name || 'Partner 2';
+    setHostName(p1);
+    setGuestName(p2);
+    localStorage.setItem('between_p1_name', p1);
+    localStorage.setItem('between_p2_name', p2);
+
     const initialDeck = buildSession(rel, len);
     setQuestions(initialDeck);
     setCurrentIndex(0);
@@ -308,7 +352,9 @@ export default function App() {
         questions,
         currentIndex: 0,
         currentTurn: 'host',
-        bookmarkedMoments: []
+        bookmarkedMoments: [],
+        hostName,
+        guestName
       });
     }
   };
@@ -566,12 +612,13 @@ export default function App() {
 
   const isCurrentBookmarked = bookmarkedMoments.some(b => b.id === currentQuestion.id);
 
-  let turnString = 'Your Turn to Speak';
+  const activeSpeakerName = currentTurn === 'host' ? (hostName || 'Partner 1') : (guestName || 'Partner 2');
+  let turnString = `${activeSpeakerName}'s Turn to Speak`;
   if (isSolo) {
-    turnString = currentTurn === 'host' ? 'Partner 1 Speaks' : 'Partner 2 Speaks';
+    turnString = `${activeSpeakerName}'s Turn to Speak`;
   } else {
     const isMyTurn = (isHost && currentTurn === 'host') || (!isHost && currentTurn === 'guest');
-    turnString = isMyTurn ? 'Your Turn to Speak' : "Friend's Turn to Speak";
+    turnString = isMyTurn ? `Your Turn to Speak (${activeSpeakerName})` : `${activeSpeakerName}'s Turn to Speak`;
   }
 
   return (
@@ -635,6 +682,7 @@ export default function App() {
             roomCode={roomCode}
             isConnected={connectionStatus === 'CONNECTED'}
             onStartSession={handleStartSession}
+            peerName={guestName}
           />
         )}
 
@@ -695,6 +743,11 @@ export default function App() {
                 blindState={blindState}
                 onUpdateBlindAnswer={handleUpdateBlindAnswer}
                 onSubmitBlindAnswer={handleSubmitBlindAnswer}
+                myName={isHost ? hostName : guestName}
+                peerName={isHost ? guestName : hostName}
+                isSolo={isSolo}
+                hostName={hostName}
+                guestName={guestName}
               />
             </div>
 
@@ -768,6 +821,9 @@ export default function App() {
             bookmarkedMoments={bookmarkedMoments}
             relationshipType={relationshipType}
             onReturnHome={handleExitToLobby}
+            hostName={hostName}
+            guestName={guestName}
+            peerName={isHost ? guestName : hostName}
             onStartNew={() => {
               const newDeck = buildSession(relationshipType, sessionLength);
               setQuestions(newDeck);
@@ -782,7 +838,9 @@ export default function App() {
                   questions: newDeck,
                   currentIndex: 0,
                   currentTurn: 'host',
-                  bookmarkedMoments: []
+                  bookmarkedMoments: [],
+                  hostName,
+                  guestName
                 });
               }
             }}
@@ -803,6 +861,8 @@ export default function App() {
           peerReady={peerReady}
           onConfirmReady={handleConfirmHandshake}
           onDecline={handleDeclineHandshake}
+          myName={isHost ? hostName : guestName}
+          peerName={isHost ? guestName : hostName}
         />
       </div>
     </div>

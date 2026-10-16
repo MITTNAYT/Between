@@ -8,7 +8,9 @@ export default function HandshakeModal({
   myReady,
   peerReady,
   onConfirmReady,
-  onDecline
+  onDecline,
+  myName = 'You',
+  peerName = 'Partner'
 }) {
   if (!isOpen) return null;
 
@@ -69,7 +71,7 @@ export default function HandshakeModal({
             color: myReady ? 'var(--color-sage)' : 'var(--color-muted)'
           }}>
             <CheckCircle2 size={16} strokeWidth={2.4} color={myReady ? 'var(--color-sage)' : 'var(--color-muted)'} />
-            <span>You: {myReady ? 'Ready' : 'Waiting'}</span>
+            <span>{myName}: {myReady ? 'Ready' : 'Waiting'}</span>
           </div>
 
           <div style={{ width: '1px', background: 'var(--color-hairline)' }} />
@@ -83,7 +85,7 @@ export default function HandshakeModal({
             color: peerReady ? 'var(--color-sage)' : 'var(--color-muted)'
           }}>
             <CheckCircle2 size={16} strokeWidth={2.4} color={peerReady ? 'var(--color-sage)' : 'var(--color-muted)'} />
-            <span>Friend: {peerReady ? 'Ready' : 'Waiting'}</span>
+            <span>{peerName}: {peerReady ? 'Ready' : 'Waiting'}</span>
           </div>
         </div>
 
@@ -97,7 +99,7 @@ export default function HandshakeModal({
             className="btn-primary"
             style={{ width: '100%', padding: '14px', gap: '8px' }}
           >
-            <span>{myReady ? 'Waiting for Friend...' : 'Yes, I am Ready'}</span>
+            <span>{myReady ? `Waiting for ${peerName}...` : 'Yes, I am Ready'}</span>
             <ArrowRight size={17} strokeWidth={2.4} />
           </button>
 
