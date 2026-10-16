@@ -23,9 +23,12 @@ export default function App() {
   const [hostName, setHostName] = useState(() => localStorage.getItem('between_host_name') || localStorage.getItem('between_user_name') || 'Partner 1');
   const [guestName, setGuestName] = useState(() => localStorage.getItem('between_guest_name') || 'Partner 2');
 
-  // Theme: 'sandstone' | 'candlelight'
+  // Theme: 'unisex' (sandstone) | 'masculine' (obsidian slate) | 'feminine' (blush cashmere)
   const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('between_theme') || 'sandstone';
+    const saved = localStorage.getItem('between_theme');
+    if (saved === 'candlelight') return 'masculine';
+    if (saved === 'sandstone') return 'unisex';
+    return saved || 'unisex';
   });
 
   const [relationshipType, setRelationshipType] = useState('COUPLE');
@@ -64,12 +67,13 @@ export default function App() {
 
   // Synchronize document theme
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('between_theme', theme);
+    const normalizedTheme = (theme === 'candlelight' ? 'masculine' : (theme === 'sandstone' ? 'unisex' : theme)) || 'unisex';
+    document.documentElement.setAttribute('data-theme', normalizedTheme);
+    localStorage.setItem('between_theme', normalizedTheme);
   }, [theme]);
 
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'candlelight' ? 'sandstone' : 'candlelight');
+  const handleSelectTheme = (newTheme) => {
+    setTheme(newTheme);
   };
 
   // Keep a ref to current state for peer callbacks
@@ -627,7 +631,7 @@ export default function App() {
       <audio ref={remoteAudioRef} autoPlay playsInline style={{ display: 'none' }} />
 
       {/* Interactive 3D Background with Three.js */}
-      <ThreeCanvas relationshipType={relationshipType} />
+      <ThreeCanvas relationshipType={relationshipType} theme={theme} />
 
       {/* Atmospheric Radial Backdrop */}
       <div className="app-backdrop" />
@@ -664,7 +668,7 @@ export default function App() {
           onExit={handleExitToLobby}
           isSessionActive={screen === 'SESSION'}
           theme={theme}
-          onToggleTheme={toggleTheme}
+          onSelectTheme={handleSelectTheme}
           voiceCallState={voiceCallState}
           isVoiceMuted={isVoiceMuted}
           onToggleVoiceCall={handleToggleVoiceCall}
@@ -683,6 +687,8 @@ export default function App() {
             isConnected={connectionStatus === 'CONNECTED'}
             onStartSession={handleStartSession}
             peerName={guestName}
+            theme={theme}
+            onSelectTheme={handleSelectTheme}
           />
         )}
 

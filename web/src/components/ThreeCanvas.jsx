@@ -1,30 +1,70 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
-const AURA_COLORS = {
-  COUPLE: {
-    primary: new THREE.Color('#E6A15C'),   // Warm Honey Amber
-    secondary: new THREE.Color('#D48243'), // Candlelit Terracotta
-    accent: new THREE.Color('#FFF2DC')     // Soft Champagne Pearl
+const THEME_PALETTES = {
+  unisex: {
+    COUPLE: {
+      primary: new THREE.Color('#E6A15C'),   // Warm Honey Amber
+      secondary: new THREE.Color('#D48243'), // Candlelit Terracotta
+      accent: new THREE.Color('#FFF2DC')     // Soft Champagne Pearl
+    },
+    FRIEND: {
+      primary: new THREE.Color('#E5B869'),   // Sunlit Golden Topaz
+      secondary: new THREE.Color('#C89B48'), // Warm Ochre
+      accent: new THREE.Color('#FFF8E7')     // Golden Mist
+    },
+    JUST_MET: {
+      primary: new THREE.Color('#94AAA0'),   // Earthy Soft Sage Stone
+      secondary: new THREE.Color('#C4B49F'), // Warm Driftwood
+      accent: new THREE.Color('#F7F2EB')     // Sandstone Ivory
+    }
   },
-  FRIEND: {
-    primary: new THREE.Color('#E5B869'),   // Sunlit Golden Topaz
-    secondary: new THREE.Color('#C89B48'), // Warm Ochre
-    accent: new THREE.Color('#FFF8E7')     // Golden Mist
+  masculine: {
+    COUPLE: {
+      primary: new THREE.Color('#D98236'),   // Bronze Flame
+      secondary: new THREE.Color('#4E71BA'), // Midnight Petrol Blue
+      accent: new THREE.Color('#E2E8F0')     // Platinum Starlight
+    },
+    FRIEND: {
+      primary: new THREE.Color('#3B82F6'),   // Electric Sapphire
+      secondary: new THREE.Color('#64748B'), // Slate Mist
+      accent: new THREE.Color('#F8FAFC')     // Ice Silver
+    },
+    JUST_MET: {
+      primary: new THREE.Color('#475569'),   // Graphite Smoke
+      secondary: new THREE.Color('#D97706'), // Warm Amber Spark
+      accent: new THREE.Color('#CBD5E1')     // Starlight
+    }
   },
-  JUST_MET: {
-    primary: new THREE.Color('#94AAA0'),   // Earthy Soft Sage Stone
-    secondary: new THREE.Color('#C4B49F'), // Warm Driftwood
-    accent: new THREE.Color('#F7F2EB')     // Sandstone Ivory
+  feminine: {
+    COUPLE: {
+      primary: new THREE.Color('#E85B78'),   // Velvet Rose
+      secondary: new THREE.Color('#D64562'), // Deep Ruby Mauve
+      accent: new THREE.Color('#FFE4E8')     // Pearlescent Rose Mist
+    },
+    FRIEND: {
+      primary: new THREE.Color('#F472B6'),   // Radiant Peach Blossom
+      secondary: new THREE.Color('#FB7185'), // Soft Coral
+      accent: new THREE.Color('#FFF1F2')     // Luminous Silk
+    },
+    JUST_MET: {
+      primary: new THREE.Color('#A855F7'),   // Lavender Dream
+      secondary: new THREE.Color('#EC4899'), // Wild Orchid
+      accent: new THREE.Color('#FAF5FF')     // Frosted Violet
+    }
   }
 };
 
-export default function ThreeCanvas({ relationshipType = 'COUPLE' }) {
+export default function ThreeCanvas({ relationshipType = 'COUPLE', theme = 'unisex' }) {
   const mountRef = useRef(null);
 
   useEffect(() => {
     const mount = mountRef.current;
     if (!mount) return;
+
+    const normalizedTheme = (theme === 'candlelight' ? 'masculine' : (theme === 'sandstone' ? 'unisex' : theme)) || 'unisex';
+    const themeAuras = THEME_PALETTES[normalizedTheme] || THEME_PALETTES.unisex;
+    const activeAura = themeAuras[relationshipType] || themeAuras.COUPLE;
 
     // Scene, Camera, Renderer
     const scene = new THREE.Scene();
@@ -58,8 +98,6 @@ export default function ThreeCanvas({ relationshipType = 'COUPLE' }) {
     const colors = new Float32Array(particleCount * 3);
     const scales = new Float32Array(particleCount);
     const originalPositions = [];
-
-    const activeAura = AURA_COLORS[relationshipType] || AURA_COLORS.COUPLE;
 
     for (let i = 0; i < particleCount; i++) {
       const x = (Math.random() - 0.5) * 36;
@@ -183,7 +221,7 @@ export default function ThreeCanvas({ relationshipType = 'COUPLE' }) {
       matIco.dispose();
       renderer.dispose();
     };
-  }, [relationshipType]);
+  }, [relationshipType, theme]);
 
   return (
     <div
