@@ -1,4 +1,6 @@
-import { Peer } from 'peerjs';
+import PeerPkg from 'peerjs';
+const Peer = PeerPkg?.Peer || PeerPkg;
+import mqtt from 'mqtt';
 
 export function generateRandomCode(length = 5) {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -9,55 +11,49 @@ export function generateRandomCode(length = 5) {
   return code;
 }
 
-const ICE_SERVERS = [
-  { urls: 'stun:stun.l.google.com:19302' },
-  { urls: 'stun:stun1.l.google.com:19302' },
-  { urls: 'stun:stun2.l.google.com:19302' },
-  { urls: 'stun:stun.cloudflare.com:3478' },
-  { urls: 'stun:global.stun.twilio.com:3478' },
-  {
-    urls: 'turn:openrelay.metered.ca:80',
-    username: 'openrelayproject',
-    credential: 'openrelayproject'
-  },
-  {
-    urls: 'turn:openrelay.metered.ca:443',
-    username: 'openrelayproject',
-    credential: 'openrelayproject'
-  },
-  {
-    urls: 'turn:openrelay.metered.ca:443?transport=tcp',
-    username: 'openrelayproject',
-    credential: 'openrelayproject'
-  }
-];
-
 export function sanitizeCode(code) {
   return (code || '').replace(/[^A-Za-z0-9]/g, '').toUpperCase().trim();
 }
 
+const MQTT_BROKERS = [
+  'wss://broker.hivemq.com:8884/mqtt',
+  'wss://broker.emqx.io:8084/mqtt'
+];
+
+const ICE_SERVERS = [
+  { urls: 'stun:stun.l.google.com:19302' },
+  { urls: 'stun:stun1.l.google.com:19302' },
+  { urls: 'stun:stun2.l.google.com:19302' },
+  { urls: 'stun:stun.cloudflare.com:3478' }
+];
+
 class MultiplayerSync {
   constructor() {
-    this.peer = null;
-    this.connection = null;
+    this.clientId = 'u_' + Math.random().toString(36).substring(2, 9);
+    this.mqttClient = null;
+    this.mqttConnected = false;
     this.broadcastChannel = null;
     this.roomCode = null;
     this.isHost = false;
     this.myName = 'Partner 1';
     this.peerName = 'Partner 2';
+    this.isConnected = false;
+    this.joinTimeout = null;
+    this.guestHelloTimer = null;
+    this.heartbeatTimer = null;
+
+    // Callbacks
     this.onStateChangeCallback = null;
     this.onReactionCallback = null;
     this.onStatusChangeCallback = null;
     this.onTouchRippleCallback = null;
-    this.isConnected = false;
-    this.joinTimeout = null;
-    this.heartbeatTimer = null;
-
-    // WebRTC Voice Call
-    this.mediaCall = null;
-    this.localStream = null;
     this.onCallStreamCallback = null;
     this.onCallStateCallback = null;
+
+    // Optional PeerJS Voice Call
+    this.peer = null;
+    this.mediaCall = null;
+    this.localStream = null;
     this.isMuted = false;
     this.remotePeerId = null;
   }
@@ -93,92 +89,26 @@ class MultiplayerSync {
     this.onTouchRippleCallback = onTouchRipple;
     this.onCallStreamCallback = onCallStream;
     this.onCallStateCallback = onCallState;
+    this.onRequestStateCallback = opts.onRequestState || null;
 
     this.roomCode = sanitizeCode(opts.roomCode || this.generateRoomCode());
-    const peerId = `between-v1-${this.roomCode.toLowerCase()}`;
 
+    // 1. Setup local BroadcastChannel
     this.setupBroadcastChannel(this.roomCode);
 
-    try {
-      this.peer = new Peer(peerId, {
-        debug: 1,
-        config: { iceServers: ICE_SERVERS }
-      });
+    // 2. Connect to MQTT cluster
+    this.connectMqtt(0);
 
-      this.peer.on('open', (id) => {
-        this.onStatusChangeCallback?.({
-          status: 'WAITING_FOR_GUEST',
-          roomCode: this.roomCode,
-          isHost: true
-        });
-      });
+    // 3. Inform host state
+    this.onStatusChangeCallback?.({
+      status: 'WAITING_FOR_GUEST',
+      roomCode: this.roomCode,
+      isHost: true,
+      myName: this.myName
+    });
 
-      this.peer.on('connection', (conn) => {
-        this.remotePeerId = conn.peer;
-        this.setupConnection(conn);
-      });
-
-      // Handle incoming voice call
-      this.peer.on('call', async (call) => {
-        this.mediaCall = call;
-        try {
-          if (!this.localStream) {
-            this.localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
-          }
-          call.answer(this.localStream);
-          this.onCallStateCallback?.('CONNECTED');
-
-          call.on('stream', (remoteStream) => {
-            this.onCallStreamCallback?.(remoteStream);
-          });
-
-          call.on('close', () => {
-            this.onCallStateCallback?.('ENDED');
-          });
-        } catch (e) {
-          console.warn('Voice call auto-answer error:', e);
-        }
-      });
-
-      this.peer.on('error', (err) => {
-        console.warn('Host Peer error:', err?.type, err);
-        if (err?.type === 'unavailable-id') {
-          // Room ID already registered in PeerJS cloud: regenerate a fresh room code
-          const freshCode = this.generateRoomCode();
-          this.roomCode = freshCode;
-          console.log('Room ID taken, assigning fresh code:', freshCode);
-          this.initHost({
-            roomCode: freshCode,
-            userName: this.myName,
-            onStatusChange: this.onStatusChangeCallback,
-            onStateChange: this.onStateChangeCallback,
-            onReaction: this.onReactionCallback,
-            onTouchRipple: this.onTouchRippleCallback,
-            onCallStream: this.onCallStreamCallback,
-            onCallState: this.onCallStateCallback
-          });
-          return;
-        }
-
-        if (err?.type === 'network' || err?.type === 'server-error') {
-          this.onStatusChangeCallback?.({
-            status: 'ERROR',
-            error: 'Signaling connection lost. Please check internet connection.',
-            roomCode: this.roomCode,
-            isHost: true
-          });
-          return;
-        }
-
-        this.onStatusChangeCallback?.({
-          status: this.isConnected ? 'CONNECTED' : 'WAITING_FOR_GUEST',
-          roomCode: this.roomCode,
-          isHost: true
-        });
-      });
-    } catch (e) {
-      console.warn('PeerJS init failed, using BroadcastChannel fallback:', e);
-    }
+    // 4. Initialize PeerJS in background for optional voice calling
+    this.initPeerVoice();
 
     return this.roomCode;
   }
@@ -224,105 +154,36 @@ class MultiplayerSync {
       return;
     }
 
-    this.setupBroadcastChannel(this.roomCode);
-
-    const targetPeerId = `between-v1-${this.roomCode.toLowerCase()}`;
-    this.remotePeerId = targetPeerId;
-    const guestPeerId = `between-guest-${Math.random().toString(36).substring(2, 9)}`;
-
     this.onStatusChangeCallback?.({
       status: 'CONNECTING',
       roomCode: this.roomCode,
       isHost: false
     });
 
-    // 14-second timeout for guest connection
+    // 1. Setup local BroadcastChannel
+    this.setupBroadcastChannel(this.roomCode);
+
+    // 2. Connect to MQTT cluster
+    this.connectMqtt(0);
+
+    // 3. Timeout for connection (24 seconds)
     this.joinTimeout = setTimeout(() => {
       if (!this.isConnected) {
+        this.stopGuestHelloPing();
         this.onStatusChangeCallback?.({
           status: 'ERROR',
-          error: `Could not connect to room "${this.roomCode}". The host may have left or the room code was mistyped.`,
+          error: `Could not connect to room "${this.roomCode}". Please ensure the host has the room open and check the code.`,
           roomCode: this.roomCode,
           isHost: false
         });
       }
-    }, 14000);
+    }, 24000);
 
-    try {
-      this.peer = new Peer(guestPeerId, {
-        debug: 1,
-        config: { iceServers: ICE_SERVERS }
-      });
+    // 4. Start guest hello ping
+    this.startGuestHelloPing();
 
-      this.peer.on('open', () => {
-        try {
-          const conn = this.peer.connect(targetPeerId, {
-            reliable: true,
-            serialization: 'json'
-          });
-          this.setupConnection(conn);
-        } catch (err) {
-          console.warn('peer.connect error:', err);
-        }
-      });
-
-      // Handle incoming voice call on guest
-      this.peer.on('call', async (call) => {
-        this.mediaCall = call;
-        try {
-          if (!this.localStream) {
-            this.localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
-          }
-          call.answer(this.localStream);
-          this.onCallStateCallback?.('CONNECTED');
-
-          call.on('stream', (remoteStream) => {
-            this.onCallStreamCallback?.(remoteStream);
-          });
-
-          call.on('close', () => {
-            this.onCallStateCallback?.('ENDED');
-          });
-        } catch (e) {
-          console.warn('Guest voice answer error:', e);
-        }
-      });
-
-      this.peer.on('error', (err) => {
-        console.warn('Guest Peer error:', err?.type, err);
-        if (this.joinTimeout) {
-          clearTimeout(this.joinTimeout);
-          this.joinTimeout = null;
-        }
-
-        if (err?.type === 'peer-unavailable') {
-          this.onStatusChangeCallback?.({
-            status: 'ERROR',
-            error: `Room "${this.roomCode}" was not found. Please verify the code or ask the host to send an invite link.`,
-            roomCode: this.roomCode,
-            isHost: false
-          });
-        } else if (err?.type === 'network' || err?.type === 'server-error' || err?.type === 'socket-error') {
-          this.onStatusChangeCallback?.({
-            status: 'ERROR',
-            error: 'Signaling connection error. Please check your internet connection.',
-            roomCode: this.roomCode,
-            isHost: false
-          });
-        } else if (err?.type !== 'unavailable-id') {
-          this.onStatusChangeCallback?.({
-            status: 'ERROR',
-            error: err?.message || 'Connection failed. Please verify the room code and try again.',
-            roomCode: this.roomCode,
-            isHost: false
-          });
-        }
-      });
-    } catch (e) {
-      console.warn('Guest PeerJS error, using local channel:', e);
-    }
-
-    this.sendBroadcast({ type: 'GUEST_HELLO', name: this.myName });
+    // 5. Initialize PeerJS in background for optional voice calling
+    this.initPeerVoice();
   }
 
   setupBroadcastChannel(roomCode) {
@@ -330,69 +191,104 @@ class MultiplayerSync {
       try {
         this.broadcastChannel = new BroadcastChannel(`between_room_${roomCode}`);
         this.broadcastChannel.onmessage = (event) => {
-          this.handleIncomingData(event.data);
+          const data = event.data;
+          if (data && data.senderId !== this.clientId) {
+            this.handleIncomingData(data);
+          }
         };
-      } catch (e) {}
+      } catch (e) {
+        console.warn('BroadcastChannel not supported or error:', e);
+      }
     }
   }
 
-  setupConnection(conn) {
-    this.connection = conn;
-    this.remotePeerId = conn.peer;
+  connectMqtt(brokerIndex = 0) {
+    if (this.mqttClient) {
+      try { this.mqttClient.end(true); } catch (e) {}
+      this.mqttClient = null;
+    }
 
-    conn.on('open', () => {
-      if (this.joinTimeout) {
-        clearTimeout(this.joinTimeout);
-        this.joinTimeout = null;
-      }
-      this.isConnected = true;
-      this.startHeartbeat();
+    const brokerUrl = MQTT_BROKERS[brokerIndex % MQTT_BROKERS.length];
+    const topic = `between/v2/room/${this.roomCode}`;
 
-      this.onStatusChangeCallback?.({
-        status: 'CONNECTED',
-        roomCode: this.roomCode,
-        isHost: this.isHost,
-        myName: this.myName,
-        peerName: this.peerName
+    try {
+      const client = mqtt.connect(brokerUrl, {
+        clientId: `${this.isHost ? 'host' : 'guest'}_${this.clientId}`,
+        clean: true,
+        connectTimeout: 8000,
+        reconnectPeriod: 2000
       });
 
-      if (this.isHost) {
-        this.broadcastMessage({ type: 'HOST_CONNECTED', name: this.myName });
+      client.on('connect', () => {
+        this.mqttConnected = true;
+        client.subscribe(topic, { qos: 1 }, (err) => {
+          if (err) {
+            console.warn('[MQTT] Sub error:', err);
+            return;
+          }
+          if (!this.isHost && !this.isConnected) {
+            this.sendHello();
+          }
+        });
+      });
+
+      client.on('message', (_t, payload) => {
+        try {
+          const data = JSON.parse(payload.toString());
+          if (data && data.senderId !== this.clientId) {
+            this.handleIncomingData(data);
+          }
+        } catch (e) {
+          console.warn('[MQTT] parse error:', e);
+        }
+      });
+
+      client.on('error', (err) => {
+        console.warn(`[MQTT] error on ${brokerUrl}:`, err);
+        if (!this.isConnected && brokerIndex < MQTT_BROKERS.length - 1) {
+          this.connectMqtt(brokerIndex + 1);
+        }
+      });
+
+      this.mqttClient = client;
+    } catch (e) {
+      console.warn('MQTT connect error:', e);
+    }
+  }
+
+  startGuestHelloPing() {
+    this.stopGuestHelloPing();
+    this.sendHello();
+    this.guestHelloTimer = setInterval(() => {
+      if (!this.isConnected) {
+        this.sendHello();
       } else {
-        this.broadcastMessage({ type: 'GUEST_HELLO', name: this.myName });
+        this.stopGuestHelloPing();
       }
-    });
+    }, 1500);
+  }
 
-    conn.on('data', (data) => {
-      this.handleIncomingData(data);
-    });
+  stopGuestHelloPing() {
+    if (this.guestHelloTimer) {
+      clearInterval(this.guestHelloTimer);
+      this.guestHelloTimer = null;
+    }
+  }
 
-    conn.on('close', () => {
-      this.isConnected = false;
-      this.stopHeartbeat();
-      this.onStatusChangeCallback?.({
-        status: 'DISCONNECTED',
-        roomCode: this.roomCode,
-        isHost: this.isHost,
-        myName: this.myName,
-        peerName: this.peerName
-      });
-    });
-
-    conn.on('error', (err) => {
-      console.warn('Connection error:', err);
+  sendHello() {
+    this.broadcastMessage({
+      type: 'GUEST_HELLO',
+      name: this.myName
     });
   }
 
   startHeartbeat() {
     this.stopHeartbeat();
     this.heartbeatTimer = setInterval(() => {
-      if (this.connection && this.connection.open) {
-        try {
-          this.connection.send({ type: 'HEARTBEAT' });
-        } catch (e) {}
+      if (this.isConnected) {
+        this.broadcastMessage({ type: 'HEARTBEAT' });
       }
-    }, 4000);
+    }, 5000);
   }
 
   stopHeartbeat() {
@@ -409,9 +305,14 @@ class MultiplayerSync {
     if (data.type === 'GUEST_HELLO') {
       this.isConnected = true;
       if (data.name) this.peerName = data.name;
+
       if (this.isHost) {
-        this.broadcastMessage({ type: 'HOST_CONNECTED', name: this.myName });
+        this.broadcastMessage({
+          type: 'HOST_CONNECTED',
+          name: this.myName
+        });
       }
+
       this.onStatusChangeCallback?.({
         status: 'CONNECTED',
         roomCode: this.roomCode,
@@ -423,8 +324,14 @@ class MultiplayerSync {
     }
 
     if (data.type === 'HOST_CONNECTED') {
+      if (this.joinTimeout) {
+        clearTimeout(this.joinTimeout);
+        this.joinTimeout = null;
+      }
+      this.stopGuestHelloPing();
       this.isConnected = true;
       if (data.name) this.peerName = data.name;
+
       this.onStatusChangeCallback?.({
         status: 'CONNECTED',
         roomCode: this.roomCode,
@@ -432,6 +339,16 @@ class MultiplayerSync {
         peerName: this.peerName,
         myName: this.myName
       });
+
+      // Request latest session state immediately from host
+      this.broadcastMessage({
+        type: 'STATE_REQ'
+      });
+      return;
+    }
+
+    if (data.type === 'STATE_REQ' && this.isHost) {
+      this.onRequestStateCallback?.();
       return;
     }
 
@@ -457,20 +374,27 @@ class MultiplayerSync {
   }
 
   broadcastMessage(message) {
-    if (this.connection && this.connection.open) {
+    const payload = {
+      ...message,
+      senderId: this.clientId,
+      roomCode: this.roomCode,
+      timestamp: Date.now()
+    };
+
+    // 1. Send via MQTT
+    if (this.mqttClient && this.mqttConnected) {
       try {
-        this.connection.send(message);
+        const topic = `between/v2/room/${this.roomCode}`;
+        this.mqttClient.publish(topic, JSON.stringify(payload), { qos: 1 });
       } catch (e) {
-        console.warn('Failed to send over WebRTC:', e);
+        console.warn('MQTT publish error:', e);
       }
     }
-    this.sendBroadcast(message);
-  }
 
-  sendBroadcast(message) {
+    // 2. Send via BroadcastChannel (local tabs on same device)
     if (this.broadcastChannel) {
       try {
-        this.broadcastChannel.postMessage(message);
+        this.broadcastChannel.postMessage(payload);
       } catch (e) {}
     }
   }
@@ -496,17 +420,63 @@ class MultiplayerSync {
     });
   }
 
-  // Voice Call
+  // --- Voice Call WebRTC Support ---
+  initPeerVoice() {
+    try {
+      const myPeerId = this.isHost
+        ? `between-v2-${this.roomCode.toLowerCase()}`
+        : `between-guest-${this.clientId}`;
+
+      this.peer = new Peer(myPeerId, {
+        debug: 0,
+        config: { iceServers: ICE_SERVERS }
+      });
+
+      this.peer.on('call', async (call) => {
+        this.mediaCall = call;
+        try {
+          if (!this.localStream) {
+            this.localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+          }
+          call.answer(this.localStream);
+          this.onCallStateCallback?.('CONNECTED');
+
+          call.on('stream', (remoteStream) => {
+            this.onCallStreamCallback?.(remoteStream);
+          });
+
+          call.on('close', () => {
+            this.onCallStateCallback?.('ENDED');
+          });
+        } catch (e) {
+          console.warn('Voice auto-answer error:', e);
+        }
+      });
+
+      this.peer.on('error', (err) => {
+        // Voice is optional, do not break the main room connection
+        console.warn('PeerJS voice non-fatal notice:', err?.type);
+      });
+    } catch (e) {
+      console.warn('PeerJS init voice skipped:', e);
+    }
+  }
+
   async startVoiceCall() {
-    if (!this.peer || !this.remotePeerId) {
-      console.warn('Cannot start call: peer not connected');
+    if (!this.peer || !this.roomCode) {
+      console.warn('Cannot start call: peer not initialized');
       return false;
     }
+
+    const targetPeerId = this.isHost
+      ? `between-guest-${this.clientId}`
+      : `between-v2-${this.roomCode.toLowerCase()}`;
+
     try {
       this.onCallStateCallback?.('CALLING');
       this.localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
       
-      const call = this.peer.call(this.remotePeerId, this.localStream);
+      const call = this.peer.call(targetPeerId, this.localStream);
       this.mediaCall = call;
 
       call.on('stream', (remoteStream) => {
@@ -560,13 +530,16 @@ class MultiplayerSync {
       clearTimeout(this.joinTimeout);
       this.joinTimeout = null;
     }
+    this.stopGuestHelloPing();
     this.stopHeartbeat();
     this.endVoiceCall();
+
     try {
-      if (this.connection) {
-        this.connection.close();
-        this.connection = null;
+      if (this.mqttClient) {
+        this.mqttClient.end(true);
+        this.mqttClient = null;
       }
+      this.mqttConnected = false;
       if (this.peer) {
         this.peer.destroy();
         this.peer = null;
@@ -576,6 +549,7 @@ class MultiplayerSync {
         this.broadcastChannel = null;
       }
     } catch (e) {}
+
     this.isConnected = false;
     this.roomCode = null;
   }

@@ -304,7 +304,21 @@ export default function App() {
       onReaction: handleReactionReceived,
       onTouchRipple: handleTouchRippleReceived,
       onCallStream: handleRemoteStream,
-      onCallState: handleCallState
+      onCallState: handleCallState,
+      onRequestState: () => {
+        const cur = stateRef.current;
+        multiplayerSync.syncState({
+          screen: cur.screen,
+          relationshipType: cur.relationshipType,
+          sessionLength: cur.sessionLength,
+          questions: cur.questions,
+          currentIndex: cur.currentIndex,
+          currentTurn: cur.currentTurn,
+          bookmarkedMoments: cur.bookmarkedMoments,
+          hostName: cur.hostName,
+          guestName: cur.guestName
+        });
+      }
     });
     setRoomCode(code);
     setConnectionStatus('WAITING_FOR_GUEST');
