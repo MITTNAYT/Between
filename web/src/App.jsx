@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Feather, Flame, ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import Header from './components/Header';
 import LobbyScreen from './components/LobbyScreen';
 import QuestionCard from './components/QuestionCard';
 import ReactionBar from './components/ReactionBar';
 import HandshakeModal from './components/HandshakeModal';
 import ClosingScreen from './components/ClosingScreen';
+import ThreeCanvas from './components/ThreeCanvas';
 import { buildSession, swapQuestion, RELATIONSHIP_TYPES } from './utils/engine';
 import { multiplayerSync } from './utils/peer';
 import { playClickSound, playChimeSound, playReactionSound, playHandshakeSound } from './utils/audio';
@@ -64,11 +66,11 @@ export default function App() {
   // Floating reaction spawner
   const spawnReaction = useCallback((emoji, sender) => {
     const id = `${Date.now()}-${Math.random()}`;
-    const xPos = 40 + Math.random() * 20; // 40% - 60%
+    const xPos = 38 + Math.random() * 24; // 38% - 62%
     setFloatingReactions(prev => [...prev, { id, emoji, sender, xPos }]);
     setTimeout(() => {
       setFloatingReactions(prev => prev.filter(r => r.id !== id));
-    }, 2400);
+    }, 2600);
   }, []);
 
   // Peer Event Handlers
@@ -378,7 +380,6 @@ export default function App() {
     setIsSolo(false);
     setCurrentIndex(0);
     setBookmarkedMoments([]);
-    // Remove query param from URL without reload
     window.history.replaceState({}, document.title, window.location.pathname);
   };
 
@@ -393,26 +394,29 @@ export default function App() {
   const isCurrentBookmarked = bookmarkedMoments.some(b => b.id === currentQuestion.id);
 
   // Turn string display
-  let turnString = 'Your Turn to Answer';
+  let turnString = 'Your Turn to Speak';
   if (isSolo) {
-    turnString = currentTurn === 'host' ? 'Partner 1 speaks' : 'Partner 2 speaks';
+    turnString = currentTurn === 'host' ? 'Partner 1 Speaks' : 'Partner 2 Speaks';
   } else {
     const isMyTurn = (isHost && currentTurn === 'host') || (!isHost && currentTurn === 'guest');
-    turnString = isMyTurn ? 'Your turn to answer' : "Friend's turn to answer";
+    turnString = isMyTurn ? 'Your Turn to Speak' : "Friend's Turn to Speak";
   }
 
   return (
     <div className="wellness-canvas">
-      {/* Blush Atmospheric Glow */}
-      <div className="blush-glow" />
+      {/* Interactive 3D Background with Three.js */}
+      <ThreeCanvas relationshipType={relationshipType} />
 
-      {/* Floating live reactions */}
-      <div className="floating-reactions-container">
+      {/* Atmospheric Blush Glow Backdrop */}
+      <div className="app-backdrop" />
+
+      {/* Floating live reactions with subtle drift */}
+      <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 9999 }}>
         {floatingReactions.map(r => (
           <div
             key={r.id}
-            className="floating-emoji"
-            style={{ left: `${r.xPos}%` }}
+            className="floating-reaction"
+            style={{ left: `${r.xPos}%`, bottom: '15%' }}
           >
             {r.emoji}
           </div>
@@ -459,10 +463,10 @@ export default function App() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                fontSize: '12px',
+                fontSize: '11px',
                 fontWeight: '700',
                 color: 'var(--color-muted)',
-                letterSpacing: '0.04em'
+                letterSpacing: '0.08em'
               }}>
                 <span>QUESTION {currentIndex + 1} OF {questions.length}</span>
                 <span style={{ color: 'var(--color-ember)' }}>DEPTH {currentQuestion.depth}/5</span>
@@ -471,7 +475,7 @@ export default function App() {
               {/* Progress track */}
               <div style={{
                 width: '100%',
-                height: '5px',
+                height: '4px',
                 background: 'rgba(0,0,0,0.06)',
                 borderRadius: 'var(--radius-pill)',
                 overflow: 'hidden'
@@ -481,13 +485,13 @@ export default function App() {
                   width: `${((currentIndex + 1) / (questions.length || 1)) * 100}%`,
                   background: 'var(--color-ember)',
                   borderRadius: 'var(--radius-pill)',
-                  transition: 'width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)'
+                  transition: 'width 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
                 }} />
               </div>
             </div>
 
-            {/* Central Card */}
-            <div className="card-container" style={{ width: '100%', margin: '4px 0' }}>
+            {/* Central 3D Question Card */}
+            <div style={{ width: '100%', margin: '4px 0' }}>
               <QuestionCard
                 question={currentQuestion}
                 turnIndicator={turnString}
@@ -512,14 +516,13 @@ export default function App() {
                 disabled={currentIndex === 0}
                 className="btn-icon"
                 style={{
-                  opacity: currentIndex === 0 ? 0.3 : 1,
+                  opacity: currentIndex === 0 ? 0.35 : 1,
                   cursor: currentIndex === 0 ? 'not-allowed' : 'pointer'
                 }}
                 title="Previous card"
+                aria-label="Previous card"
               >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="15 18 9 12 15 6"></polyline>
-                </svg>
+                <ChevronLeft size={20} strokeWidth={2.4} />
               </button>
 
               {/* Lighter / Deeper Quick Swappers */}
@@ -527,20 +530,20 @@ export default function App() {
                 <button
                   onClick={() => handleSwap('LIGHTER')}
                   className="btn-secondary"
-                  style={{ padding: '8px 12px', fontSize: '12px', gap: '4px' }}
-                  title="Swap for an easier, lighter question"
+                  style={{ padding: '8px 14px', fontSize: '13px', gap: '6px' }}
+                  title="Swap for an easier question"
                 >
-                  <span>🍃</span>
+                  <Feather size={14} strokeWidth={2.4} color="var(--color-sage)" />
                   <span>Lighter</span>
                 </button>
 
                 <button
                   onClick={() => handleSwap('DEEPER')}
                   className="btn-secondary"
-                  style={{ padding: '8px 12px', fontSize: '12px', gap: '4px' }}
-                  title="Swap for a deeper, more intimate question"
+                  style={{ padding: '8px 14px', fontSize: '13px', gap: '6px' }}
+                  title="Swap for a deeper question"
                 >
-                  <span>🔥</span>
+                  <Flame size={14} strokeWidth={2.4} color="var(--color-ember)" />
                   <span>Deeper</span>
                 </button>
               </div>
@@ -549,17 +552,15 @@ export default function App() {
               <button
                 onClick={handleAdvanceCard}
                 className="btn-primary"
-                style={{ padding: '10px 20px', fontSize: '14px', gap: '6px' }}
+                style={{ padding: '10px 22px', fontSize: '14px', gap: '8px' }}
               >
-                <span>{currentIndex === questions.length - 1 ? 'Finish' : 'Next'}</span>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
+                <span>{currentIndex === questions.length - 1 ? 'Complete' : 'Next'}</span>
+                <ChevronRight size={18} strokeWidth={2.4} />
               </button>
             </div>
 
             {/* Floating Live Reaction Bar */}
-            <div style={{ marginTop: '12px', width: '100%', display: 'flex', justifyContent: 'center' }}>
+            <div style={{ marginTop: '14px', width: '100%', display: 'flex', justifyContent: 'center' }}>
               <ReactionBar onSendReaction={handleSendReaction} />
             </div>
           </div>

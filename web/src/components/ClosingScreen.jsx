@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Sparkles, Bookmark, Copy, Check, Heart, ArrowRight, Home } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { playClickSound, playHandshakeSound } from '../utils/audio';
 
@@ -15,13 +16,13 @@ export default function ClosingScreen({
   useEffect(() => {
     playHandshakeSound();
 
-    // Soft celebration confetti
+    // High-end subtle confetti
     try {
       confetti({
-        particleCount: 45,
-        spread: 60,
+        particleCount: 55,
+        spread: 70,
         origin: { y: 0.6 },
-        colors: ['#D94E34', '#DE4D6A', '#F9ECE4', '#E87D65']
+        colors: ['#D94E34', '#DE4D6A', '#C6882C', '#F9ECE4', '#E87D65']
       });
     } catch (e) {}
   }, []);
@@ -56,18 +57,19 @@ export default function ClosingScreen({
           height: '64px',
           borderRadius: '50%',
           background: 'rgba(217, 78, 52, 0.1)',
+          border: '1px solid rgba(217, 78, 52, 0.25)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           margin: '0 auto 16px',
-          fontSize: '28px'
+          color: 'var(--color-ember)'
         }}>
-          🕊️
+          <Sparkles size={30} strokeWidth={2.2} />
         </div>
 
         <h1 style={{
           fontFamily: 'var(--font-serif)',
-          fontSize: '30px',
+          fontSize: '32px',
           fontWeight: '600',
           color: 'var(--color-ink)',
           marginBottom: '8px'
@@ -95,7 +97,7 @@ export default function ClosingScreen({
           marginBottom: '16px'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '18px' }}>⭐</span>
+            <Bookmark size={18} strokeWidth={2.4} color="var(--color-ember)" />
             <h3 style={{
               fontFamily: 'var(--font-serif)',
               fontSize: '18px',
@@ -111,9 +113,10 @@ export default function ClosingScreen({
             <button
               onClick={handleCopyMoments}
               className="btn-secondary"
-              style={{ padding: '6px 12px', fontSize: '12px' }}
+              style={{ padding: '6px 12px', fontSize: '12px', gap: '4px' }}
             >
-              {copiedMoments ? '✓ Copied' : 'Copy All'}
+              {copiedMoments ? <Check size={13} strokeWidth={2.4} color="#387B6A" /> : <Copy size={13} strokeWidth={2.2} />}
+              <span>{copiedMoments ? 'Copied' : 'Copy All'}</span>
             </button>
           )}
         </div>
@@ -152,17 +155,18 @@ export default function ClosingScreen({
 
       {/* Mutual Appreciation Note */}
       <div className="soft-card" style={{ padding: '24px', textAlign: 'left' }}>
-        <label style={{
-          display: 'block',
-          fontSize: '12px',
-          fontWeight: '700',
-          letterSpacing: '0.06em',
-          textTransform: 'uppercase',
-          color: 'var(--color-muted)',
-          marginBottom: '8px'
-        }}>
-          Closing Takeaway or Appreciation
-        </label>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
+          <Heart size={15} strokeWidth={2.4} color="var(--color-ember)" />
+          <label style={{
+            fontSize: '11px',
+            fontWeight: '700',
+            letterSpacing: '0.08em',
+            textTransform: 'uppercase',
+            color: 'var(--color-muted)'
+          }}>
+            Closing Takeaway or Appreciation
+          </label>
+        </div>
         
         <p style={{ fontSize: '13px', color: 'var(--color-body)', marginBottom: '12px' }}>
           What is one thing you appreciate about your partner or friend after this conversation?
@@ -172,7 +176,7 @@ export default function ClosingScreen({
           rows={3}
           value={appreciationNote}
           onChange={(e) => setAppreciationNote(e.target.value)}
-          placeholder="E.g., Thank you for opening up about work today. It means a lot to hear your raw thoughts..."
+          placeholder="E.g., Thank you for opening up about your dreams today. It was so peaceful listening to you..."
           style={{
             width: '100%',
             padding: '12px',
@@ -190,15 +194,20 @@ export default function ClosingScreen({
 
         {noteSent ? (
           <div style={{
-            padding: '8px 12px',
+            padding: '10px 14px',
             borderRadius: 'var(--radius-sm)',
             background: 'rgba(56, 123, 106, 0.12)',
             color: 'var(--color-sage)',
             fontSize: '13px',
             fontWeight: '600',
-            textAlign: 'center'
+            textAlign: 'center',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '6px'
           }}>
-            ✓ Shared with gratitude
+            <Check size={16} strokeWidth={2.5} />
+            <span>Shared with heartfelt gratitude</span>
           </div>
         ) : (
           <button
@@ -230,9 +239,10 @@ export default function ClosingScreen({
             onStartNew();
           }}
           className="btn-primary"
-          style={{ width: '100%', padding: '15px' }}
+          style={{ width: '100%', padding: '15px', gap: '8px' }}
         >
-          Start Another Ritual →
+          <span>Start Another Ritual</span>
+          <ArrowRight size={18} strokeWidth={2.4} />
         </button>
 
         <button
@@ -241,9 +251,10 @@ export default function ClosingScreen({
             onReturnHome();
           }}
           className="btn-secondary"
-          style={{ width: '100%', padding: '12px' }}
+          style={{ width: '100%', padding: '12px', gap: '8px' }}
         >
-          Return to Home
+          <Home size={16} strokeWidth={2.2} />
+          <span>Return to Home</span>
         </button>
       </div>
     </div>

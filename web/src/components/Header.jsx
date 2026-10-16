@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Sparkles, Radio, Volume2, VolumeX, Copy, Check, LogOut, Heart } from 'lucide-react';
 import { toggleAmbientSoundscape, playClickSound } from '../utils/audio';
 
 export default function Header({ 
@@ -17,10 +18,9 @@ export default function Header({
     const url = `${window.location.origin}${window.location.pathname}?room=${roomCode}`;
     navigator.clipboard.writeText(url).then(() => {
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      setTimeout(() => setCopied(false), 2200);
     }).catch(() => {
-      // Fallback
-      prompt('Copy this link to send to your friend:', url);
+      prompt('Copy invite link:', url);
     });
   };
 
@@ -29,6 +29,8 @@ export default function Header({
     const playing = toggleAmbientSoundscape();
     setIsPlayingSoundscape(playing);
   };
+
+  const isConnected = connectionStatus === 'CONNECTED';
 
   return (
     <header style={{
@@ -40,7 +42,7 @@ export default function Header({
       borderBottom: isSessionActive ? '1px solid var(--color-hairline)' : 'none',
       marginBottom: isSessionActive ? '16px' : '0'
     }}>
-      {/* Left: Exit or Logo */}
+      {/* Left: Exit or Brand Logo */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
         {isSessionActive ? (
           <button 
@@ -49,16 +51,13 @@ export default function Header({
             aria-label="Exit session"
             title="Leave conversation"
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
+            <LogOut size={18} strokeWidth={2.2} />
           </button>
         ) : (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <div style={{
-              width: '36px',
-              height: '36px',
+              width: '38px',
+              height: '38px',
               borderRadius: '12px',
               background: 'var(--color-surface)',
               border: '1px solid var(--color-hairline)',
@@ -67,82 +66,112 @@ export default function Header({
               justifyContent: 'center',
               boxShadow: 'var(--shadow-sm)'
             }}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-ember)" strokeWidth="2.2">
-                <circle cx="9" cy="12" r="6" stroke="var(--color-ember)" fill="none" opacity="0.85" />
-                <circle cx="15" cy="12" r="6" stroke="var(--color-ember)" fill="none" opacity="0.85" />
-              </svg>
+              <Heart size={20} strokeWidth={2.2} color="var(--color-ember)" fill="rgba(217, 78, 52, 0.15)" />
             </div>
-            <span style={{ fontWeight: '700', fontSize: '18px', letterSpacing: '-0.02em' }}>
-              Between
-            </span>
-          </div>
-        )}
-
-        {/* Phase Pill in Active Session */}
-        {isSessionActive && phaseName && (
-          <div className="pill-badge pill-badge-surface" style={{ fontSize: '12px', fontWeight: '600' }}>
-            {phaseName}
+            <div>
+              <div style={{
+                fontFamily: 'var(--font-serif)',
+                fontSize: '18px',
+                fontWeight: '600',
+                lineHeight: 1.1,
+                color: 'var(--color-ink)'
+              }}>
+                Between
+              </div>
+              <div style={{
+                fontSize: '11px',
+                fontWeight: '600',
+                color: 'var(--color-muted)',
+                letterSpacing: '0.04em'
+              }}>
+                Rituals of Closeness
+              </div>
+            </div>
           </div>
         )}
       </div>
 
-      {/* Center/Right: Room Code Badge */}
+      {/* Center: Phase or Active Room Indicator */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        {isSessionActive && (
+          <div className="pill-badge pill-badge-surface" style={{ gap: '6px' }}>
+            <Sparkles size={12} strokeWidth={2.4} color="var(--color-ember)" />
+            <span style={{ fontSize: '11px', fontWeight: '700' }}>{phaseName}</span>
+          </div>
+        )}
+
         {roomCode && (
-          <button 
+          <button
             onClick={handleCopyLink}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '6px 12px',
+              background: 'var(--color-surface)',
+              border: '1px solid var(--color-hairline)',
+              borderRadius: 'var(--radius-pill)',
+              cursor: 'pointer',
+              fontSize: '12px',
+              fontWeight: '700',
+              color: 'var(--color-ink)',
+              boxShadow: 'var(--shadow-sm)',
+              transition: 'all 0.18s'
+            }}
+            title="Click to copy invite link"
+          >
+            <span style={{ color: 'var(--color-muted)', fontSize: '10px', textTransform: 'uppercase' }}>ROOM</span>
+            <span style={{ letterSpacing: '0.08em', fontFamily: 'monospace' }}>{roomCode}</span>
+            {copied ? <Check size={13} strokeWidth={2.6} color="#387B6A" /> : <Copy size={13} strokeWidth={2.2} color="var(--color-muted)" />}
+          </button>
+        )}
+      </div>
+
+      {/* Right Controls: Connection Status Dot & Soundscape Toggle */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        {/* P2P Live Status Indicator */}
+        {roomCode && (
+          <div
             style={{
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              padding: '6px 12px',
-              background: connectionStatus === 'CONNECTED' ? 'rgba(56, 123, 106, 0.1)' : 'rgba(217, 78, 52, 0.08)',
-              border: `1px solid ${connectionStatus === 'CONNECTED' ? 'rgba(56, 123, 106, 0.3)' : 'rgba(217, 78, 52, 0.25)'}`,
+              padding: '6px 10px',
               borderRadius: 'var(--radius-pill)',
-              color: connectionStatus === 'CONNECTED' ? 'var(--color-sage)' : 'var(--color-ember)',
-              fontSize: '12px',
-              fontWeight: '600',
-              cursor: 'pointer',
-              transition: 'all 0.2s'
+              background: isConnected ? 'rgba(56, 123, 106, 0.08)' : 'rgba(217, 78, 52, 0.08)',
+              border: `1px solid ${isConnected ? 'rgba(56, 123, 106, 0.25)' : 'rgba(217, 78, 52, 0.2)'}`,
+              fontSize: '11px',
+              fontWeight: '700',
+              color: isConnected ? 'var(--color-sage)' : 'var(--color-ember)'
             }}
-            title="Click to copy invite link for your friend"
+            title={isConnected ? 'Connected in real-time' : 'Waiting for your friend to connect'}
           >
             <span style={{
-              width: '8px',
-              height: '8px',
+              width: '7px',
+              height: '7px',
               borderRadius: '50%',
-              backgroundColor: connectionStatus === 'CONNECTED' ? 'var(--color-sage)' : 'var(--color-ember)'
-            }}></span>
-            <span>Room {roomCode}</span>
-            <span style={{ opacity: 0.75, fontSize: '11px' }}>
-              {copied ? '✓ Copied!' : '🔗 Copy'}
+              background: isConnected ? 'var(--color-sage)' : 'var(--color-ember)',
+              boxShadow: isConnected ? '0 0 8px rgba(56, 123, 106, 0.6)' : '0 0 8px rgba(217, 78, 52, 0.6)',
+              animation: isConnected ? 'none' : 'audioPulse 1.4s infinite ease-in-out'
+            }} />
+            <span style={{ textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              {isConnected ? 'Synced' : 'Waiting'}
             </span>
-          </button>
+          </div>
         )}
 
         {/* Ambient Soundscape Toggle */}
-        <button 
+        <button
           className="btn-icon"
           onClick={handleToggleAudio}
-          title={isPlayingSoundscape ? "Mute warm soundscape" : "Play warm ambient soundscape"}
+          aria-label="Toggle ambient soundscape"
+          title={isPlayingSoundscape ? 'Mute ambient soundscape' : 'Play calming soundscape'}
           style={{
             borderColor: isPlayingSoundscape ? 'var(--color-ember)' : 'var(--color-hairline)',
-            background: isPlayingSoundscape ? 'rgba(217, 78, 52, 0.08)' : 'var(--color-surface)'
+            color: isPlayingSoundscape ? 'var(--color-ember)' : 'var(--color-body)'
           }}
         >
-          {isPlayingSoundscape ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '2px', height: '14px' }}>
-              <div className="audio-bar"></div>
-              <div className="audio-bar"></div>
-              <div className="audio-bar"></div>
-            </div>
-          ) : (
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
-              <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-              <line x1="1" y1="1" x2="23" y2="23" strokeWidth="2"></line>
-            </svg>
-          )}
+          {isPlayingSoundscape ? <Volume2 size={18} strokeWidth={2.2} /> : <VolumeX size={18} strokeWidth={2.2} />}
         </button>
       </div>
     </header>

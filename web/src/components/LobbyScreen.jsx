@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { Heart, Users, Compass, Clock, Sparkles, ShieldCheck, Copy, Check, ArrowRight, Lock, Radio } from 'lucide-react';
 import { RELATIONSHIP_TYPES, SESSION_LENGTHS } from '../utils/engine';
 import { playClickSound } from '../utils/audio';
+
+const REL_ICONS = {
+  COUPLE: Heart,
+  FRIEND: Users,
+  JUST_MET: Compass
+};
 
 export default function LobbyScreen({
   onCreateRoom,
@@ -68,51 +75,55 @@ export default function LobbyScreen({
       display: 'flex',
       flexDirection: 'column',
       gap: '24px',
-      animation: 'fadeIn 0.3s ease-out'
+      animation: 'fadeIn 0.35s ease-out'
     }}>
       {/* Brand Hero Greeting */}
-      <div style={{ textAlign: 'center', padding: '12px 0 6px' }}>
+      <div style={{ textAlign: 'center', padding: '8px 0 4px' }}>
         <div style={{
           display: 'inline-flex',
           alignItems: 'center',
-          gap: '8px',
+          gap: '6px',
           padding: '6px 14px',
           borderRadius: 'var(--radius-pill)',
           background: 'rgba(217, 78, 52, 0.08)',
+          border: '1px solid rgba(217, 78, 52, 0.2)',
           color: 'var(--color-ember)',
-          fontSize: '12px',
+          fontSize: '11px',
           fontWeight: '700',
-          letterSpacing: '0.06em',
+          letterSpacing: '0.08em',
           textTransform: 'uppercase',
-          marginBottom: '12px'
+          marginBottom: '14px'
         }}>
-          <span>✦</span>
-          <span>Rituals of Closeness</span>
+          <Sparkles size={12} strokeWidth={2.5} />
+          <span>Intimate Multiplayer</span>
         </div>
 
         <h1 style={{
           fontFamily: 'var(--font-serif)',
-          fontSize: '32px',
+          fontSize: '34px',
           fontWeight: '600',
           color: 'var(--color-ink)',
-          lineHeight: '1.25',
+          lineHeight: '1.2',
+          letterSpacing: '-0.02em',
           marginBottom: '8px'
         }}>
-          Between
+          Closeness Across Distance
         </h1>
         <p style={{
           fontSize: '15px',
           color: 'var(--color-body)',
-          lineHeight: '1.5'
+          lineHeight: '1.55',
+          maxWidth: '420px',
+          margin: '0 auto'
         }}>
-          A synchronized space for long-distance partners and friends to slow down, listen, and truly be seen.
+          A synchronized card ritual for two screens. Flip questions, pass turns, and share moments in real-time.
         </p>
       </div>
 
-      {/* Host waiting room card (if room is already created) */}
+      {/* Host waiting room card */}
       {isWaitingForGuest ? (
         <div className="soft-card" style={{
-          padding: '28px 24px',
+          padding: '32px 24px',
           textAlign: 'center',
           border: '1.5px solid rgba(217, 78, 52, 0.35)',
           background: 'linear-gradient(180deg, #FFFFFF 0%, #FFFDFB 100%)',
@@ -120,17 +131,17 @@ export default function LobbyScreen({
           position: 'relative'
         }}>
           <div style={{
-            width: '56px',
-            height: '56px',
+            width: '60px',
+            height: '60px',
             borderRadius: '50%',
             background: isConnected ? 'rgba(56, 123, 106, 0.12)' : 'rgba(217, 78, 52, 0.1)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             margin: '0 auto 16px',
-            fontSize: '26px'
+            color: isConnected ? 'var(--color-sage)' : 'var(--color-ember)'
           }}>
-            {isConnected ? '✨' : '🕊️'}
+            {isConnected ? <Sparkles size={28} strokeWidth={2.2} /> : <Radio size={28} strokeWidth={2.2} className="audio-bar" />}
           </div>
 
           <h2 style={{
@@ -139,7 +150,7 @@ export default function LobbyScreen({
             fontWeight: '600',
             marginBottom: '6px'
           }}>
-            {isConnected ? 'Friend Connected!' : 'Your room is ready'}
+            {isConnected ? 'Friend Connected!' : 'Waiting for Friend'}
           </h2>
 
           <p style={{
@@ -148,8 +159,8 @@ export default function LobbyScreen({
             marginBottom: '20px'
           }}>
             {isConnected 
-              ? 'Both of you are in sync. Start whenever you are ready.'
-              : 'Share this link or code with your friend. Both screens will flip questions together in real-time.'}
+              ? 'Both screens are synchronized. Press below when you are ready to begin.'
+              : 'Send this 1-click link to your partner or friend. No signups required.'}
           </p>
 
           {/* Big Code Pill */}
@@ -163,10 +174,10 @@ export default function LobbyScreen({
             borderRadius: 'var(--radius-pill)',
             marginBottom: '20px'
           }}>
-            <span style={{ fontSize: '12px', fontWeight: '700', color: 'var(--color-muted)', letterSpacing: '0.06em' }}>ROOM CODE:</span>
+            <span style={{ fontSize: '11px', fontWeight: '700', color: 'var(--color-muted)', letterSpacing: '0.08em' }}>ROOM CODE:</span>
             <span style={{
               fontFamily: 'monospace',
-              fontSize: '26px',
+              fontSize: '28px',
               fontWeight: '800',
               letterSpacing: '0.18em',
               color: 'var(--color-ember)'
@@ -182,11 +193,8 @@ export default function LobbyScreen({
               className="btn-secondary"
               style={{ width: '100%', padding: '13px', display: 'flex', justifyContent: 'center', gap: '8px' }}
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-              </svg>
-              <span>{copiedLink ? '✓ Link Copied to Clipboard!' : 'Copy 1-Click Invite Link'}</span>
+              {copiedLink ? <Check size={18} strokeWidth={2.4} color="#387B6A" /> : <Copy size={18} strokeWidth={2.2} />}
+              <span>{copiedLink ? 'Link Copied to Clipboard!' : 'Copy 1-Click Invite Link'}</span>
             </button>
 
             <button
@@ -197,13 +205,14 @@ export default function LobbyScreen({
               className="btn-primary"
               style={{ width: '100%', padding: '15px' }}
             >
-              {isConnected ? 'Begin Intimate Ritual →' : 'Start Session (Or Play Solo) →'}
+              <span>{isConnected ? 'Begin Intimate Ritual' : 'Start Session (Or Play Solo)'}</span>
+              <ArrowRight size={18} strokeWidth={2.4} />
             </button>
           </div>
         </div>
       ) : (
         <>
-          {/* Main Tabs: CREATE ROOM vs JOIN ROOM */}
+          {/* Main Segmented Switcher: CREATE ROOM vs JOIN ROOM */}
           <div style={{
             display: 'flex',
             background: 'rgba(0, 0, 0, 0.04)',
@@ -257,9 +266,9 @@ export default function LobbyScreen({
               {/* Relationship Selector */}
               <label style={{
                 display: 'block',
-                fontSize: '12px',
+                fontSize: '11px',
                 fontWeight: '700',
-                letterSpacing: '0.06em',
+                letterSpacing: '0.08em',
                 textTransform: 'uppercase',
                 color: 'var(--color-muted)',
                 marginBottom: '10px'
@@ -271,17 +280,18 @@ export default function LobbyScreen({
                 display: 'grid',
                 gridTemplateColumns: 'repeat(3, 1fr)',
                 gap: '8px',
-                marginBottom: '20px'
+                marginBottom: '16px'
               }}>
                 {Object.values(RELATIONSHIP_TYPES).map((rel) => {
                   const isSelected = selectedRel === rel.id;
+                  const Icon = REL_ICONS[rel.id] || Heart;
                   return (
                     <button
                       key={rel.id}
                       type="button"
                       onClick={() => { playClickSound(); setSelectedRel(rel.id); }}
                       style={{
-                        padding: '12px 8px',
+                        padding: '14px 8px',
                         borderRadius: 'var(--radius-md)',
                         border: isSelected ? `2px solid ${rel.color}` : '1px solid var(--color-hairline)',
                         background: isSelected ? 'var(--color-surface)' : 'var(--color-surface-subtle)',
@@ -292,12 +302,19 @@ export default function LobbyScreen({
                       }}
                     >
                       <div style={{
-                        width: '8px',
-                        height: '8px',
+                        width: '32px',
+                        height: '32px',
                         borderRadius: '50%',
-                        background: rel.color,
-                        margin: '0 auto 6px'
-                      }}></div>
+                        background: isSelected ? `${rel.color}18` : 'rgba(0,0,0,0.04)',
+                        color: rel.color,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        margin: '0 auto 8px',
+                        transition: 'transform 0.2s'
+                      }}>
+                        <Icon size={17} strokeWidth={2.4} />
+                      </div>
                       <div style={{
                         fontSize: '13px',
                         fontWeight: isSelected ? '700' : '600',
@@ -312,13 +329,14 @@ export default function LobbyScreen({
 
               {/* Description preview */}
               <div style={{
-                padding: '10px 14px',
+                padding: '12px 14px',
                 background: 'var(--color-surface-subtle)',
                 borderRadius: 'var(--radius-sm)',
-                fontSize: '12px',
+                fontSize: '13px',
                 color: 'var(--color-body)',
                 lineHeight: '1.45',
-                marginBottom: '22px'
+                marginBottom: '22px',
+                borderLeft: `3px solid ${RELATIONSHIP_TYPES[selectedRel]?.color}`
               }}>
                 {RELATIONSHIP_TYPES[selectedRel]?.description}
               </div>
@@ -326,9 +344,9 @@ export default function LobbyScreen({
               {/* Duration Selector */}
               <label style={{
                 display: 'block',
-                fontSize: '12px',
+                fontSize: '11px',
                 fontWeight: '700',
-                letterSpacing: '0.06em',
+                letterSpacing: '0.08em',
                 textTransform: 'uppercase',
                 color: 'var(--color-muted)',
                 marginBottom: '10px'
@@ -350,7 +368,7 @@ export default function LobbyScreen({
                       type="button"
                       onClick={() => { playClickSound(); setSelectedLength(len.id); }}
                       style={{
-                        padding: '10px 6px',
+                        padding: '12px 6px',
                         borderRadius: 'var(--radius-md)',
                         border: isSelected ? '2px solid var(--color-ink)' : '1px solid var(--color-hairline)',
                         background: isSelected ? 'var(--color-surface)' : 'var(--color-surface-subtle)',
@@ -379,7 +397,8 @@ export default function LobbyScreen({
                   className="btn-primary"
                   style={{ width: '100%', padding: '15px' }}
                 >
-                  Create Synchronized Room →
+                  <span>Create Synchronized Room</span>
+                  <ArrowRight size={18} strokeWidth={2.4} />
                 </button>
 
                 <button
@@ -396,18 +415,18 @@ export default function LobbyScreen({
 
           {/* TAB 2: JOIN ROOM */}
           {tab === 'JOIN' && (
-            <form onSubmit={handleJoinSubmit} className="soft-card" style={{ padding: '28px 24px' }}>
+            <form onSubmit={handleJoinSubmit} className="soft-card" style={{ padding: '32px 24px' }}>
               <div style={{ textAlign: 'center', marginBottom: '20px' }}>
                 <h3 style={{
                   fontFamily: 'var(--font-serif)',
-                  fontSize: '20px',
+                  fontSize: '22px',
                   fontWeight: '600',
                   marginBottom: '6px'
                 }}>
                   Join Friend's Room
                 </h3>
                 <p style={{ fontSize: '13px', color: 'var(--color-body)' }}>
-                  Enter the 4-letter code your partner or friend shared with you.
+                  Enter the 4-letter room code your partner or friend shared with you.
                 </p>
               </div>
 
@@ -421,12 +440,12 @@ export default function LobbyScreen({
                   autoFocus
                   style={{
                     width: '100%',
-                    padding: '14px',
+                    padding: '16px',
                     textAlign: 'center',
                     fontFamily: 'monospace',
-                    fontSize: '32px',
+                    fontSize: '34px',
                     fontWeight: '800',
-                    letterSpacing: '0.25em',
+                    letterSpacing: '0.28em',
                     textTransform: 'uppercase',
                     color: 'var(--color-ink)',
                     background: 'var(--color-surface-subtle)',
@@ -449,7 +468,8 @@ export default function LobbyScreen({
                   cursor: joinCodeInput.trim().length === 4 ? 'pointer' : 'not-allowed'
                 }}
               >
-                Connect to Room →
+                <span>Connect to Room</span>
+                <ArrowRight size={18} strokeWidth={2.4} />
               </button>
             </form>
           )}
@@ -466,8 +486,8 @@ export default function LobbyScreen({
         justifyContent: 'center',
         gap: '6px'
       }}>
-        <span>🔒</span>
-        <span>Peer-to-peer encrypted · Zero accounts required · Always free</span>
+        <ShieldCheck size={14} strokeWidth={2.2} />
+        <span>Peer-to-peer encrypted · Zero accounts required · Private & open source</span>
       </div>
     </div>
   );

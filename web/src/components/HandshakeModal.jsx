@@ -1,4 +1,5 @@
 import React from 'react';
+import { ShieldCheck, CheckCircle2, Lock, ArrowRight, X } from 'lucide-react';
 import { playClickSound } from '../utils/audio';
 
 export default function HandshakeModal({
@@ -14,7 +15,7 @@ export default function HandshakeModal({
   return (
     <div className="modal-overlay">
       <div className="modal-content" style={{ textAlign: 'center' }}>
-        {/* Soft Glowing Heart / Lock Icon */}
+        {/* Glowing Shield / Sacred Space Icon */}
         <div style={{
           width: '64px',
           height: '64px',
@@ -24,9 +25,10 @@ export default function HandshakeModal({
           border: '1px solid rgba(217, 78, 52, 0.25)',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center'
+          justifyContent: 'center',
+          color: 'var(--color-ember)'
         }}>
-          <span style={{ fontSize: '30px' }}>🤝</span>
+          <ShieldCheck size={32} strokeWidth={2.2} />
         </div>
 
         <h3 style={{
@@ -36,7 +38,7 @@ export default function HandshakeModal({
           color: 'var(--color-ink)',
           marginBottom: '8px'
         }}>
-          Deeper waters ahead
+          Deeper Waters Ahead
         </h3>
 
         <p style={{
@@ -45,10 +47,10 @@ export default function HandshakeModal({
           lineHeight: '1.55',
           marginBottom: '22px'
         }}>
-          This next question opens a door into deeper vulnerability and honesty. Are you both comfortable stepping into this space together?
+          The next tier moves into vulnerability and authentic honesty. Are you both comfortable stepping into this space together?
         </p>
 
-        {/* Readiness Indicators */}
+        {/* Readiness Indicators with Lucide CheckCircle2 */}
         <div style={{
           display: 'flex',
           justifyContent: 'center',
@@ -58,52 +60,56 @@ export default function HandshakeModal({
           background: 'var(--color-surface-subtle)',
           borderRadius: 'var(--radius-md)'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px' }}>
-            <span style={{ fontWeight: '600' }}>You:</span>
-            <span style={{
-              color: myReady ? 'var(--color-sage)' : 'var(--color-muted)',
-              fontWeight: '700'
-            }}>
-              {myReady ? 'Ready ✓' : 'Deciding...'}
-            </span>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            fontSize: '13px',
+            fontWeight: '600',
+            color: myReady ? 'var(--color-sage)' : 'var(--color-muted)'
+          }}>
+            <CheckCircle2 size={16} strokeWidth={2.4} color={myReady ? 'var(--color-sage)' : 'var(--color-muted)'} />
+            <span>You: {myReady ? 'Ready' : 'Waiting'}</span>
           </div>
-          <div style={{ width: '1px', background: 'var(--color-hairline)' }}></div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px' }}>
-            <span style={{ fontWeight: '600' }}>Friend:</span>
-            <span style={{
-              color: peerReady ? 'var(--color-sage)' : 'var(--color-muted)',
-              fontWeight: '700'
-            }}>
-              {peerReady ? 'Ready ✓' : 'Waiting...'}
-            </span>
+
+          <div style={{ width: '1px', background: 'var(--color-hairline)' }} />
+
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            fontSize: '13px',
+            fontWeight: '600',
+            color: peerReady ? 'var(--color-sage)' : 'var(--color-muted)'
+          }}>
+            <CheckCircle2 size={16} strokeWidth={2.4} color={peerReady ? 'var(--color-sage)' : 'var(--color-muted)'} />
+            <span>Friend: {peerReady ? 'Ready' : 'Waiting'}</span>
           </div>
         </div>
 
-        {/* Action Buttons */}
+        {/* Buttons */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
           <button
-            className="btn-primary"
             onClick={() => {
               playClickSound();
               onConfirmReady();
             }}
-            disabled={myReady}
-            style={{
-              background: myReady ? 'var(--color-sage)' : 'var(--color-ink)',
-              opacity: myReady ? 0.9 : 1
-            }}
+            className="btn-primary"
+            style={{ width: '100%', padding: '14px', gap: '8px' }}
           >
-            {myReady ? 'Waiting for friend...' : "Yes, I'm ready"}
+            <span>{myReady ? 'Waiting for Friend...' : 'Yes, I am Ready'}</span>
+            <ArrowRight size={17} strokeWidth={2.4} />
           </button>
 
           <button
-            className="btn-secondary"
             onClick={() => {
               playClickSound();
               onDecline();
             }}
+            className="btn-secondary"
+            style={{ width: '100%', padding: '12px', gap: '6px' }}
           >
-            Keep it lighter for now
+            <span>Stay Lighter for Now</span>
           </button>
         </div>
       </div>
