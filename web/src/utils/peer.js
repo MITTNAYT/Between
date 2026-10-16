@@ -1,6 +1,5 @@
 import PeerPkg from 'peerjs';
 const Peer = PeerPkg?.Peer || PeerPkg;
-import mqtt from 'mqtt';
 
 export function generateRandomCode(length = 5) {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -15,11 +14,6 @@ export function sanitizeCode(code) {
   return (code || '').replace(/[^A-Za-z0-9]/g, '').toUpperCase().trim();
 }
 
-const MQTT_BROKERS = [
-  'wss://broker.hivemq.com:8884/mqtt',
-  'wss://broker.emqx.io:8084/mqtt'
-];
-
 const ICE_SERVERS = [
   { urls: 'stun:stun.l.google.com:19302' },
   { urls: 'stun:stun1.l.google.com:19302' },
@@ -30,8 +24,7 @@ const ICE_SERVERS = [
 class MultiplayerSync {
   constructor() {
     this.clientId = 'u_' + Math.random().toString(36).substring(2, 9);
-    this.mqttClient = null;
-    this.mqttConnected = false;
+    this.ws = null;
     this.broadcastChannel = null;
     this.roomCode = null;
     this.isHost = false;
@@ -47,6 +40,7 @@ class MultiplayerSync {
     this.onReactionCallback = null;
     this.onStatusChangeCallback = null;
     this.onTouchRippleCallback = null;
+    this.onRequestStateCallback = null;
     this.onCallStreamCallback = null;
     this.onCallStateCallback = null;
 
@@ -55,7 +49,6 @@ class MultiplayerSync {
     this.mediaCall = null;
     this.localStream = null;
     this.isMuted = false;
-    this.remotePeerId = null;
   }
 
   generateRoomCode(length = 5) {
@@ -93,13 +86,13 @@ class MultiplayerSync {
 
     this.roomCode = sanitizeCode(opts.roomCode || this.generateRoomCode());
 
-    // 1. Setup local BroadcastChannel
+    // 1. Setup local BroadcastChannel for same-device tabs
     this.setupBroadcastChannel(this.roomCode);
 
-    // 2. Connect to MQTT cluster
-    this.connectMqtt(0);
+    // 2. Connect to real-time pubsub stream
+    this.connectRealtimeStream();
 
-    // 3. Inform host state
+    // 3. Immediately emit waiting state
     this.onStatusChangeCallback?.({
       status: 'WAITING_FOR_GUEST',
       roomCode: this.roomCode,
@@ -107,7 +100,7 @@ class MultiplayerSync {
       myName: this.myName
     });
 
-    // 4. Initialize PeerJS in background for optional voice calling
+    // 4. Initialize optional voice calling
     this.initPeerVoice();
 
     return this.roomCode;
@@ -163,10 +156,10 @@ class MultiplayerSync {
     // 1. Setup local BroadcastChannel
     this.setupBroadcastChannel(this.roomCode);
 
-    // 2. Connect to MQTT cluster
-    this.connectMqtt(0);
+    // 2. Connect to real-time pubsub stream
+    this.connectRealtimeStream();
 
-    // 3. Timeout for connection (24 seconds)
+    // 3. Timeout for connection (20 seconds)
     this.joinTimeout = setTimeout(() => {
       if (!this.isConnected) {
         this.stopGuestHelloPing();
@@ -177,12 +170,12 @@ class MultiplayerSync {
           isHost: false
         });
       }
-    }, 24000);
+    }, 20000);
 
-    // 4. Start guest hello ping
+    // 4. Start sending hello ping immediately and repeatedly
     this.startGuestHelloPing();
 
-    // 5. Initialize PeerJS in background for optional voice calling
+    // 5. Initialize optional voice calling
     this.initPeerVoice();
   }
 
@@ -197,62 +190,59 @@ class MultiplayerSync {
           }
         };
       } catch (e) {
-        console.warn('BroadcastChannel not supported or error:', e);
+        console.warn('BroadcastChannel error:', e);
       }
     }
   }
 
-  connectMqtt(brokerIndex = 0) {
-    if (this.mqttClient) {
-      try { this.mqttClient.end(true); } catch (e) {}
-      this.mqttClient = null;
+  connectRealtimeStream() {
+    if (this.ws) {
+      try { this.ws.close(); } catch (e) {}
+      this.ws = null;
     }
 
-    const brokerUrl = MQTT_BROKERS[brokerIndex % MQTT_BROKERS.length];
-    const topic = `between/v2/room/${this.roomCode}`;
+    const topic = `between_v2_room_${this.roomCode}`;
+    const wsUrl = `wss://ntfy.sh/${topic}/ws`;
 
     try {
-      const client = mqtt.connect(brokerUrl, {
-        clientId: `${this.isHost ? 'host' : 'guest'}_${this.clientId}`,
-        clean: true,
-        connectTimeout: 8000,
-        reconnectPeriod: 2000
+      this.ws = new WebSocket(wsUrl);
+
+      this.ws.addEventListener('open', () => {
+        if (!this.isHost && !this.isConnected) {
+          this.sendHello();
+        }
       });
 
-      client.on('connect', () => {
-        this.mqttConnected = true;
-        client.subscribe(topic, { qos: 1 }, (err) => {
-          if (err) {
-            console.warn('[MQTT] Sub error:', err);
-            return;
-          }
-          if (!this.isHost && !this.isConnected) {
-            this.sendHello();
-          }
-        });
-      });
-
-      client.on('message', (_t, payload) => {
+      this.ws.addEventListener('message', (event) => {
         try {
-          const data = JSON.parse(payload.toString());
-          if (data && data.senderId !== this.clientId) {
-            this.handleIncomingData(data);
+          const outer = JSON.parse(event.data);
+          if (outer.event === 'message' && outer.message) {
+            const data = JSON.parse(outer.message);
+            if (data && data.senderId !== this.clientId) {
+              this.handleIncomingData(data);
+            }
           }
         } catch (e) {
-          console.warn('[MQTT] parse error:', e);
+          // ignore keepalive or parse errors
         }
       });
 
-      client.on('error', (err) => {
-        console.warn(`[MQTT] error on ${brokerUrl}:`, err);
-        if (!this.isConnected && brokerIndex < MQTT_BROKERS.length - 1) {
-          this.connectMqtt(brokerIndex + 1);
-        }
+      this.ws.addEventListener('error', (err) => {
+        console.warn('Realtime WS notice:', err);
       });
 
-      this.mqttClient = client;
+      this.ws.addEventListener('close', () => {
+        // Reconnect if room is still active and not cleaned up
+        if (this.roomCode) {
+          setTimeout(() => {
+            if (this.roomCode && !this.ws) {
+              this.connectRealtimeStream();
+            }
+          }, 2000);
+        }
+      });
     } catch (e) {
-      console.warn('MQTT connect error:', e);
+      console.warn('Realtime stream init error:', e);
     }
   }
 
@@ -265,7 +255,7 @@ class MultiplayerSync {
       } else {
         this.stopGuestHelloPing();
       }
-    }, 1500);
+    }, 1200);
   }
 
   stopGuestHelloPing() {
@@ -282,22 +272,6 @@ class MultiplayerSync {
     });
   }
 
-  startHeartbeat() {
-    this.stopHeartbeat();
-    this.heartbeatTimer = setInterval(() => {
-      if (this.isConnected) {
-        this.broadcastMessage({ type: 'HEARTBEAT' });
-      }
-    }, 5000);
-  }
-
-  stopHeartbeat() {
-    if (this.heartbeatTimer) {
-      clearInterval(this.heartbeatTimer);
-      this.heartbeatTimer = null;
-    }
-  }
-
   handleIncomingData(data) {
     if (!data || typeof data !== 'object') return;
     if (data.type === 'HEARTBEAT') return;
@@ -311,6 +285,8 @@ class MultiplayerSync {
           type: 'HOST_CONNECTED',
           name: this.myName
         });
+        // Immediately sync current session state to guest
+        this.onRequestStateCallback?.();
       }
 
       this.onStatusChangeCallback?.({
@@ -381,17 +357,20 @@ class MultiplayerSync {
       timestamp: Date.now()
     };
 
-    // 1. Send via MQTT
-    if (this.mqttClient && this.mqttConnected) {
-      try {
-        const topic = `between/v2/room/${this.roomCode}`;
-        this.mqttClient.publish(topic, JSON.stringify(payload), { qos: 1 });
-      } catch (e) {
-        console.warn('MQTT publish error:', e);
-      }
-    }
+    const topic = `between_v2_room_${this.roomCode}`;
 
-    // 2. Send via BroadcastChannel (local tabs on same device)
+    // 1. Send via HTTP POST pubsub (instant delivery to all subscribers worldwide)
+    try {
+      fetch(`https://ntfy.sh/${topic}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(payload)
+      }).catch((e) => {
+        console.warn('PubSub publish notice:', e);
+      });
+    } catch (e) {}
+
+    // 2. Send via BroadcastChannel (instant for local tabs on same device)
     if (this.broadcastChannel) {
       try {
         this.broadcastChannel.postMessage(payload);
@@ -454,8 +433,7 @@ class MultiplayerSync {
       });
 
       this.peer.on('error', (err) => {
-        // Voice is optional, do not break the main room connection
-        console.warn('PeerJS voice non-fatal notice:', err?.type);
+        console.warn('PeerJS voice notice:', err?.type);
       });
     } catch (e) {
       console.warn('PeerJS init voice skipped:', e);
@@ -531,15 +509,13 @@ class MultiplayerSync {
       this.joinTimeout = null;
     }
     this.stopGuestHelloPing();
-    this.stopHeartbeat();
     this.endVoiceCall();
 
     try {
-      if (this.mqttClient) {
-        this.mqttClient.end(true);
-        this.mqttClient = null;
+      if (this.ws) {
+        this.ws.close();
+        this.ws = null;
       }
-      this.mqttConnected = false;
       if (this.peer) {
         this.peer.destroy();
         this.peer = null;
