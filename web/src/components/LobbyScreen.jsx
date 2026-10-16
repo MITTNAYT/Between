@@ -280,7 +280,7 @@ export default function LobbyScreen({
                 display: 'grid',
                 gridTemplateColumns: 'repeat(3, 1fr)',
                 gap: '8px',
-                marginBottom: '16px'
+                marginBottom: '24px'
               }}>
                 {Object.values(RELATIONSHIP_TYPES).map((rel) => {
                   const isSelected = selectedRel === rel.id;
@@ -325,20 +325,6 @@ export default function LobbyScreen({
                     </button>
                   );
                 })}
-              </div>
-
-              {/* Description preview */}
-              <div style={{
-                padding: '12px 14px',
-                background: 'var(--color-surface-subtle)',
-                borderRadius: 'var(--radius-sm)',
-                fontSize: '13px',
-                color: 'var(--color-body)',
-                lineHeight: '1.45',
-                marginBottom: '22px',
-                borderLeft: `3px solid ${RELATIONSHIP_TYPES[selectedRel]?.color}`
-              }}>
-                {RELATIONSHIP_TYPES[selectedRel]?.description}
               </div>
 
               {/* Duration Selector */}

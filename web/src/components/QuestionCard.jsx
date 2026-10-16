@@ -10,7 +10,10 @@ export default function QuestionCard({
   relationshipType = 'COUPLE',
   onPassTurn,
   isBookmarked = false,
-  onToggleBookmark
+  onToggleBookmark,
+  swipeClass = '',
+  onSwipeLeft,
+  onSwipeRight
 }) {
   const [hintExpanded, setHintExpanded] = useState(false);
   const [selectedWildcardPrompt, setSelectedWildcardPrompt] = useState(null);
@@ -36,7 +39,13 @@ export default function QuestionCard({
   };
 
   return (
-    <InteractiveCard3D isWildcard={isWildcard} className="question-card-inner">
+    <InteractiveCard3D 
+      isWildcard={isWildcard} 
+      swipeClass={swipeClass}
+      onSwipeLeft={onSwipeLeft}
+      onSwipeRight={onSwipeRight}
+      className="question-card-inner"
+    >
       <div style={{
         padding: '32px 28px',
         minHeight: '360px',

@@ -3,19 +3,19 @@ import * as THREE from 'three';
 
 const AURA_COLORS = {
   COUPLE: {
-    primary: new THREE.Color('#D94E34'),   // Warm Ember
-    secondary: new THREE.Color('#DE4D6A'), // Rose Intimacy
-    accent: new THREE.Color('#F7D6CD')     // Soft Candlelight
+    primary: new THREE.Color('#E6A15C'),   // Warm Honey Amber
+    secondary: new THREE.Color('#D48243'), // Candlelit Terracotta
+    accent: new THREE.Color('#FFF2DC')     // Soft Champagne Pearl
   },
   FRIEND: {
-    primary: new THREE.Color('#C6882C'),   // Warm Amber Gold
-    secondary: new THREE.Color('#E5A93C'), // Sunbeam
-    accent: new THREE.Color('#FDF3E3')     // Champagne
+    primary: new THREE.Color('#E5B869'),   // Sunlit Golden Topaz
+    secondary: new THREE.Color('#C89B48'), // Warm Ochre
+    accent: new THREE.Color('#FFF8E7')     // Golden Mist
   },
   JUST_MET: {
-    primary: new THREE.Color('#387B6A'),   // Contemplative Sage Teal
-    secondary: new THREE.Color('#2A5A4E'), // Deep Emerald
-    accent: new THREE.Color('#D4EAE2')     // Mist
+    primary: new THREE.Color('#94AAA0'),   // Earthy Soft Sage Stone
+    secondary: new THREE.Color('#C4B49F'), // Warm Driftwood
+    accent: new THREE.Color('#F7F2EB')     // Sandstone Ivory
   }
 };
 
@@ -138,10 +138,10 @@ export default function ThreeCanvas({ relationshipType = 'COUPLE' }) {
 
     // Animation Loop
     let animationFrameId;
-    let clock = new THREE.Clock();
+    const startTime = performance.now();
 
     const animate = () => {
-      const time = clock.getElapsedTime();
+      const time = (performance.now() - startTime) * 0.001;
 
       // Smooth camera interpolation
       currentX += (targetX - currentX) * 0.04;

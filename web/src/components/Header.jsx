@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Sparkles, Radio, Volume2, VolumeX, Copy, Check, LogOut, Heart } from 'lucide-react';
+import { Sparkles, Radio, Volume2, VolumeX, Copy, Check, LogOut } from 'lucide-react';
+import BetweenLogo from './BetweenLogo';
 import { toggleAmbientSoundscape, playClickSound } from '../utils/audio';
 
 export default function Header({ 
@@ -55,19 +56,7 @@ export default function Header({
           </button>
         ) : (
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div style={{
-              width: '38px',
-              height: '38px',
-              borderRadius: '12px',
-              background: 'var(--color-surface)',
-              border: '1px solid var(--color-hairline)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              boxShadow: 'var(--shadow-sm)'
-            }}>
-              <Heart size={20} strokeWidth={2.2} color="var(--color-ember)" fill="rgba(217, 78, 52, 0.15)" />
-            </div>
+            <BetweenLogo size={38} />
             <div>
               <div style={{
                 fontFamily: 'var(--font-serif)',

@@ -25,6 +25,7 @@ export default function App() {
   const [currentTurn, setCurrentTurn] = useState('host'); // 'host' | 'guest'
   const [bookmarkedMoments, setBookmarkedMoments] = useState([]);
   const [floatingReactions, setFloatingReactions] = useState([]);
+  const [swipeClass, setSwipeClass] = useState('');
 
   // Deep questions handshake state
   const [handshakeOpen, setHandshakeOpen] = useState(false);
@@ -105,8 +106,14 @@ export default function App() {
     if (incoming.questions) setQuestions(incoming.questions);
 
     if (incoming.currentIndex !== undefined && incoming.currentIndex !== stateRef.current.currentIndex) {
-      setCurrentIndex(incoming.currentIndex);
-      playChimeSound();
+      const isNext = incoming.currentIndex > stateRef.current.currentIndex;
+      setSwipeClass(isNext ? 'swipe-out-left' : 'swipe-out-right');
+      setTimeout(() => {
+        setCurrentIndex(incoming.currentIndex);
+        setSwipeClass(isNext ? 'swipe-in-right' : 'swipe-in-left');
+        playChimeSound();
+        setTimeout(() => setSwipeClass(''), 360);
+      }, 230);
     }
 
     if (incoming.currentTurn !== undefined) {
@@ -243,29 +250,48 @@ export default function App() {
       return;
     }
 
-    // Normal advance
-    playChimeSound();
-    const nextTurn = currentTurn === 'host' ? 'guest' : 'host';
-    setCurrentIndex(nextIdx);
-    setCurrentTurn(nextTurn);
+    // Trigger card swiping animation
+    playClickSound();
+    setSwipeClass('swipe-out-left');
 
-    if (!isSolo) {
-      multiplayerSync.syncState({
-        currentIndex: nextIdx,
-        currentTurn: nextTurn
-      });
-    }
+    setTimeout(() => {
+      playChimeSound();
+      const nextTurn = currentTurn === 'host' ? 'guest' : 'host';
+      setCurrentIndex(nextIdx);
+      setCurrentTurn(nextTurn);
+      setSwipeClass('swipe-in-right');
+
+      if (!isSolo) {
+        multiplayerSync.syncState({
+          currentIndex: nextIdx,
+          currentTurn: nextTurn
+        });
+      }
+
+      setTimeout(() => {
+        setSwipeClass('');
+      }, 360);
+    }, 230);
   };
 
   // Previous Card
   const handlePreviousCard = () => {
     if (currentIndex <= 0) return;
     playClickSound();
-    const prevIdx = currentIndex - 1;
-    setCurrentIndex(prevIdx);
-    if (!isSolo) {
-      multiplayerSync.syncState({ currentIndex: prevIdx });
-    }
+    setSwipeClass('swipe-out-right');
+
+    setTimeout(() => {
+      const prevIdx = currentIndex - 1;
+      setCurrentIndex(prevIdx);
+      setSwipeClass('swipe-in-left');
+      if (!isSolo) {
+        multiplayerSync.syncState({ currentIndex: prevIdx });
+      }
+
+      setTimeout(() => {
+        setSwipeClass('');
+      }, 360);
+    }, 230);
   };
 
   // Pass Turn
@@ -490,7 +516,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* Central 3D Question Card */}
+            {/* Central 3D Question Card with Physical Swipe Gesture & Animation */}
             <div style={{ width: '100%', margin: '4px 0' }}>
               <QuestionCard
                 question={currentQuestion}
@@ -499,6 +525,9 @@ export default function App() {
                 onPassTurn={handlePassTurn}
                 isBookmarked={isCurrentBookmarked}
                 onToggleBookmark={handleToggleBookmark}
+                swipeClass={swipeClass}
+                onSwipeLeft={handleAdvanceCard}
+                onSwipeRight={handlePreviousCard}
               />
             </div>
 
