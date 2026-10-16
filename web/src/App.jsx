@@ -18,6 +18,7 @@ export default function App() {
   const [isHost, setIsHost] = useState(false);
   const [isSolo, setIsSolo] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState('IDLE');
+  const [errorMessage, setErrorMessage] = useState('');
   
   // Player Names
   const [hostName, setHostName] = useState(() => localStorage.getItem('between_host_name') || localStorage.getItem('between_user_name') || 'Partner 1');
@@ -136,7 +137,16 @@ export default function App() {
 
   // Peer Event Handlers
   const handleStatusChange = useCallback((statusData) => {
-    setConnectionStatus(statusData.status);
+    if (statusData.status === 'ERROR') {
+      setConnectionStatus('ERROR');
+      setErrorMessage(statusData.error || 'Connection error. Please try again.');
+    } else {
+      setConnectionStatus(statusData.status);
+      if (statusData.status === 'CONNECTED') {
+        setErrorMessage('');
+      }
+    }
+
     if (statusData.roomCode) setRoomCode(statusData.roomCode);
     if (typeof statusData.isHost === 'boolean') setIsHost(statusData.isHost);
 
@@ -273,6 +283,7 @@ export default function App() {
   const handleCreateRoom = ({ relationshipType: rel, sessionLength: len, roomCode: customCode, userName }) => {
     setIsHost(true);
     setIsSolo(false);
+    setErrorMessage('');
     setRelationshipType(rel);
     setSessionLength(len);
     const myName = userName || 'Partner 1';
@@ -303,6 +314,7 @@ export default function App() {
   const handleJoinRoom = (paramsOrCode) => {
     setIsHost(false);
     setIsSolo(false);
+    setErrorMessage('');
     let code = typeof paramsOrCode === 'string' ? paramsOrCode : (paramsOrCode.roomCode || '');
     let userName = typeof paramsOrCode === 'object' && paramsOrCode.userName ? paramsOrCode.userName : (localStorage.getItem('between_user_name') || 'Partner 2');
     code = code.trim().toUpperCase();
@@ -597,9 +609,10 @@ export default function App() {
   // Return to Lobby
   const handleExitToLobby = () => {
     playClickSound();
-    multiplayerSync.cleanup();
+    multiplayerSync.leaveRoom();
     setScreen('LOBBY');
     setConnectionStatus('IDLE');
+    setErrorMessage('');
     setRoomCode('');
     setIsHost(false);
     setIsSolo(false);
@@ -683,11 +696,16 @@ export default function App() {
             onJoinRoom={handleJoinRoom}
             onStartSolo={handleStartSolo}
             initialRoomCode={new URLSearchParams(window.location.search).get('room') || ''}
-            isWaitingForGuest={connectionStatus === 'WAITING_FOR_GUEST' || (isHost && connectionStatus === 'CONNECTED')}
+            connectionStatus={connectionStatus}
+            isHost={isHost}
+            errorMessage={errorMessage}
+            onCancelRoom={handleExitToLobby}
+            isWaitingForGuest={isHost && (connectionStatus === 'WAITING_FOR_GUEST' || connectionStatus === 'CONNECTED')}
             roomCode={roomCode}
             isConnected={connectionStatus === 'CONNECTED'}
             onStartSession={handleStartSession}
-            peerName={guestName}
+            peerName={isHost ? guestName : hostName}
+            myName={isHost ? hostName : guestName}
           />
         )}
 

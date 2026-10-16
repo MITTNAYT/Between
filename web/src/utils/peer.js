@@ -9,6 +9,33 @@ export function generateRandomCode(length = 5) {
   return code;
 }
 
+const ICE_SERVERS = [
+  { urls: 'stun:stun.l.google.com:19302' },
+  { urls: 'stun:stun1.l.google.com:19302' },
+  { urls: 'stun:stun2.l.google.com:19302' },
+  { urls: 'stun:stun.cloudflare.com:3478' },
+  { urls: 'stun:global.stun.twilio.com:3478' },
+  {
+    urls: 'turn:openrelay.metered.ca:80',
+    username: 'openrelayproject',
+    credential: 'openrelayproject'
+  },
+  {
+    urls: 'turn:openrelay.metered.ca:443',
+    username: 'openrelayproject',
+    credential: 'openrelayproject'
+  },
+  {
+    urls: 'turn:openrelay.metered.ca:443?transport=tcp',
+    username: 'openrelayproject',
+    credential: 'openrelayproject'
+  }
+];
+
+export function sanitizeCode(code) {
+  return (code || '').replace(/[^A-Za-z0-9]/g, '').toUpperCase().trim();
+}
+
 class MultiplayerSync {
   constructor() {
     this.peer = null;
@@ -23,6 +50,8 @@ class MultiplayerSync {
     this.onStatusChangeCallback = null;
     this.onTouchRippleCallback = null;
     this.isConnected = false;
+    this.joinTimeout = null;
+    this.heartbeatTimer = null;
 
     // WebRTC Voice Call
     this.mediaCall = null;
@@ -65,7 +94,7 @@ class MultiplayerSync {
     this.onCallStreamCallback = onCallStream;
     this.onCallStateCallback = onCallState;
 
-    this.roomCode = (opts.roomCode || this.generateRoomCode()).toUpperCase().trim();
+    this.roomCode = sanitizeCode(opts.roomCode || this.generateRoomCode());
     const peerId = `between-v1-${this.roomCode.toLowerCase()}`;
 
     this.setupBroadcastChannel(this.roomCode);
@@ -73,12 +102,7 @@ class MultiplayerSync {
     try {
       this.peer = new Peer(peerId, {
         debug: 1,
-        config: {
-          iceServers: [
-            { urls: 'stun:stun.l.google.com:19302' },
-            { urls: 'stun:stun1.l.google.com:19302' }
-          ]
-        }
+        config: { iceServers: ICE_SERVERS }
       });
 
       this.peer.on('open', (id) => {
@@ -117,7 +141,35 @@ class MultiplayerSync {
       });
 
       this.peer.on('error', (err) => {
-        console.warn('Host Peer error:', err);
+        console.warn('Host Peer error:', err?.type, err);
+        if (err?.type === 'unavailable-id') {
+          // Room ID already registered in PeerJS cloud: regenerate a fresh room code
+          const freshCode = this.generateRoomCode();
+          this.roomCode = freshCode;
+          console.log('Room ID taken, assigning fresh code:', freshCode);
+          this.initHost({
+            roomCode: freshCode,
+            userName: this.myName,
+            onStatusChange: this.onStatusChangeCallback,
+            onStateChange: this.onStateChangeCallback,
+            onReaction: this.onReactionCallback,
+            onTouchRipple: this.onTouchRippleCallback,
+            onCallStream: this.onCallStreamCallback,
+            onCallState: this.onCallStateCallback
+          });
+          return;
+        }
+
+        if (err?.type === 'network' || err?.type === 'server-error') {
+          this.onStatusChangeCallback?.({
+            status: 'ERROR',
+            error: 'Signaling connection lost. Please check internet connection.',
+            roomCode: this.roomCode,
+            isHost: true
+          });
+          return;
+        }
+
         this.onStatusChangeCallback?.({
           status: this.isConnected ? 'CONNECTED' : 'WAITING_FOR_GUEST',
           roomCode: this.roomCode,
@@ -154,7 +206,7 @@ class MultiplayerSync {
     this.isHost = false;
     this.myName = opts.userName || 'Partner 2';
     this.peerName = 'Partner 1';
-    this.roomCode = (code || '').toUpperCase().trim();
+    this.roomCode = sanitizeCode(code);
     this.onStatusChangeCallback = onStatusChange;
     this.onStateChangeCallback = onStateChange;
     this.onReactionCallback = onReaction;
@@ -162,26 +214,56 @@ class MultiplayerSync {
     this.onCallStreamCallback = onCallStream;
     this.onCallStateCallback = onCallState;
 
+    if (!this.roomCode || this.roomCode.length < 3) {
+      this.onStatusChangeCallback?.({
+        status: 'ERROR',
+        error: 'Please enter a valid room code.',
+        roomCode: this.roomCode,
+        isHost: false
+      });
+      return;
+    }
+
     this.setupBroadcastChannel(this.roomCode);
 
     const targetPeerId = `between-v1-${this.roomCode.toLowerCase()}`;
     this.remotePeerId = targetPeerId;
-    const guestPeerId = `between-guest-${Math.random().toString(36).substring(2, 7)}`;
+    const guestPeerId = `between-guest-${Math.random().toString(36).substring(2, 9)}`;
+
+    this.onStatusChangeCallback?.({
+      status: 'CONNECTING',
+      roomCode: this.roomCode,
+      isHost: false
+    });
+
+    // 14-second timeout for guest connection
+    this.joinTimeout = setTimeout(() => {
+      if (!this.isConnected) {
+        this.onStatusChangeCallback?.({
+          status: 'ERROR',
+          error: `Could not connect to room "${this.roomCode}". The host may have left or the room code was mistyped.`,
+          roomCode: this.roomCode,
+          isHost: false
+        });
+      }
+    }, 14000);
 
     try {
       this.peer = new Peer(guestPeerId, {
         debug: 1,
-        config: {
-          iceServers: [
-            { urls: 'stun:stun.l.google.com:19302' },
-            { urls: 'stun:stun1.l.google.com:19302' }
-          ]
-        }
+        config: { iceServers: ICE_SERVERS }
       });
 
       this.peer.on('open', () => {
-        const conn = this.peer.connect(targetPeerId, { reliable: true });
-        this.setupConnection(conn);
+        try {
+          const conn = this.peer.connect(targetPeerId, {
+            reliable: true,
+            serialization: 'json'
+          });
+          this.setupConnection(conn);
+        } catch (err) {
+          console.warn('peer.connect error:', err);
+        }
       });
 
       // Handle incoming voice call on guest
@@ -207,7 +289,34 @@ class MultiplayerSync {
       });
 
       this.peer.on('error', (err) => {
-        console.warn('Guest Peer error:', err);
+        console.warn('Guest Peer error:', err?.type, err);
+        if (this.joinTimeout) {
+          clearTimeout(this.joinTimeout);
+          this.joinTimeout = null;
+        }
+
+        if (err?.type === 'peer-unavailable') {
+          this.onStatusChangeCallback?.({
+            status: 'ERROR',
+            error: `Room "${this.roomCode}" was not found. Please verify the code or ask the host to send an invite link.`,
+            roomCode: this.roomCode,
+            isHost: false
+          });
+        } else if (err?.type === 'network' || err?.type === 'server-error' || err?.type === 'socket-error') {
+          this.onStatusChangeCallback?.({
+            status: 'ERROR',
+            error: 'Signaling connection error. Please check your internet connection.',
+            roomCode: this.roomCode,
+            isHost: false
+          });
+        } else if (err?.type !== 'unavailable-id') {
+          this.onStatusChangeCallback?.({
+            status: 'ERROR',
+            error: err?.message || 'Connection failed. Please verify the room code and try again.',
+            roomCode: this.roomCode,
+            isHost: false
+          });
+        }
       });
     } catch (e) {
       console.warn('Guest PeerJS error, using local channel:', e);
@@ -232,7 +341,13 @@ class MultiplayerSync {
     this.remotePeerId = conn.peer;
 
     conn.on('open', () => {
+      if (this.joinTimeout) {
+        clearTimeout(this.joinTimeout);
+        this.joinTimeout = null;
+      }
       this.isConnected = true;
+      this.startHeartbeat();
+
       this.onStatusChangeCallback?.({
         status: 'CONNECTED',
         roomCode: this.roomCode,
@@ -254,6 +369,7 @@ class MultiplayerSync {
 
     conn.on('close', () => {
       this.isConnected = false;
+      this.stopHeartbeat();
       this.onStatusChangeCallback?.({
         status: 'DISCONNECTED',
         roomCode: this.roomCode,
@@ -268,8 +384,27 @@ class MultiplayerSync {
     });
   }
 
+  startHeartbeat() {
+    this.stopHeartbeat();
+    this.heartbeatTimer = setInterval(() => {
+      if (this.connection && this.connection.open) {
+        try {
+          this.connection.send({ type: 'HEARTBEAT' });
+        } catch (e) {}
+      }
+    }, 4000);
+  }
+
+  stopHeartbeat() {
+    if (this.heartbeatTimer) {
+      clearInterval(this.heartbeatTimer);
+      this.heartbeatTimer = null;
+    }
+  }
+
   handleIncomingData(data) {
     if (!data || typeof data !== 'object') return;
+    if (data.type === 'HEARTBEAT') return;
 
     if (data.type === 'GUEST_HELLO') {
       this.isConnected = true;
@@ -294,6 +429,18 @@ class MultiplayerSync {
         status: 'CONNECTED',
         roomCode: this.roomCode,
         isHost: false,
+        peerName: this.peerName,
+        myName: this.myName
+      });
+      return;
+    }
+
+    if (data.type === 'DISCONNECT') {
+      this.isConnected = false;
+      this.onStatusChangeCallback?.({
+        status: 'DISCONNECTED',
+        roomCode: this.roomCode,
+        isHost: this.isHost,
         peerName: this.peerName,
         myName: this.myName
       });
@@ -403,7 +550,17 @@ class MultiplayerSync {
     return false;
   }
 
+  leaveRoom() {
+    this.broadcastMessage({ type: 'DISCONNECT' });
+    this.cleanup();
+  }
+
   cleanup() {
+    if (this.joinTimeout) {
+      clearTimeout(this.joinTimeout);
+      this.joinTimeout = null;
+    }
+    this.stopHeartbeat();
     this.endVoiceCall();
     try {
       if (this.connection) {

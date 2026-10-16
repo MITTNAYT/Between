@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Heart, Users, Compass, Sparkles, ShieldCheck, Copy, Check, ArrowRight, Radio, Shuffle, User, ChevronDown, ChevronUp } from 'lucide-react';
+import { Heart, Users, Compass, Sparkles, ShieldCheck, Copy, Check, ArrowRight, Radio, Shuffle, User, ChevronDown, ChevronUp, Home, ChevronLeft } from 'lucide-react';
 import { RELATIONSHIP_TYPES, SESSION_LENGTHS } from '../utils/engine';
 import { playClickSound } from '../utils/audio';
 import { generateRandomCode } from '../utils/peer';
@@ -16,6 +16,10 @@ export default function LobbyScreen({
   onStartSolo,
   initialRoomCode = '',
   isWaitingForGuest = false,
+  connectionStatus = 'IDLE',
+  isHost = false,
+  errorMessage = '',
+  onCancelRoom,
   roomCode = '',
   isConnected = false,
   onStartSession,
@@ -152,15 +156,187 @@ export default function LobbyScreen({
         </p>
       </div>
 
-      {/* Host waiting room card */}
-      {isWaitingForGuest ? (
+      {/* 1. Connection Error State */}
+      {(errorMessage || connectionStatus === 'ERROR') ? (
+        <div className="soft-card" style={{
+          padding: '32px 24px',
+          textAlign: 'center',
+          border: '1.5px solid rgba(217, 78, 52, 0.45)',
+          background: 'var(--color-surface)',
+          boxShadow: 'var(--shadow-md)',
+          animation: 'fadeIn 0.25s ease-out'
+        }}>
+          <div style={{
+            width: '60px',
+            height: '60px',
+            borderRadius: '50%',
+            background: 'rgba(217, 78, 52, 0.12)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            margin: '0 auto 16px',
+            color: 'var(--color-ember)'
+          }}>
+            <ShieldCheck size={30} strokeWidth={2.2} />
+          </div>
+
+          <h2 style={{
+            fontFamily: 'var(--font-serif)',
+            fontSize: '22px',
+            fontWeight: '600',
+            marginBottom: '8px'
+          }}>
+            Unable to Connect
+          </h2>
+
+          <p style={{
+            fontSize: '14px',
+            color: 'var(--color-body)',
+            lineHeight: 1.5,
+            marginBottom: '22px',
+            maxWidth: '380px',
+            margin: '0 auto 22px'
+          }}>
+            {errorMessage || 'The room could not be found or the connection timed out. Please verify the code with your partner.'}
+          </p>
+
+          <button
+            type="button"
+            onClick={() => {
+              playClickSound();
+              onCancelRoom?.();
+            }}
+            className="btn-primary"
+            style={{ width: '100%', padding: '14px', display: 'flex', justifyContent: 'center', gap: '8px' }}
+          >
+            <ChevronLeft size={18} strokeWidth={2.4} />
+            <span>Back to Lobby / Try Again</span>
+          </button>
+        </div>
+      ) : (!isHost && connectionStatus === 'CONNECTING') ? (
+        /* 2. Guest Connecting State */
+        <div className="soft-card" style={{
+          padding: '36px 24px',
+          textAlign: 'center',
+          border: '1.5px solid rgba(229, 169, 60, 0.4)',
+          background: 'var(--color-surface)',
+          boxShadow: 'var(--shadow-md)',
+          animation: 'fadeIn 0.25s ease-out'
+        }}>
+          <div style={{
+            width: '64px',
+            height: '64px',
+            borderRadius: '50%',
+            background: 'rgba(229, 169, 60, 0.14)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            margin: '0 auto 16px',
+            color: 'var(--color-gold)'
+          }}>
+            <Radio size={30} strokeWidth={2.2} className="audio-bar" />
+          </div>
+
+          <h2 style={{
+            fontFamily: 'var(--font-serif)',
+            fontSize: '22px',
+            fontWeight: '600',
+            marginBottom: '8px'
+          }}>
+            Connecting to Room {roomCode}...
+          </h2>
+
+          <p style={{
+            fontSize: '14px',
+            color: 'var(--color-body)',
+            lineHeight: 1.5,
+            marginBottom: '24px',
+            maxWidth: '340px',
+            margin: '0 auto 24px'
+          }}>
+            Pairing with your partner across the miles. Please keep this screen open while we connect your rituals.
+          </p>
+
+          <button
+            type="button"
+            onClick={() => {
+              playClickSound();
+              onCancelRoom?.();
+            }}
+            className="btn-secondary"
+            style={{ width: '100%', padding: '13px', display: 'flex', justifyContent: 'center', gap: '8px' }}
+          >
+            <ChevronLeft size={17} strokeWidth={2.4} />
+            <span>Cancel & Go Back</span>
+          </button>
+        </div>
+      ) : (!isHost && isConnected) ? (
+        /* 3. Guest Connected Waiting State */
+        <div className="soft-card" style={{
+          padding: '36px 24px',
+          textAlign: 'center',
+          border: '1.5px solid rgba(56, 123, 106, 0.4)',
+          background: 'var(--color-surface)',
+          boxShadow: 'var(--shadow-md)',
+          animation: 'fadeIn 0.25s ease-out'
+        }}>
+          <div style={{
+            width: '64px',
+            height: '64px',
+            borderRadius: '50%',
+            background: 'rgba(56, 123, 106, 0.14)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            margin: '0 auto 16px',
+            color: 'var(--color-sage)'
+          }}>
+            <Sparkles size={32} strokeWidth={2.2} />
+          </div>
+
+          <h2 style={{
+            fontFamily: 'var(--font-serif)',
+            fontSize: '22px',
+            fontWeight: '600',
+            marginBottom: '8px'
+          }}>
+            Connected with {peerName || 'Host'}!
+          </h2>
+
+          <p style={{
+            fontSize: '14px',
+            color: 'var(--color-body)',
+            lineHeight: 1.5,
+            marginBottom: '24px',
+            maxWidth: '360px',
+            margin: '0 auto 24px'
+          }}>
+            Both screens are synchronized. Waiting for {peerName || 'your partner'} to start the ritual... Settle in and enjoy the moment.
+          </p>
+
+          <button
+            type="button"
+            onClick={() => {
+              playClickSound();
+              onCancelRoom?.();
+            }}
+            className="btn-secondary"
+            style={{ width: '100%', padding: '13px', display: 'flex', justifyContent: 'center', gap: '8px' }}
+          >
+            <Home size={17} strokeWidth={2.2} />
+            <span>Leave Room & Return Home</span>
+          </button>
+        </div>
+      ) : isWaitingForGuest ? (
+        /* 4. Host Waiting Room Card */
         <div className="soft-card" style={{
           padding: '32px 24px',
           textAlign: 'center',
           border: '1.5px solid rgba(217, 78, 52, 0.35)',
           background: 'var(--color-surface)',
           boxShadow: 'var(--shadow-md)',
-          position: 'relative'
+          position: 'relative',
+          animation: 'fadeIn 0.25s ease-out'
         }}>
           <div style={{
             width: '60px',
@@ -239,6 +415,19 @@ export default function LobbyScreen({
             >
               <span>{isConnected ? `Begin Intimate Ritual with ${peerName || 'Partner'}` : 'Start Session (Or Play Solo)'}</span>
               <ArrowRight size={18} strokeWidth={2.4} />
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                playClickSound();
+                onCancelRoom?.();
+              }}
+              className="btn-secondary"
+              style={{ width: '100%', padding: '12px', display: 'flex', justifyContent: 'center', gap: '8px' }}
+            >
+              <ChevronLeft size={17} strokeWidth={2.2} />
+              <span>Cancel Room & Return Home</span>
             </button>
           </div>
         </div>
@@ -703,6 +892,26 @@ export default function LobbyScreen({
               >
                 <span>Connect to Room</span>
                 <ArrowRight size={18} strokeWidth={2.4} />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  playClickSound();
+                  setTab('CREATE');
+                }}
+                className="btn-secondary"
+                style={{
+                  width: '100%',
+                  marginTop: '10px',
+                  padding: '12px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  gap: '6px'
+                }}
+              >
+                <ChevronLeft size={16} strokeWidth={2.4} />
+                <span>Back to Create Room</span>
               </button>
             </form>
           )}

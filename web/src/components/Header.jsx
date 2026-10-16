@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sparkles, Radio, Volume2, VolumeX, Copy, Check, LogOut, Flame, Sun, Moon, Mic, MicOff, Phone, PhoneOff } from 'lucide-react';
+import { Sparkles, Radio, Volume2, VolumeX, Copy, Check, LogOut, Flame, Sun, Moon, Mic, MicOff, Phone, PhoneOff, Home, ChevronLeft } from 'lucide-react';
 import BetweenLogo from './BetweenLogo';
 import { toggleAmbientSoundscape, playClickSound } from '../utils/audio';
 
@@ -49,37 +49,71 @@ export default function Header({
       borderBottom: isSessionActive ? '1px solid var(--color-hairline)' : 'none',
       marginBottom: isSessionActive ? '16px' : '0'
     }}>
-      {/* Left: Exit or Brand Logo */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+      {/* Left: Exit/Home or Brand Logo */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
         {isSessionActive ? (
-          <button 
-            className="btn-icon" 
-            onClick={onExit}
-            aria-label="Exit session"
-            title="Leave conversation"
-          >
-            <LogOut size={18} strokeWidth={2.2} />
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <button 
+              className="btn-icon" 
+              onClick={onExit}
+              aria-label="Return to Home"
+              title="Return to Home"
+            >
+              <Home size={17} strokeWidth={2.2} />
+            </button>
+            <button 
+              className="btn-secondary" 
+              onClick={onExit}
+              aria-label="Exit session"
+              title="Exit ritual and return to home"
+              style={{ padding: '6px 12px', fontSize: '12px', gap: '6px' }}
+            >
+              <LogOut size={13} strokeWidth={2.2} />
+              <span>Exit</span>
+            </button>
+          </div>
         ) : (
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <BetweenLogo size={38} />
-            <div>
-              <div style={{
-                fontFamily: 'var(--font-serif)',
-                fontSize: '18px',
-                fontWeight: '600',
-                lineHeight: 1.1,
-                color: 'var(--color-ink)'
-              }}>
-                Between
-              </div>
-              <div style={{
-                fontSize: '11px',
-                fontWeight: '600',
-                color: 'var(--color-muted)',
-                letterSpacing: '0.04em'
-              }}>
-                Rituals of Closeness
+            {roomCode && (
+              <button 
+                className="btn-icon" 
+                onClick={onExit}
+                aria-label="Back to Lobby"
+                title="Cancel room and return to Home"
+                style={{ width: '40px', height: '40px' }}
+              >
+                <ChevronLeft size={18} strokeWidth={2.4} />
+              </button>
+            )}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                cursor: roomCode ? 'pointer' : 'default'
+              }}
+              onClick={roomCode ? onExit : undefined}
+              title={roomCode ? 'Click to return to Home' : undefined}
+            >
+              <BetweenLogo size={38} />
+              <div>
+                <div style={{
+                  fontFamily: 'var(--font-serif)',
+                  fontSize: '18px',
+                  fontWeight: '600',
+                  lineHeight: 1.1,
+                  color: 'var(--color-ink)'
+                }}>
+                  Between
+                </div>
+                <div style={{
+                  fontSize: '11px',
+                  fontWeight: '600',
+                  color: 'var(--color-muted)',
+                  letterSpacing: '0.04em'
+                }}>
+                  Rituals of Closeness
+                </div>
               </div>
             </div>
           </div>
