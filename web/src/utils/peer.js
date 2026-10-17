@@ -1,5 +1,8 @@
 import PeerPkg from 'peerjs';
+import PahoPkg from 'paho-mqtt';
+
 const Peer = PeerPkg?.Peer || PeerPkg?.default?.Peer || PeerPkg?.default || PeerPkg;
+const Paho = PahoPkg?.default || PahoPkg;
 
 export function generateRandomCode(length = 5) {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -14,6 +17,11 @@ export function sanitizeCode(code) {
   return (code || '').replace(/[^A-Za-z0-9]/g, '').toUpperCase().trim();
 }
 
+const MQTT_BROKERS = [
+  { host: 'broker.emqx.io', port: 8084, path: '/mqtt' },
+  { host: 'broker.hivemq.com', port: 8884, path: '/mqtt' }
+];
+
 const ICE_SERVERS = [
   { urls: 'stun:stun.l.google.com:19302' },
   { urls: 'stun:stun1.l.google.com:19302' },
@@ -24,7 +32,8 @@ const ICE_SERVERS = [
 class MultiplayerSync {
   constructor() {
     this.clientId = 'u_' + Math.random().toString(36).substring(2, 9);
-    this.ws = null;
+    this.mqttClient = null;
+    this.currentBrokerIdx = 0;
     this.broadcastChannel = null;
     this.roomCode = null;
     this.isHost = false;
@@ -32,13 +41,7 @@ class MultiplayerSync {
     this.peerName = 'Partner 2';
     this.isConnected = false;
     this.joinTimeout = null;
-    this.guestHelloTimer = null;
-    this.hostWaitingTimer = null;
-    this.microPollTimer = null;
     this.heartbeatTimer = null;
-    this.isPolling = false;
-
-    // Deduplication tracking
     this.processedMsgIds = new Set();
 
     // Callbacks
@@ -55,6 +58,8 @@ class MultiplayerSync {
     this.mediaCall = null;
     this.localStream = null;
     this.isMuted = false;
+    this.myVoicePeerId = null;
+    this.remoteVoicePeerId = null;
   }
 
   generateRoomCode(length = 5) {
@@ -92,22 +97,13 @@ class MultiplayerSync {
 
     this.roomCode = sanitizeCode(opts.roomCode || this.generateRoomCode());
 
-    // 1. Setup local BroadcastChannel for same-device tabs
+    // 1. Setup local BroadcastChannel
     this.setupBroadcastChannel(this.roomCode);
 
-    // 2. Connect to real-time pubsub stream via WebSocket
-    this.connectRealtimeStream();
+    // 2. Connect to high-speed global real-time broker
+    this.connectBroker(0);
 
-    // 3. Start active HTTP micro-polling fallback
-    this.startMicroPolling();
-
-    // 4. Start Host waiting beacon so guest immediately finds host
-    this.startHostWaitingBeacon();
-
-    // 5. Start ongoing presence heartbeat
-    this.startHeartbeat();
-
-    // 6. Immediately emit waiting state
+    // 3. Immediately emit waiting state to UI
     this.onStatusChangeCallback?.({
       status: 'WAITING_FOR_GUEST',
       roomCode: this.roomCode,
@@ -115,7 +111,7 @@ class MultiplayerSync {
       myName: this.myName
     });
 
-    // 7. Initialize optional voice calling
+    // 4. Initialize voice call peer in background
     this.initPeerVoice();
 
     return this.roomCode;
@@ -171,32 +167,22 @@ class MultiplayerSync {
     // 1. Setup local BroadcastChannel
     this.setupBroadcastChannel(this.roomCode);
 
-    // 2. Connect to real-time pubsub stream via WebSocket
-    this.connectRealtimeStream();
+    // 2. Connect to high-speed global real-time broker
+    this.connectBroker(0);
 
-    // 3. Start active HTTP micro-polling fallback
-    this.startMicroPolling();
-
-    // 4. Timeout for connection (extended to 30 seconds with automatic active retries)
+    // 3. Safety timeout if room does not exist
     this.joinTimeout = setTimeout(() => {
       if (!this.isConnected) {
-        this.stopGuestHelloPing();
         this.onStatusChangeCallback?.({
           status: 'ERROR',
-          error: `Could not connect to room "${this.roomCode}". Please ensure your partner has the room open and check the code.`,
+          error: `Could not find room "${this.roomCode}". Please ensure your partner has the room open and check the code.`,
           roomCode: this.roomCode,
           isHost: false
         });
       }
-    }, 30000);
+    }, 15000);
 
-    // 5. Start sending hello ping immediately and repeatedly
-    this.startGuestHelloPing();
-
-    // 6. Start ongoing presence heartbeat
-    this.startHeartbeat();
-
-    // 7. Initialize optional voice calling
+    // 4. Initialize voice call peer in background
     this.initPeerVoice();
   }
 
@@ -207,7 +193,7 @@ class MultiplayerSync {
         this.broadcastChannel.onmessage = (event) => {
           const data = event.data;
           if (data && data.senderId !== this.clientId) {
-            this.handleIncomingData(data, data.msgId);
+            this.handleIncomingData(data);
           }
         };
       } catch (e) {
@@ -216,160 +202,125 @@ class MultiplayerSync {
     }
   }
 
-  connectRealtimeStream() {
-    if (this.ws) {
-      try { this.ws.close(); } catch (e) {}
-      this.ws = null;
+  connectBroker(brokerIdx = 0) {
+    this.currentBrokerIdx = brokerIdx % MQTT_BROKERS.length;
+    const cfg = MQTT_BROKERS[this.currentBrokerIdx];
+
+    if (this.mqttClient) {
+      try {
+        if (this.mqttClient.isConnected()) {
+          this.mqttClient.disconnect();
+        }
+      } catch (e) {}
+      this.mqttClient = null;
     }
 
-    if (!this.roomCode) return;
-
-    const topic = `between_v2_room_${this.roomCode}`;
-    const wsUrl = `wss://ntfy.sh/${topic}/ws`;
-
+    const clientId = `between_${this.isHost ? 'host' : 'guest'}_${this.clientId}`;
     try {
-      this.ws = new WebSocket(wsUrl);
+      this.mqttClient = new Paho.Client(cfg.host, cfg.port, cfg.path, clientId);
 
-      this.ws.addEventListener('open', () => {
-        if (!this.isHost && !this.isConnected) {
-          this.sendHello();
-        } else if (this.isHost && !this.isConnected) {
-          this.sendHostWaitingBeacon();
-        }
-      });
-
-      this.ws.addEventListener('message', (event) => {
-        try {
-          const outer = JSON.parse(event.data);
-          if (outer.event === 'message' && outer.message) {
-            const data = JSON.parse(outer.message);
-            if (data && data.senderId !== this.clientId) {
-              this.handleIncomingData(data, data.msgId || outer.id);
-            }
+      this.mqttClient.onConnectionLost = (responseObject) => {
+        if (responseObject.errorCode !== 0) {
+          console.warn('[Realtime] Connection lost:', responseObject.errorMessage);
+          // Try reconnect or failover if still active
+          if (this.roomCode) {
+            setTimeout(() => {
+              if (this.roomCode && (!this.mqttClient || !this.mqttClient.isConnected())) {
+                this.connectBroker(this.currentBrokerIdx + 1);
+              }
+            }, 2000);
           }
+        }
+      };
+
+      this.mqttClient.onMessageArrived = (message) => {
+        try {
+          const payload = JSON.parse(message.payloadString);
+          this.handleIncomingData(payload);
         } catch (e) {
-          // ignore keepalive or parse errors
+          console.warn('[Realtime] Parse error:', e);
         }
-      });
+      };
 
-      this.ws.addEventListener('error', (err) => {
-        console.warn('Realtime WS notice (polling fallback active):', err);
-      });
-
-      this.ws.addEventListener('close', () => {
-        if (this.roomCode) {
-          setTimeout(() => {
-            if (this.roomCode && !this.ws) {
-              this.connectRealtimeStream();
-            }
-          }, 2000);
-        }
-      });
-    } catch (e) {
-      console.warn('Realtime stream init error:', e);
-    }
-  }
-
-  startMicroPolling() {
-    this.stopMicroPolling();
-    const pollInterval = this.isConnected ? 1200 : 750;
-
-    // Immediately poll once
-    this.pollOnce();
-
-    this.microPollTimer = setInterval(() => {
-      this.pollOnce();
-    }, pollInterval);
-  }
-
-  stopMicroPolling() {
-    if (this.microPollTimer) {
-      clearInterval(this.microPollTimer);
-      this.microPollTimer = null;
-    }
-  }
-
-  async pollOnce() {
-    if (!this.roomCode || this.isPolling) return;
-    this.isPolling = true;
-    const topic = `between_v2_room_${this.roomCode}`;
-    try {
-      const res = await fetch(`https://ntfy.sh/${topic}/json?poll=1&since=2m&_t=${Date.now()}`, {
-        cache: 'no-store'
-      });
-      if (!res.ok) return;
-      const text = await res.text();
-      if (!text) return;
-
-      const lines = text.trim().split('\n');
-      for (const line of lines) {
-        if (!line) continue;
-        try {
-          const item = JSON.parse(line);
-          if (item.event === 'message' && item.message) {
-            const data = JSON.parse(item.message);
-            if (data && data.senderId !== this.clientId) {
-              this.handleIncomingData(data, data.msgId || item.id);
-            }
+      this.mqttClient.connect({
+        useSSL: true,
+        timeout: 4,
+        keepAliveInterval: 20,
+        cleanSession: true,
+        onSuccess: () => {
+          this.onBrokerConnected();
+        },
+        onFailure: (err) => {
+          console.warn(`[Realtime] Failed connecting to ${cfg.host}:`, err.errorMessage);
+          // Failover to secondary broker
+          if (this.roomCode && !this.isConnected && brokerIdx < MQTT_BROKERS.length * 2) {
+            setTimeout(() => {
+              if (this.roomCode && !this.isConnected) {
+                this.connectBroker(brokerIdx + 1);
+              }
+            }, 600);
           }
-        } catch (e) {}
-      }
+        }
+      });
     } catch (e) {
-      // Network hiccup - polling will automatically retry
-    } finally {
-      this.isPolling = false;
+      console.warn('[Realtime] Client init error:', e);
     }
   }
 
-  startHostWaitingBeacon() {
-    this.stopHostWaitingBeacon();
-    this.sendHostWaitingBeacon();
-    this.hostWaitingTimer = setInterval(() => {
-      if (!this.isConnected && this.isHost) {
-        this.sendHostWaitingBeacon();
-      } else {
-        this.stopHostWaitingBeacon();
+  onBrokerConnected() {
+    if (!this.roomCode || !this.mqttClient || !this.mqttClient.isConnected()) return;
+
+    const topicBase = `between/v3/room/${this.roomCode}`;
+    const subscribeTopic = `${topicBase}/#`;
+
+    this.mqttClient.subscribe(subscribeTopic, {
+      qos: 1,
+      onSuccess: () => {
+        if (this.isHost) {
+          // Host announces presence with retained message so guest immediately receives it on connect
+          this.publishPresence(true);
+        } else {
+          // Guest announces presence and requests current session state
+          this.sendGuestHello();
+        }
+      },
+      onFailure: (err) => {
+        console.warn('[Realtime] Subscribe error:', err.errorMessage);
       }
-    }, 1000);
-  }
-
-  stopHostWaitingBeacon() {
-    if (this.hostWaitingTimer) {
-      clearInterval(this.hostWaitingTimer);
-      this.hostWaitingTimer = null;
-    }
-  }
-
-  sendHostWaitingBeacon() {
-    this.broadcastMessage({
-      type: 'HOST_WAITING',
-      name: this.myName
     });
+
+    this.startHeartbeat();
   }
 
-  startGuestHelloPing() {
-    this.stopGuestHelloPing();
-    this.sendHello();
-    this.guestHelloTimer = setInterval(() => {
-      if (!this.isConnected) {
-        this.sendHello();
-      } else {
-        this.stopGuestHelloPing();
-      }
-    }, 850);
-  }
+  publishPresence(isWaiting = true) {
+    if (!this.roomCode || !this.mqttClient || !this.mqttClient.isConnected()) return;
 
-  stopGuestHelloPing() {
-    if (this.guestHelloTimer) {
-      clearInterval(this.guestHelloTimer);
-      this.guestHelloTimer = null;
+    const payload = {
+      type: isWaiting ? 'HOST_WAITING' : 'HOST_CONNECTED',
+      name: this.myName,
+      voicePeerId: this.myVoicePeerId,
+      senderId: this.clientId,
+      roomCode: this.roomCode,
+      timestamp: Date.now()
+    };
+
+    const message = new Paho.Message(JSON.stringify(payload));
+    message.destinationName = `between/v3/room/${this.roomCode}/presence/host`;
+    message.qos = 1;
+    message.retained = true; // Retained so guest immediately sees host upon connecting!
+
+    try {
+      this.mqttClient.send(message);
+    } catch (e) {
+      console.warn('[Realtime] Send presence error:', e);
     }
   }
 
-  sendHello() {
+  sendGuestHello() {
     this.broadcastMessage({
-      type: 'GUEST_HELLO',
-      name: this.myName
+      type: 'GUEST_CONNECTED',
+      name: this.myName,
+      voicePeerId: this.myVoicePeerId
     });
   }
 
@@ -378,11 +329,10 @@ class MultiplayerSync {
     this.heartbeatTimer = setInterval(() => {
       if (this.roomCode && this.isConnected) {
         this.broadcastMessage({
-          type: 'HEARTBEAT_PING',
-          name: this.myName
+          type: 'HEARTBEAT'
         });
       }
-    }, 3500);
+    }, 8000);
   }
 
   stopHeartbeat() {
@@ -392,80 +342,35 @@ class MultiplayerSync {
     }
   }
 
-  handleIncomingData(data, rawId = null) {
+  handleIncomingData(data) {
     if (!data || typeof data !== 'object') return;
     if (data.senderId === this.clientId) return;
     if (data.roomCode && data.roomCode !== this.roomCode) return;
     if (data.type === 'HEARTBEAT') return;
 
     // Deduplication check
-    const msgId = data.msgId || rawId || `${data.type}_${data.senderId}_${data.timestamp}`;
-    if (this.processedMsgIds.has(msgId)) {
-      return;
-    }
+    const msgId = data.msgId || `${data.type}_${data.senderId}_${data.timestamp}`;
+    if (this.processedMsgIds.has(msgId)) return;
     this.processedMsgIds.add(msgId);
-    if (this.processedMsgIds.size > 500) {
+    if (this.processedMsgIds.size > 300) {
       const oldest = this.processedMsgIds.values().next().value;
       this.processedMsgIds.delete(oldest);
     }
 
-    // Heartbeat ping from partner
-    if (data.type === 'HEARTBEAT_PING') {
-      if (!this.isConnected) {
-        this.isConnected = true;
-        if (data.name) this.peerName = data.name;
-        this.onStatusChangeCallback?.({
-          status: 'CONNECTED',
-          roomCode: this.roomCode,
-          isHost: this.isHost,
-          peerName: this.peerName,
-          myName: this.myName
-        });
-      }
-      return;
+    if (data.senderName && data.senderName !== this.peerName) {
+      this.peerName = data.senderName;
     }
 
-    // 1. Host sees Guest Hello
-    if (data.type === 'GUEST_HELLO') {
-      this.stopHostWaitingBeacon();
-      const wasConnected = this.isConnected;
-      this.isConnected = true;
-      if (data.name) this.peerName = data.name;
-
-      if (this.isHost) {
-        this.broadcastMessage({
-          type: 'HOST_CONNECTED',
-          name: this.myName
-        });
-        if (!wasConnected) {
-          // Immediately sync current session state to guest
-          this.onRequestStateCallback?.();
-        }
-      }
-
-      if (!wasConnected) {
-        this.onStatusChangeCallback?.({
-          status: 'CONNECTED',
-          roomCode: this.roomCode,
-          isHost: this.isHost,
-          peerName: this.peerName,
-          myName: this.myName
-        });
-        this.startMicroPolling();
-      }
-      return;
-    }
-
-    // 2. Guest sees Host Waiting Beacon OR Host Connected
+    // 1. Guest sees Host Waiting Beacon or Host Connected
     if ((data.type === 'HOST_WAITING' || data.type === 'HOST_CONNECTED') && !this.isHost) {
       if (this.joinTimeout) {
         clearTimeout(this.joinTimeout);
         this.joinTimeout = null;
       }
-      this.stopGuestHelloPing();
       const wasConnected = this.isConnected;
       this.isConnected = true;
       if (data.name) this.peerName = data.name;
+      if (data.voicePeerId) this.remoteVoicePeerId = data.voicePeerId;
 
       if (!wasConnected) {
         this.onStatusChangeCallback?.({
@@ -475,23 +380,46 @@ class MultiplayerSync {
           peerName: this.peerName,
           myName: this.myName
         });
-        this.startMicroPolling();
 
-        // Reply with hello so host knows guest is connected, and request state
-        this.sendHello();
-        this.broadcastMessage({
-          type: 'STATE_REQ'
-        });
+        // Reply immediately so host knows guest is locked in
+        this.sendGuestHello();
       }
       return;
     }
 
+    // 2. Host sees Guest Connected
+    if (data.type === 'GUEST_CONNECTED' && this.isHost) {
+      const wasConnected = this.isConnected;
+      this.isConnected = true;
+      if (data.name) this.peerName = data.name;
+      if (data.voicePeerId) this.remoteVoicePeerId = data.voicePeerId;
+
+      // Update presence to connected
+      this.publishPresence(false);
+
+      if (!wasConnected) {
+        this.onStatusChangeCallback?.({
+          status: 'CONNECTED',
+          roomCode: this.roomCode,
+          isHost: true,
+          peerName: this.peerName,
+          myName: this.myName
+        });
+
+        // Immediately sync current session state to guest
+        this.onRequestStateCallback?.();
+      }
+      return;
+    }
+
+    // 3. Guest requests session state
     if (data.type === 'STATE_REQ' && this.isHost) {
       this.onRequestStateCallback?.();
       return;
     }
 
-    if (data.type === 'DISCONNECT') {
+    // 4. Partner leaves room
+    if (data.type === 'DISCONNECT' || data.type === 'ROOM_CLOSED') {
       this.isConnected = false;
       this.onStatusChangeCallback?.({
         status: 'DISCONNECTED',
@@ -503,14 +431,13 @@ class MultiplayerSync {
       return;
     }
 
+    // 5. Game State Synchronizations
     if (data.type === 'STATE_SYNC') {
-      // If guest receives state sync before completing handshake, confirm connected status
       if (!this.isConnected && !this.isHost) {
         if (this.joinTimeout) {
           clearTimeout(this.joinTimeout);
           this.joinTimeout = null;
         }
-        this.stopGuestHelloPing();
         this.isConnected = true;
         this.onStatusChangeCallback?.({
           status: 'CONNECTED',
@@ -519,7 +446,6 @@ class MultiplayerSync {
           peerName: this.peerName,
           myName: this.myName
         });
-        this.startMicroPolling();
       }
       this.onStateChangeCallback?.(data.payload);
     } else if (data.type === 'REACTION') {
@@ -534,34 +460,29 @@ class MultiplayerSync {
 
     const payload = {
       ...message,
-      msgId: `${this.clientId}_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`,
+      msgId: `${this.clientId}_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
       senderId: this.clientId,
+      senderName: this.myName,
       roomCode: this.roomCode,
       timestamp: Date.now()
     };
 
-    // Remember our own message id so we don't process reflections
+    // Mark as seen so we don't process our own broadcast reflection
     this.processedMsgIds.add(payload.msgId);
 
-    const topic = `between_v2_room_${this.roomCode}`;
-    const jsonStr = JSON.stringify(payload);
+    // 1. Send via high-speed global broker
+    if (this.mqttClient && this.mqttClient.isConnected()) {
+      try {
+        const mqttMsg = new Paho.Message(JSON.stringify(payload));
+        mqttMsg.destinationName = `between/v3/room/${this.roomCode}/events`;
+        mqttMsg.qos = 1;
+        this.mqttClient.send(mqttMsg);
+      } catch (e) {
+        console.warn('[Realtime] Broadcast error:', e);
+      }
+    }
 
-    // 1. Send via HTTP POST pubsub (with explicit cache headers so poll picks it up)
-    try {
-      fetch(`https://ntfy.sh/${topic}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'text/plain',
-          'X-Cache': 'yes',
-          'Cache': 'yes'
-        },
-        body: jsonStr
-      }).catch((e) => {
-        console.warn('PubSub publish notice:', e);
-      });
-    } catch (e) {}
-
-    // 2. Send via BroadcastChannel (instant for local tabs on same device)
+    // 2. Send via local BroadcastChannel (instant for tabs on same device)
     if (this.broadcastChannel) {
       try {
         this.broadcastChannel.postMessage(payload);
@@ -594,11 +515,11 @@ class MultiplayerSync {
   initPeerVoice() {
     try {
       if (!this.roomCode) return;
-      const myPeerId = this.isHost
-        ? `between-v2-${this.roomCode.toLowerCase()}`
-        : `between-guest-${this.clientId}`;
+      this.myVoicePeerId = this.isHost
+        ? `between-v3-${this.roomCode.toLowerCase()}`
+        : `between-v3-guest-${this.clientId}`;
 
-      this.peer = new Peer(myPeerId, {
+      this.peer = new Peer(this.myVoicePeerId, {
         debug: 0,
         config: { iceServers: ICE_SERVERS }
       });
@@ -634,18 +555,20 @@ class MultiplayerSync {
 
   async startVoiceCall() {
     if (!this.peer || !this.roomCode) {
-      console.warn('Cannot start call: peer not initialized');
+      console.warn('Cannot start call: voice peer not initialized');
       return false;
     }
 
-    const targetPeerId = this.isHost
-      ? `between-guest-${this.clientId}`
-      : `between-v2-${this.roomCode.toLowerCase()}`;
+    const targetPeerId = this.remoteVoicePeerId || (
+      this.isHost
+        ? `between-v3-guest-${this.peerName}`
+        : `between-v3-${this.roomCode.toLowerCase()}`
+    );
 
     try {
       this.onCallStateCallback?.('CALLING');
       this.localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
-      
+
       const call = this.peer.call(targetPeerId, this.localStream);
       this.mediaCall = call;
 
@@ -691,6 +614,17 @@ class MultiplayerSync {
   }
 
   leaveRoom() {
+    // Clear retained presence if host
+    if (this.isHost && this.mqttClient && this.mqttClient.isConnected()) {
+      try {
+        const clearMsg = new Paho.Message(JSON.stringify({ type: 'ROOM_CLOSED' }));
+        clearMsg.destinationName = `between/v3/room/${this.roomCode}/presence/host`;
+        clearMsg.retained = true;
+        clearMsg.qos = 1;
+        this.mqttClient.send(clearMsg);
+      } catch (e) {}
+    }
+
     this.broadcastMessage({ type: 'DISCONNECT' });
     this.cleanup();
   }
@@ -700,17 +634,17 @@ class MultiplayerSync {
       clearTimeout(this.joinTimeout);
       this.joinTimeout = null;
     }
-    this.stopGuestHelloPing();
-    this.stopHostWaitingBeacon();
-    this.stopMicroPolling();
     this.stopHeartbeat();
     this.endVoiceCall();
 
     try {
-      if (this.ws) {
-        this.ws.close();
-        this.ws = null;
+      if (this.mqttClient && this.mqttClient.isConnected()) {
+        this.mqttClient.disconnect();
       }
+      this.mqttClient = null;
+    } catch (e) {}
+
+    try {
       if (this.peer) {
         this.peer.destroy();
         this.peer = null;
@@ -723,6 +657,7 @@ class MultiplayerSync {
 
     this.isConnected = false;
     this.roomCode = null;
+    this.remoteVoicePeerId = null;
   }
 }
 
