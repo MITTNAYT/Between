@@ -36,6 +36,7 @@ class MultiplayerSync {
     this.hostWaitingTimer = null;
     this.microPollTimer = null;
     this.heartbeatTimer = null;
+    this.isPolling = false;
 
     // Deduplication tracking
     this.processedMsgIds = new Set();
@@ -103,7 +104,10 @@ class MultiplayerSync {
     // 4. Start Host waiting beacon so guest immediately finds host
     this.startHostWaitingBeacon();
 
-    // 5. Immediately emit waiting state
+    // 5. Start ongoing presence heartbeat
+    this.startHeartbeat();
+
+    // 6. Immediately emit waiting state
     this.onStatusChangeCallback?.({
       status: 'WAITING_FOR_GUEST',
       roomCode: this.roomCode,
@@ -111,7 +115,7 @@ class MultiplayerSync {
       myName: this.myName
     });
 
-    // 6. Initialize optional voice calling
+    // 7. Initialize optional voice calling
     this.initPeerVoice();
 
     return this.roomCode;
@@ -189,7 +193,10 @@ class MultiplayerSync {
     // 5. Start sending hello ping immediately and repeatedly
     this.startGuestHelloPing();
 
-    // 6. Initialize optional voice calling
+    // 6. Start ongoing presence heartbeat
+    this.startHeartbeat();
+
+    // 7. Initialize optional voice calling
     this.initPeerVoice();
   }
 
@@ -283,10 +290,11 @@ class MultiplayerSync {
   }
 
   async pollOnce() {
-    if (!this.roomCode) return;
+    if (!this.roomCode || this.isPolling) return;
+    this.isPolling = true;
     const topic = `between_v2_room_${this.roomCode}`;
     try {
-      const res = await fetch(`https://ntfy.sh/${topic}/json?poll=1&since=1m`, {
+      const res = await fetch(`https://ntfy.sh/${topic}/json?poll=1&since=2m&_t=${Date.now()}`, {
         cache: 'no-store'
       });
       if (!res.ok) return;
@@ -308,6 +316,8 @@ class MultiplayerSync {
       }
     } catch (e) {
       // Network hiccup - polling will automatically retry
+    } finally {
+      this.isPolling = false;
     }
   }
 
@@ -320,7 +330,7 @@ class MultiplayerSync {
       } else {
         this.stopHostWaitingBeacon();
       }
-    }, 1200);
+    }, 1000);
   }
 
   stopHostWaitingBeacon() {
@@ -346,7 +356,7 @@ class MultiplayerSync {
       } else {
         this.stopGuestHelloPing();
       }
-    }, 900);
+    }, 850);
   }
 
   stopGuestHelloPing() {
@@ -363,8 +373,29 @@ class MultiplayerSync {
     });
   }
 
+  startHeartbeat() {
+    this.stopHeartbeat();
+    this.heartbeatTimer = setInterval(() => {
+      if (this.roomCode && this.isConnected) {
+        this.broadcastMessage({
+          type: 'HEARTBEAT_PING',
+          name: this.myName
+        });
+      }
+    }, 3500);
+  }
+
+  stopHeartbeat() {
+    if (this.heartbeatTimer) {
+      clearInterval(this.heartbeatTimer);
+      this.heartbeatTimer = null;
+    }
+  }
+
   handleIncomingData(data, rawId = null) {
     if (!data || typeof data !== 'object') return;
+    if (data.senderId === this.clientId) return;
+    if (data.roomCode && data.roomCode !== this.roomCode) return;
     if (data.type === 'HEARTBEAT') return;
 
     // Deduplication check
@@ -378,9 +409,26 @@ class MultiplayerSync {
       this.processedMsgIds.delete(oldest);
     }
 
+    // Heartbeat ping from partner
+    if (data.type === 'HEARTBEAT_PING') {
+      if (!this.isConnected) {
+        this.isConnected = true;
+        if (data.name) this.peerName = data.name;
+        this.onStatusChangeCallback?.({
+          status: 'CONNECTED',
+          roomCode: this.roomCode,
+          isHost: this.isHost,
+          peerName: this.peerName,
+          myName: this.myName
+        });
+      }
+      return;
+    }
+
     // 1. Host sees Guest Hello
     if (data.type === 'GUEST_HELLO') {
       this.stopHostWaitingBeacon();
+      const wasConnected = this.isConnected;
       this.isConnected = true;
       if (data.name) this.peerName = data.name;
 
@@ -389,56 +437,52 @@ class MultiplayerSync {
           type: 'HOST_CONNECTED',
           name: this.myName
         });
-        // Immediately sync current session state to guest
-        this.onRequestStateCallback?.();
+        if (!wasConnected) {
+          // Immediately sync current session state to guest
+          this.onRequestStateCallback?.();
+        }
       }
 
-      this.onStatusChangeCallback?.({
-        status: 'CONNECTED',
-        roomCode: this.roomCode,
-        isHost: this.isHost,
-        peerName: this.peerName,
-        myName: this.myName
-      });
-
-      // Switch to standard polling interval
-      this.startMicroPolling();
+      if (!wasConnected) {
+        this.onStatusChangeCallback?.({
+          status: 'CONNECTED',
+          roomCode: this.roomCode,
+          isHost: this.isHost,
+          peerName: this.peerName,
+          myName: this.myName
+        });
+        this.startMicroPolling();
+      }
       return;
     }
 
-    // 2. Guest sees Host Waiting Beacon
-    if (data.type === 'HOST_WAITING' && !this.isHost) {
-      if (data.name) this.peerName = data.name;
-      // Immediately reply with hello to close the handshake loop
-      this.sendHello();
-      return;
-    }
-
-    // 3. Guest receives Host Connected
-    if (data.type === 'HOST_CONNECTED') {
+    // 2. Guest sees Host Waiting Beacon OR Host Connected
+    if ((data.type === 'HOST_WAITING' || data.type === 'HOST_CONNECTED') && !this.isHost) {
       if (this.joinTimeout) {
         clearTimeout(this.joinTimeout);
         this.joinTimeout = null;
       }
       this.stopGuestHelloPing();
+      const wasConnected = this.isConnected;
       this.isConnected = true;
       if (data.name) this.peerName = data.name;
 
-      this.onStatusChangeCallback?.({
-        status: 'CONNECTED',
-        roomCode: this.roomCode,
-        isHost: false,
-        peerName: this.peerName,
-        myName: this.myName
-      });
+      if (!wasConnected) {
+        this.onStatusChangeCallback?.({
+          status: 'CONNECTED',
+          roomCode: this.roomCode,
+          isHost: false,
+          peerName: this.peerName,
+          myName: this.myName
+        });
+        this.startMicroPolling();
 
-      // Switch to standard polling interval
-      this.startMicroPolling();
-
-      // Request latest session state immediately from host
-      this.broadcastMessage({
-        type: 'STATE_REQ'
-      });
+        // Reply with hello so host knows guest is connected, and request state
+        this.sendHello();
+        this.broadcastMessage({
+          type: 'STATE_REQ'
+        });
+      }
       return;
     }
 
@@ -460,6 +504,23 @@ class MultiplayerSync {
     }
 
     if (data.type === 'STATE_SYNC') {
+      // If guest receives state sync before completing handshake, confirm connected status
+      if (!this.isConnected && !this.isHost) {
+        if (this.joinTimeout) {
+          clearTimeout(this.joinTimeout);
+          this.joinTimeout = null;
+        }
+        this.stopGuestHelloPing();
+        this.isConnected = true;
+        this.onStatusChangeCallback?.({
+          status: 'CONNECTED',
+          roomCode: this.roomCode,
+          isHost: false,
+          peerName: this.peerName,
+          myName: this.myName
+        });
+        this.startMicroPolling();
+      }
       this.onStateChangeCallback?.(data.payload);
     } else if (data.type === 'REACTION') {
       this.onReactionCallback?.(data.payload);
@@ -642,6 +703,7 @@ class MultiplayerSync {
     this.stopGuestHelloPing();
     this.stopHostWaitingBeacon();
     this.stopMicroPolling();
+    this.stopHeartbeat();
     this.endVoiceCall();
 
     try {
