@@ -21,17 +21,30 @@ export default function QuestionCard({
   peerName = 'Partner',
   isSolo = false,
   hostName = 'Partner 1',
-  guestName = 'Partner 2'
+  guestName = 'Partner 2',
+  wildcardPrompt = null,
+  onSelectWildcardPrompt = null,
+  onSkipQuestion = null
 }) {
   const [isFlipped, setIsFlipped] = useState(false);
   const [backTab, setBackTab] = useState('BLIND'); // 'BLIND' | 'NOTES'
   const [hintExpanded, setHintExpanded] = useState(false);
-  const [selectedWildcardPrompt, setSelectedWildcardPrompt] = useState(null);
-  const [wildcardOffset, setWildcardOffset] = useState(0);
-  const [noteText, setNoteText] = useState('');
+  const [selectedWildcardPrompt, setSelectedWildcardPrompt] = useState(wildcardPrompt || null);
+  const [customWildcardInput, setCustomWildcardInput] = useState('');
+  const [showCustomInput, setShowCustomInput] = useState(false);
 
   const isWildcard = question?.isWildcard || question?.id?.startsWith('wildcard');
   const allPrompts = WILDCARD_INSPIRATIONS[relationshipType] || WILDCARD_INSPIRATIONS.COUPLE;
+
+  const [wildcardOffset, setWildcardOffset] = useState(() => Math.floor(Math.random() * (allPrompts.length || 6)));
+  const [noteText, setNoteText] = useState('');
+
+  // Keep in sync if peer selected a wildcard prompt
+  useEffect(() => {
+    if (wildcardPrompt) {
+      setSelectedWildcardPrompt(wildcardPrompt);
+    }
+  }, [wildcardPrompt]);
 
   const currentVisiblePrompts = [
     allPrompts[wildcardOffset % allPrompts.length],
@@ -41,18 +54,32 @@ export default function QuestionCard({
 
   const handleShuffleWildcard = () => {
     playClickSound();
-    setWildcardOffset(prev => (prev + 3) % allPrompts.length);
+    setWildcardOffset(Math.floor(Math.random() * allPrompts.length));
   };
 
   const handleSelectPrompt = (prompt) => {
-    playClickSound();
-    setSelectedWildcardPrompt(prev => prev === prompt ? null : prompt);
+    playChimeSound();
+    setSelectedWildcardPrompt(prompt);
+    onSelectWildcardPrompt?.(prompt);
+  };
+
+  const handleApplyCustomWildcard = () => {
+    if (!customWildcardInput.trim()) return;
+    playChimeSound();
+    const custom = customWildcardInput.trim();
+    setSelectedWildcardPrompt(custom);
+    onSelectWildcardPrompt?.(custom);
+    setShowCustomInput(false);
   };
 
   const toggleFlip = () => {
     playClickSound();
     setIsFlipped(prev => !prev);
   };
+
+  const activeQuestionText = isWildcard
+    ? (wildcardPrompt || selectedWildcardPrompt || question.text)
+    : question.text;
 
   const isBothRevealed = blindState.mySubmitted && blindState.peerSubmitted;
 
@@ -169,8 +196,8 @@ export default function QuestionCard({
         padding: '10px 0'
       }}>
         <h2 className="question-serif">
-          {isWildcard 
-            ? (selectedWildcardPrompt ? `“${selectedWildcardPrompt}”` : question.text)
+          {isWildcard
+            ? (activeQuestionText ? `“${activeQuestionText}”` : question.text)
             : question.text
           }
         </h2>
@@ -239,7 +266,7 @@ export default function QuestionCard({
         </div>
       )}
 
-      {/* Wildcard inspirations */}
+      {/* Wildcard: Interactive Random Chooser */}
       {isWildcard && (
         <div style={{ width: '100%', marginTop: '18px' }}>
           <div style={{
@@ -248,31 +275,28 @@ export default function QuestionCard({
             justifyContent: 'space-between',
             marginBottom: '10px'
           }}>
-            <span style={{ fontSize: '11px', fontWeight: '700', color: 'var(--color-muted)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-              Inspirations:
+            <span style={{ fontSize: '11px', fontWeight: '700', color: 'var(--color-ember)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+              Choose a question to ask:
             </span>
             <button
               onClick={handleShuffleWildcard}
+              className="btn-secondary"
               style={{
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                color: 'var(--color-ember)',
-                fontSize: '12px',
-                fontWeight: '700',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '4px'
+                padding: '4px 10px',
+                fontSize: '11px',
+                gap: '4px',
+                borderColor: 'var(--color-hairline)'
               }}
+              title="Roll 3 new random questions"
             >
-              <Shuffle size={13} strokeWidth={2.4} />
-              <span>Shuffle</span>
+              <Shuffle size={12} strokeWidth={2.4} color="var(--color-ember)" />
+              <span>Roll 3 More</span>
             </button>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {currentVisiblePrompts.map((promptText, idx) => {
-              const isSelected = selectedWildcardPrompt === promptText;
+              const isSelected = (selectedWildcardPrompt === promptText) || (wildcardPrompt === promptText);
               return (
                 <button
                   key={idx}
@@ -281,19 +305,94 @@ export default function QuestionCard({
                     padding: '10px 14px',
                     borderRadius: 'var(--radius-sm)',
                     border: isSelected ? '1.5px solid var(--color-ember)' : '1px solid var(--color-hairline)',
-                    background: isSelected ? 'rgba(217, 78, 52, 0.05)' : 'var(--color-surface-subtle)',
+                    background: isSelected ? 'rgba(217, 78, 52, 0.08)' : 'var(--color-surface-subtle)',
                     color: isSelected ? 'var(--color-ember)' : 'var(--color-ink)',
                     fontSize: '13px',
                     textAlign: 'left',
                     lineHeight: '1.4',
                     cursor: 'pointer',
-                    transition: 'all 0.15s'
+                    transition: 'all 0.15s',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: '10px'
                   }}
                 >
-                  “{promptText}”
+                  <span>“{promptText}”</span>
+                  {isSelected && (
+                    <span style={{
+                      fontSize: '10px',
+                      fontWeight: '700',
+                      background: 'var(--color-ember)',
+                      color: '#FFF',
+                      padding: '2px 8px',
+                      borderRadius: 'var(--radius-pill)',
+                      whiteSpace: 'nowrap'
+                    }}>
+                      Chosen
+                    </span>
+                  )}
                 </button>
               );
             })}
+          </div>
+
+          {/* Option to type custom question */}
+          <div style={{ marginTop: '10px', textAlign: 'center' }}>
+            {!showCustomInput ? (
+              <button
+                onClick={() => {
+                  playClickSound();
+                  setShowCustomInput(true);
+                }}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: 'var(--color-muted)',
+                  fontSize: '12px',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  textDecoration: 'underline'
+                }}
+              >
+                Or write your own custom question...
+              </button>
+            ) : (
+              <div style={{
+                display: 'flex',
+                gap: '6px',
+                marginTop: '6px',
+                animation: 'fadeIn 0.2s ease-out'
+              }}>
+                <input
+                  type="text"
+                  value={customWildcardInput}
+                  onChange={(e) => setCustomWildcardInput(e.target.value)}
+                  placeholder="Type any question you want to ask..."
+                  style={{
+                    flex: 1,
+                    padding: '8px 12px',
+                    fontSize: '13px',
+                    borderRadius: 'var(--radius-sm)',
+                    border: '1px solid var(--color-hairline)',
+                    background: 'var(--color-surface-subtle)',
+                    outline: 'none',
+                    color: 'var(--color-ink)'
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleApplyCustomWildcard();
+                  }}
+                />
+                <button
+                  onClick={handleApplyCustomWildcard}
+                  disabled={!customWildcardInput.trim()}
+                  className="btn-primary"
+                  style={{ padding: '8px 14px', fontSize: '12px', whiteSpace: 'nowrap' }}
+                >
+                  Ask
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}

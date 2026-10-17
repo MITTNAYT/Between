@@ -1,8 +1,9 @@
 import React from 'react';
-import { Heart, Sparkles, Flame, ThumbsUp, Feather } from 'lucide-react';
+import { Heart, Sparkles, Flame, ThumbsUp, Feather, Flower2 } from 'lucide-react';
 import { playReactionSound } from '../utils/audio';
 
 const REACTION_ITEMS = [
+  { id: 'rose', label: 'Rose', icon: Flower2, color: '#E11D48', symbol: '🌹' },
   { id: 'heart', label: 'Love', icon: Heart, color: '#DE4D6A', symbol: '❤️' },
   { id: 'sparkles', label: 'Inspiring', icon: Sparkles, color: '#C6882C', symbol: '✨' },
   { id: 'flame', label: 'Raw & Real', icon: Flame, color: '#D94E34', symbol: '🔥' },

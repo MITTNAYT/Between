@@ -66,7 +66,19 @@ export const WILDCARD_INSPIRATIONS = {
     "What's something you notice about me that I don't see in myself?",
     "When did you feel most connected to me in the last month?",
     "If we could pause time for one full weekend with no phones, what would we do?",
-    "What's a quirk of mine you secretly find charming?"
+    "What's a quirk of mine you secretly find charming?",
+    "What is one question you have been wanting to ask me today?",
+    "What is something I wore recently that you secretly couldn't take your eyes off of?",
+    "If we could write our own private vow to each other right now, what would it say?",
+    "What is a fear you have about us that you want to put to rest right now?",
+    "What is your favorite sound that I make—laugh, sigh, hum, or voice in the morning?",
+    "If you could whisper one reminder into my ear every morning, what would it be?",
+    "What is a fantasy or adventure you want us to live out before this year ends?",
+    "What is something I did that made you fall in love with me all over again?",
+    "If our love had a secret hand sign or code word, what would it be?",
+    "What is an insecurity of yours that you wish I could kiss away forever?",
+    "What is a quiet moment of ours that felt like a movie scene?",
+    "What is one thing you promise to always cherish about our connection?"
   ],
   FRIEND: [
     "What's a memory of us that always makes you laugh when you think about it?",
@@ -74,7 +86,19 @@ export const WILDCARD_INSPIRATIONS = {
     "What's a quality in our friendship that you value most?",
     "What is a belief you've completely changed your mind about recently?",
     "If you could pick one adventure for us to do before the year ends, what is it?",
-    "What's something you admire about how I handle life?"
+    "What's something you admire about how I handle life?",
+    "What is one question you have been hesitant to ask me?",
+    "What is a time I made you feel genuinely proud to be my friend?",
+    "If we were dropped into a zombie apocalypse right now, what are our respective survival roles?",
+    "What is an honest critique of mine that you appreciated hearing?",
+    "What's a talent or side of you that nobody at your workplace or school knows about?",
+    "What is the most chaotic thing we have ever witnessed together?",
+    "What is an album or artist that you associate with our best memories?",
+    "If you had to describe our friendship to an alien using only food metaphors, what are we?",
+    "What is a goal of yours for the next six months where you want me to hold you accountable?",
+    "What is a piece of advice you need right now that you haven't asked for?",
+    "What is something you wish we did together more often?",
+    "If you could gift me one superpower for tomorrow, what would you give me and why?"
   ],
   JUST_MET: [
     "What's a passion of yours that most people don't find out about right away?",
@@ -82,7 +106,19 @@ export const WILDCARD_INSPIRATIONS = {
     "What is something you're looking forward to this season?",
     "What's a topic you could talk about for hours without getting tired?",
     "What's a habit or routine that brings you peace every day?",
-    "What's something that instantly earns your respect in a person?"
+    "What's something that instantly earns your respect in a person?",
+    "What is an unpopular opinion you hold that you will defend to the death?",
+    "If you had to move to another country tomorrow for one year, where are you landing?",
+    "What is the most interesting documentary or podcast you consumed recently?",
+    "What is something you bought for under $50 that dramatically improved your quality of life?",
+    "What is a weird coincidence that happened to you that you still can't explain?",
+    "What was your dream job when you were seven years old, and what was your backup plan?",
+    "What is something about your hometown or culture that outsiders always misunderstand?",
+    "If your personality was a weather forecast right now, what's the report?",
+    "What is a book, film, or album that you consider a 10/10 masterpiece?",
+    "What's an adventure or challenge you took on that completely pushed you outside your comfort zone?",
+    "What is a rule you live by that helps you keep drama out of your life?",
+    "What is the best meal you've ever eaten in your entire life?"
   ]
 };
 

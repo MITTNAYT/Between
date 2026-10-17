@@ -3403,5 +3403,4997 @@
         "needsHandshake": false,
         "status": "APPROVED",
         "hint": "e.g. 'Being told my presence is calming and puts strangers at ease.'"
+    },
+    {
+        "id": "exp-cpl-001",
+        "text": "What is a song that instantly reminds you of us when you hear it unexpectedly?",
+        "category": "MEMORIES",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "Where were we when we first listened to it?",
+            "How does it make you feel now?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-002",
+        "text": "What is your favorite lazy morning routine with me?",
+        "category": "HABITS",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What makes it feel so peaceful?",
+            "Can we plan one this upcoming weekend?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-003",
+        "text": "What is a small, everyday gesture of mine that never fails to make you smile?",
+        "category": "CONNECTION",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "Do you think I realize I do it?",
+            "When was the last time it happened?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-004",
+        "text": "If we could teleport to any quiet place right now for one hour, where would we go?",
+        "category": "PLAYFUL",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What would we do during that hour?",
+            "Why that specific spot?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-005",
+        "text": "What's an outfit or look of mine that you secretly love the most?",
+        "category": "PLAYFUL",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What about it catches your eye?",
+            "Do you remember the first time I wore it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-006",
+        "text": "What is a shared inside joke of ours that no one else would ever understand?",
+        "category": "MEMORIES",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "How did it first start?",
+            "Why has it stuck with us for so long?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-007",
+        "text": "What meal that we've cooked or eaten together felt like pure comfort?",
+        "category": "MEMORIES",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "Was it the food itself or the vibe of the evening?",
+            "Should we recreate it soon?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-008",
+        "text": "What is one little habit of mine that you find surprisingly endearing?",
+        "category": "CONNECTION",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "When did you first notice it?",
+            "Does anyone else know about it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-009",
+        "text": "If our relationship had a signature cocktail, warm drink, or dessert, what would it be?",
+        "category": "PLAYFUL",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What ingredients represent each of us?",
+            "Sweet, spicy, or smooth?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-010",
+        "text": "What is a silly thing we did together that you still giggle about when you remember it?",
+        "category": "PLAYFUL",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "Who started it?",
+            "Would you do it again in public?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-011",
+        "text": "What's a movie or show we watched that sparked our best late-night discussion?",
+        "category": "CONNECTION",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "Did we agree on the ending?",
+            "What did it teach us about each other?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-012",
+        "text": "If we had an entire Sunday completely free from errands and obligations, what is our ideal day?",
+        "category": "DREAMS",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "Would we stay in or explore?",
+            "What would be the soundtrack?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-013",
+        "text": "What was the very first thought you had about me after our first meeting?",
+        "category": "MEMORIES",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "Did you tell anyone about me that night?",
+            "How quickly did that impression evolve?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-014",
+        "text": "What is your favorite spot in our home or city to just sit together in silence?",
+        "category": "CONNECTION",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What makes that space feel safe?",
+            "Daytime or nighttime?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-015",
+        "text": "If you could pick one dessert for us to share right this second, what are we ordering?",
+        "category": "PLAYFUL",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "Who gets the last bite?",
+            "With coffee or wine?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-016",
+        "text": "What is a scent that you permanently link with me?",
+        "category": "HABITS",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "Is it a perfume, coffee, rain, or fresh laundry?",
+            "Does it make you feel safe?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-017",
+        "text": "What is a nickname I've called you (or could call you) that gives you warm butterflies?",
+        "category": "CONNECTION",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "Do you ever use it in your own thoughts?",
+            "What tone makes it hit just right?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-018",
+        "text": "What is a funny miscommunication we had early on that we both laughed about later?",
+        "category": "PLAYFUL",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "How long until we cleared it up?",
+            "What did it reveal about our styles?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-019",
+        "text": "If we could adopt any pet together without practical constraints, what would we choose?",
+        "category": "PLAYFUL",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What would we name them?",
+            "Who would spoil them more?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-020",
+        "text": "What is a photo of us on your phone that you look at when you miss me?",
+        "category": "MEMORIES",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "Where were we when it was taken?",
+            "What was the mood of that day?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-021",
+        "text": "What is something I did recently that showed you how well I know you?",
+        "category": "CONNECTION",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "Did it surprise you?",
+            "How did it make you feel cared for?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-022",
+        "text": "In what situations do you feel we make the strongest team?",
+        "category": "CONNECTION",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What strengths do each of us bring?",
+            "How has our teamwork evolved over time?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-023",
+        "text": "What is a compliment I gave you that stayed with you long after I said it?",
+        "category": "VULNERABILITY",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "Why did it resonate so deeply?",
+            "Did it change how you saw yourself?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-024",
+        "text": "What's an area of your life where you feel you've grown the most since we've been together?",
+        "category": "IDENTITY",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "Did our dynamic play a role in that growth?",
+            "Where do you want to grow next?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-025",
+        "text": "When was the last time you felt a sudden rush of gratitude for our partnership?",
+        "category": "CONNECTION",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What was happening in that moment?",
+            "Did you tell me at the time?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-026",
+        "text": "What is a dream or project you'd love us to tackle together in the next year or two?",
+        "category": "DREAMS",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What excites you most about it?",
+            "What would be our first step?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-027",
+        "text": "What's something you admire about how I treat the people around me?",
+        "category": "VALUES",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "Is there a specific moment that showed you this?",
+            "How does it inspire you?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-028",
+        "text": "What does feeling emotionally safe with me look and feel like for you?",
+        "category": "CONNECTION",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "When do you feel that safety the most?",
+            "How can we protect it when life gets hectic?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-029",
+        "text": "What is something new you've learned about love or partnership through our relationship?",
+        "category": "VALUES",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "Did it challenge your previous assumptions?",
+            "How has it reshaped your perspective?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-030",
+        "text": "What's an unspoken tradition or ritual we've developed that you cherish?",
+        "category": "HABITS",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "How did it organically begin?",
+            "Why is it important to you?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-031",
+        "text": "What is something you find immensely attractive about me that has nothing to do with looks?",
+        "category": "CONNECTION",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "Is it a mindset, a value, or how I move through life?",
+            "When did you first notice it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-032",
+        "text": "What is a conversation with me that helped you through a difficult day at work or in life?",
+        "category": "CONNECTION",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What did I say or do that helped?",
+            "What did you need most in that hour?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-033",
+        "text": "How do you feel our love has evolved from the initial spark to where we stand today?",
+        "category": "VALUES",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What feels richer or deeper now?",
+            "What do you miss from the very start?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-034",
+        "text": "What is a personal boundary of yours that you were relieved to find I respected effortlessly?",
+        "category": "VULNERABILITY",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "Why was that boundary important to your peace?",
+            "How did it build trust?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-035",
+        "text": "What is a song that describes the current chapter of our relationship?",
+        "category": "MEMORIES",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What lyric hits closest home?",
+            "Where do you want our soundtrack to go next?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-036",
+        "text": "What is a topic you love discussing with me because you know I will never judge you?",
+        "category": "CONNECTION",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "Why is that topic hard to talk about with others?",
+            "How can we keep that door wide open?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-037",
+        "text": "What is something I do that makes you feel proud to be by my side in public?",
+        "category": "CONNECTION",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "How do you feel when you watch me interact with others?",
+            "Does it make you smile?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-038",
+        "text": "What is a hobby or interest of mine that you've grown to appreciate because of how happy it makes me?",
+        "category": "HABITS",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "Were you indifferent at first?",
+            "What do you enjoy about seeing me in flow?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-039",
+        "text": "What is an unexpected similarity between us that surprised you as we got to know each other?",
+        "category": "CONNECTION",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "Did it make you feel like our meeting was meant to be?",
+            "How has it played out?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-040",
+        "text": "What is a way we navigate compromise that makes you feel valued rather than shortchanged?",
+        "category": "VALUES",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What makes our compromises fair?",
+            "What have we learned about letting go?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-041",
+        "text": "When you are stressed or overwhelmed, what is the best way for me to show up for you?",
+        "category": "VULNERABILITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "Do you prefer space, physical closeness, or practical help?",
+            "What tends to accidentally make it worse?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-042",
+        "text": "Is there a small boundary or need you've hesitated to ask for because you didn't want to inconvenience me?",
+        "category": "VULNERABILITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "How can I make it easier for you to express it?",
+            "Can we practice honoring it now?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-043",
+        "text": "What is an emotional season we weathered together that made you realize our relationship is resilient?",
+        "category": "MEMORIES",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What was the hardest part?",
+            "How did we come out of it stronger?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-044",
+        "text": "What is something you wish I understood more deeply about your inner world?",
+        "category": "IDENTITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "Why has it felt difficult to translate into words?",
+            "How can I be more curious about it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-045",
+        "text": "When do you feel most physically and emotionally connected to me in our day-to-day life?",
+        "category": "CONNECTION",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "Is it words, touch, undivided presence, or shared laughter?",
+            "How can we cultivate more of that?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-046",
+        "text": "What is an apology or acknowledgment from either of us in the past that truly healed something between us?",
+        "category": "VULNERABILITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made that apology feel genuine?",
+            "What did it teach us about conflict?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-047",
+        "text": "How have your romantic expectations shifted from what you thought love was in your youth to what it is now?",
+        "category": "VALUES",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What fairy tales did you let go of?",
+            "What realistic wonders did you gain?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-048",
+        "text": "What is a fear you hold about the future that you rarely share with anyone?",
+        "category": "VULNERABILITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "How can I be a safe anchor for that fear?",
+            "Does talking about it lighten its weight?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-049",
+        "text": "What's an unspoken expectation you used to have of me that you've learned to release?",
+        "category": "VULNERABILITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "How did releasing it bring you peace?",
+            "How did you work through the frustration?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-050",
+        "text": "What is a part of your background or childhood that still influences how you react in our relationship?",
+        "category": "IDENTITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "Does it trigger fight, flight, or shutdown?",
+            "How can we navigate that together?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-051",
+        "text": "When was a time you felt misunderstood by me, and how can I listen better next time?",
+        "category": "VULNERABILITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What was I missing in that moment?",
+            "How can you gently signal me when I'm missing the point?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-052",
+        "text": "What is an insecurity you hold about aging or life transitions, and how can we support each other through it?",
+        "category": "IDENTITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What does aging gracefully together look like to you?",
+            "What fears do you carry?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-053",
+        "text": "How do you know when you've reached your emotional limit, and how can I give you breathing room?",
+        "category": "HABITS",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What are your early burnout warning signs?",
+            "What does a gentle reset day look like?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-054",
+        "text": "What is a tenderness or emotional need you had as a child that you are learning to honor as an adult?",
+        "category": "VULNERABILITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "Did you have to grow up too quickly?",
+            "How can our relationship be a sanctuary for that inner child?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-055",
+        "text": "What is a dream for your personal identity that you want to make sure never gets lost in our couplehood?",
+        "category": "IDENTITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "How do we balance togetherness with individuality?",
+            "What passions are purely yours?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-056",
+        "text": "What is something vulnerable you've been carrying alone lately that you're ready to share with me?",
+        "category": "VULNERABILITY",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What was making it feel heavy?",
+            "How can I support you right now?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED",
+        "hint": "Take your time. A deep question invites a mindful breath."
+    },
+    {
+        "id": "exp-cpl-057",
+        "text": "In what moments do you feel most tender toward me, and when do you feel most guarded?",
+        "category": "VULNERABILITY",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What triggers the guardedness?",
+            "How can we gently melt that wall together?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED",
+        "hint": "Take your time. A deep question invites a mindful breath."
+    },
+    {
+        "id": "exp-cpl-058",
+        "text": "If we were to look back on our relationship 30 years from now, what would you hope we never compromised on?",
+        "category": "VALUES",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What core truth must we always preserve?",
+            "How will we protect that when life gets demanding?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED",
+        "hint": "Take your time. A deep question invites a mindful breath."
+    },
+    {
+        "id": "exp-cpl-059",
+        "text": "What is a desire or longing you have for our intimacy that you've felt shy or nervous to bring up?",
+        "category": "VULNERABILITY",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What would it feel like to explore it together?",
+            "What reassurance do you need from me?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED",
+        "hint": "Take your time. A deep question invites a mindful breath."
+    },
+    {
+        "id": "exp-cpl-060",
+        "text": "What is an insecurity you battle when you compare yourself to others, and how can I help you see your true worth?",
+        "category": "VULNERABILITY",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "Where does that voice come from?",
+            "What does unconditional acceptance feel like to you?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED",
+        "hint": "Take your time. A deep question invites a mindful breath."
+    },
+    {
+        "id": "exp-cpl-061",
+        "text": "What is a time you felt hurt by me that you've forgiven, but that taught you something vital about who you are?",
+        "category": "VULNERABILITY",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What did it reveal about your core values?",
+            "How has it made our bond more honest?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED",
+        "hint": "Take your time. A deep question invites a mindful breath."
+    },
+    {
+        "id": "exp-cpl-062",
+        "text": "If you could grant me one deep insight into your soul that would help me love you better every day, what is it?",
+        "category": "CONNECTION",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "How would our everyday rhythm shift if I remembered this constantly?",
+            "What will remind you to tell me when I forget?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED",
+        "hint": "Take your time. A deep question invites a mindful breath."
+    },
+    {
+        "id": "exp-cpl-063",
+        "text": "What is a way you have felt deeply seen and loved by me that you had never experienced before in your life?",
+        "category": "CONNECTION",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What shifted inside you when that happened?",
+            "How did it heal an older ache?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED",
+        "hint": "Take your time. A deep question invites a mindful breath."
+    },
+    {
+        "id": "exp-cpl-064",
+        "text": "What is the most sacred promise we have made to each other, whether spoken in words or lived in action?",
+        "category": "VALUES",
+        "depth": 5,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "How has keeping that promise changed who you are?",
+            "How can we renew it today?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED",
+        "hint": "Take your time. A deep question invites a mindful breath."
+    },
+    {
+        "id": "exp-cpl-065",
+        "text": "If today were our very last evening together on earth, what would you need me to know beyond any shadow of a doubt?",
+        "category": "VULNERABILITY",
+        "depth": 5,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What gratitude would you carry?",
+            "What love would you leave behind?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED",
+        "hint": "Take your time. A deep question invites a mindful breath."
+    },
+    {
+        "id": "exp-cpl-066",
+        "text": "How has loving me changed the way you love yourself?",
+        "category": "IDENTITY",
+        "depth": 5,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "Have you become softer, braver, or more patient with your own flaws?",
+            "What parts of yourself do you now cherish?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED",
+        "hint": "Take your time. A deep question invites a mindful breath."
+    },
+    {
+        "id": "exp-cpl-067",
+        "text": "What part of your heart do you still find hardest to surrender, and what would it take to let me in completely?",
+        "category": "VULNERABILITY",
+        "depth": 5,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What is that part protecting you from?",
+            "Can I hold that tenderness with you right now?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED",
+        "hint": "Take your time. A deep question invites a mindful breath."
+    },
+    {
+        "id": "exp-cpl-068",
+        "text": "What does devotion look like to you when passion settles into the quiet rhythms of life?",
+        "category": "VALUES",
+        "depth": 5,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "How do we keep our flame burning brightly?",
+            "What rituals anchor us?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED",
+        "hint": "Take your time. A deep question invites a mindful breath."
+    },
+    {
+        "id": "exp-cpl-069",
+        "text": "When you look into my eyes during our quietest moments, what do you see looking back at you?",
+        "category": "CONNECTION",
+        "depth": 5,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "Do you see home, peace, or truth?",
+            "How does it feel to let yourself be gazed upon?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED",
+        "hint": "Take your time. A deep question invites a mindful breath."
+    },
+    {
+        "id": "exp-frd-070",
+        "text": "What is the most unhinged or hilarious adventure we've ever found ourselves in?",
+        "category": "PLAYFUL",
+        "depth": 1,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "How did we get out of it?",
+            "Would you do it all over again?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-071",
+        "text": "What is a niche obsession or weird interest you have right now that nobody else cares about?",
+        "category": "IDENTITY",
+        "depth": 1,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "How deep is the rabbit hole?",
+            "What ignited your interest?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-072",
+        "text": "If our friendship was made into a movie, what genre would it be, and who would play us?",
+        "category": "PLAYFUL",
+        "depth": 1,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What would be the climax of the plot?",
+            "What song plays during the end credits?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-073",
+        "text": "What is a meal or comfort food that you immediately associate with our friendship?",
+        "category": "MEMORIES",
+        "depth": 1,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "Where did we usually eat it?",
+            "What makes it taste like home?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-074",
+        "text": "What is a topic where you and I have totally different tastes, but we love debating anyway?",
+        "category": "PLAYFUL",
+        "depth": 1,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "Who is more passionate about defending their side?",
+            "Has either of us ever conceded?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-075",
+        "text": "What is something ridiculous you did as a teenager that still gives you secondhand embarrassment?",
+        "category": "PLAYFUL",
+        "depth": 1,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "Did you think you were being cool at the time?",
+            "Who witnessed it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-076",
+        "text": "If we had an unlimited budget to take a one-week trip anywhere, what would we do?",
+        "category": "DREAMS",
+        "depth": 1,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "Relaxation or non-stop adventure?",
+            "What would be the first stop?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-077",
+        "text": "What is a meme, video, or soundbite that you will never fail to find funny?",
+        "category": "PLAYFUL",
+        "depth": 1,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "How many times have you watched it?",
+            "Does it make you laugh out loud immediately?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-078",
+        "text": "What was your very first impression of me when we first crossed paths?",
+        "category": "MEMORIES",
+        "depth": 1,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "Did you think we'd end up close friends?",
+            "What detail stuck in your head?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-079",
+        "text": "If we were stuck at an airport together for a 12-hour layover, how would we survive it?",
+        "category": "PLAYFUL",
+        "depth": 1,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "Who falls asleep and who wanders the duty-free shops?",
+            "What snacks are essential?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-080",
+        "text": "What is a TV show or video game we need to binge together next time we hang out?",
+        "category": "HABITS",
+        "depth": 1,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "Why would it be so fun?",
+            "What's the ideal snack spread?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-081",
+        "text": "What is something weird you do when you are completely alone at home?",
+        "category": "PLAYFUL",
+        "depth": 1,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "Talking to pets in weird voices or strange snacks?",
+            "Have you ever been caught?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-082",
+        "text": "What is a music artist you love that you feel most people unfairly hate on?",
+        "category": "PLAYFUL",
+        "depth": 1,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What makes their music great?",
+            "Can you defend them right now?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-083",
+        "text": "What is an old photo of us that always brings back a flood of memories?",
+        "category": "MEMORIES",
+        "depth": 1,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What era was that?",
+            "How much have we changed since then?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-084",
+        "text": "If you could pick one fictional duo that represents our dynamic, who are we?",
+        "category": "PLAYFUL",
+        "depth": 1,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "Who is the chaotic one and who is the sensible one?",
+            "Why does it fit?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-085",
+        "text": "What is something you admire about how I live my life that I rarely give myself credit for?",
+        "category": "CONNECTION",
+        "depth": 2,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "When do you notice it most?",
+            "Why do you think I overlook it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-086",
+        "text": "What was the exact moment or conversation where you realized, 'Yeah, this person is going to be a real friend'?",
+        "category": "MEMORIES",
+        "depth": 2,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "Were you surprised by how fast we clicked?",
+            "What set the friendship apart?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-087",
+        "text": "What is a challenge or transition you're navigating right now where you could use a friend's encouragement?",
+        "category": "VULNERABILITY",
+        "depth": 2,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What makes it feel daunting?",
+            "How can I check in on you without nagging?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-088",
+        "text": "In what ways do you feel we have positively influenced each other over the years?",
+        "category": "CONNECTION",
+        "depth": 2,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What habits or perspectives did you pick up from me?",
+            "How have I learned from you?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-089",
+        "text": "What is a belief or worldview you held five years ago that you have completely outgrown?",
+        "category": "IDENTITY",
+        "depth": 2,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What experience triggered the change?",
+            "How did your friends react?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-090",
+        "text": "What is something you wish more people in your daily life asked you about?",
+        "category": "CONNECTION",
+        "depth": 2,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "Why does that topic matter to you so much?",
+            "Why do people usually skip it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-091",
+        "text": "What quality in people do you find makes you instantly warm up to them?",
+        "category": "VALUES",
+        "depth": 2,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "Is it humility, humor, curiosity, or warmth?",
+            "Do you think you possess that quality?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-092",
+        "text": "When was the last time you felt truly proud of something you accomplished in quiet?",
+        "category": "IDENTITY",
+        "depth": 2,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "Did you celebrate it or just move on to the next thing?",
+            "Why didn't you broadcast it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-093",
+        "text": "What is a skill or creative avenue you're curious about exploring in this season of life?",
+        "category": "DREAMS",
+        "depth": 2,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What's held you back from starting?",
+            "How can I support you?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-094",
+        "text": "What is a value you refuse to negotiate on in your career or relationships?",
+        "category": "VALUES",
+        "depth": 2,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "Did a past betrayal teach you that value?",
+            "How has it protected your peace?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-095",
+        "text": "What is something you appreciate about how we communicate even when months go by without talking?",
+        "category": "CONNECTION",
+        "depth": 2,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "Why doesn't the connection fade?",
+            "How does that bring you comfort?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-096",
+        "text": "How do you define success now compared to what you thought it was in high school or college?",
+        "category": "VALUES",
+        "depth": 2,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "Has ambition softened into balance?",
+            "What matters most to you today?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-097",
+        "text": "What is something you're currently grieving or letting go of, even if it's not a person?",
+        "category": "VULNERABILITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "Is it an old dream, a former version of yourself, or an expectation?",
+            "How are you giving yourself space for it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-098",
+        "text": "What does genuine loyalty mean to you in adulthood?",
+        "category": "VALUES",
+        "depth": 3,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "How has your definition changed as life got busier?",
+            "How can we keep our bond strong across distance?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-099",
+        "text": "Have you ever felt lonely in a room full of friends or acquaintances? What does that feeling feel like for you?",
+        "category": "VULNERABILITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What makes you feel truly connected instead of just surrounded?",
+            "How can we create that depth together?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-100",
+        "text": "What is a pattern in your life that you're actively trying to break right now?",
+        "category": "IDENTITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What makes it so seductive to slip back into?",
+            "Who is holding you accountable?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-101",
+        "text": "If you could ask for anything without fear of being a burden, what support do you need most from your friends right now?",
+        "category": "VULNERABILITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "Why do you worry about being a burden?",
+            "How can I show you that you never are?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-102",
+        "text": "What is a fear you have about getting older or losing touch with people you care about?",
+        "category": "VULNERABILITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "How do we actively resist drifting apart?",
+            "What pact can we make?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-103",
+        "text": "What was a season where you felt truly lost, and what helped you find your footing again?",
+        "category": "IDENTITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "Did you hide it from people at the time?",
+            "What wisdom did it leave you with?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-104",
+        "text": "What is an assumption people often make about your life based on social media that isn't true?",
+        "category": "VULNERABILITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What is the messier reality?",
+            "Why do we feel pressured to curate?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-105",
+        "text": "What is a secret burden or financial/emotional stress you rarely let anyone see behind your smile?",
+        "category": "VULNERABILITY",
+        "depth": 4,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "How long have you been carrying it alone?",
+            "What would it take to let someone share the load?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED",
+        "hint": "Take your time. A deep question invites a mindful breath."
+    },
+    {
+        "id": "exp-frd-106",
+        "text": "How has our friendship impacted who you are as a human being?",
+        "category": "CONNECTION",
+        "depth": 4,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What part of me do you carry with you in your daily life?",
+            "What do you hope we pass on to others?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED",
+        "hint": "Take your time. A deep question invites a mindful breath."
+    },
+    {
+        "id": "exp-frd-107",
+        "text": "If you could speak to the younger version of yourself on their hardest day, what would you promise them?",
+        "category": "IDENTITY",
+        "depth": 5,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "Did things turn out the way they feared, or did resilience surprise them?",
+            "How does knowing that comfort you now?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED",
+        "hint": "Take your time. A deep question invites a mindful breath."
+    },
+    {
+        "id": "exp-frd-108",
+        "text": "What is the legacy of kindness or truth you want your life to leave behind when you're gone?",
+        "category": "VALUES",
+        "depth": 5,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "Who in your life taught you that value?",
+            "How can I help you fulfill it?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED",
+        "hint": "Take your time. A deep question invites a mindful breath."
+    },
+    {
+        "id": "exp-frd-109",
+        "text": "What is a truth about your heart that you've only shared with a tiny handful of people on earth?",
+        "category": "VULNERABILITY",
+        "depth": 5,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "Why is that truth so guarded?",
+            "How does it feel to speak it in this room?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED",
+        "hint": "Take your time. A deep question invites a mindful breath."
+    },
+    {
+        "id": "exp-new-110",
+        "text": "What is something you could give a 30-minute impromptu presentation on with zero preparation?",
+        "category": "PLAYFUL",
+        "depth": 1,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What makes you so knowledgeable about it?",
+            "When was the last time you went down that rabbit hole?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-111",
+        "text": "What is the best trip or unexpected adventure you've ever taken?",
+        "category": "MEMORIES",
+        "depth": 1,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made it so unforgettable?",
+            "Did anything go wrong that turned into a great story?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-112",
+        "text": "What is your comfort TV show or book that you revisit whenever you need to recharge?",
+        "category": "HABITS",
+        "depth": 1,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "How many times have you watched or read it?",
+            "What feeling does it bring you?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-113",
+        "text": "What is the strangest job or gig you've ever had?",
+        "category": "MEMORIES",
+        "depth": 1,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What was the most absurd thing that happened?",
+            "What did it teach you?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-114",
+        "text": "If you had an entire afternoon with no phone and no laptop, how would you spend it?",
+        "category": "HABITS",
+        "depth": 1,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Where would you go?",
+            "How long before you felt the itch to check your notifications?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-115",
+        "text": "What is a piece of art, music, or architecture that stopped you in your tracks the first time you saw it?",
+        "category": "VALUES",
+        "depth": 1,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Where were you?",
+            "What emotion did it pull out of you?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-116",
+        "text": "What is a hobby or skill you've always wanted to learn but haven't started yet?",
+        "category": "DREAMS",
+        "depth": 1,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What's the barrier—time, intimidation, or cost?",
+            "What is step one?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-117",
+        "text": "What is your ultimate go-to meal when you want to treat yourself after a long week?",
+        "category": "PLAYFUL",
+        "depth": 1,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Do you order it or cook it?",
+            "What drink pairs with it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-118",
+        "text": "What is your favorite city you've visited, and what gave it such incredible energy?",
+        "category": "MEMORIES",
+        "depth": 1,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "The food, the locals, or the streets?",
+            "Could you see yourself living there?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-119",
+        "text": "Are you an early morning riser or a late night thinker? What makes that your prime window?",
+        "category": "HABITS",
+        "depth": 1,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What happens during that golden hour?",
+            "How does the world feel different then?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-120",
+        "text": "What is a book or author you find yourself recommending to almost everyone you meet?",
+        "category": "VALUES",
+        "depth": 1,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What perspective did it give you?",
+            "Who originally recommended it to you?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-121",
+        "text": "What kind of music do you put on when you're driving alone on an open highway?",
+        "category": "HABITS",
+        "depth": 1,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Windows down or blasting through speakers?",
+            "Do you sing along or just zone in?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-122",
+        "text": "What is an unexpected place in nature where you feel an overwhelming sense of calm?",
+        "category": "HABITS",
+        "depth": 1,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Mountains, ocean, forest, or desert?",
+            "How often do you get out there?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-123",
+        "text": "What is a small, harmless pet peeve of yours that always makes you shake your head?",
+        "category": "PLAYFUL",
+        "depth": 1,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Why does it bother you so disproportionately?",
+            "Are you guilty of it too?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-124",
+        "text": "If you were given a pass to shadow any professional in the world for a week, who would you follow?",
+        "category": "DREAMS",
+        "depth": 1,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "A chef, an astronaut, a detective, or an architect?",
+            "What would you want to learn?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-125",
+        "text": "What was a turning point in your life that set you on your current career or creative path?",
+        "category": "IDENTITY",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Was it planned or a complete coincidence?",
+            "Do you ever wonder what would have happened if you took the other fork?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-126",
+        "text": "What is a principle or rule of thumb you try to live by when making major life decisions?",
+        "category": "VALUES",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Who taught you that principle?",
+            "When was the last time it guided you?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-127",
+        "text": "What is something most people assume about you when they first meet you that is actually inaccurate?",
+        "category": "IDENTITY",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Why do you think people get that impression?",
+            "What is the truth once they get to know you?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-128",
+        "text": "What kind of environment brings out your most creative and energized self?",
+        "category": "HABITS",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Is it solitude, busy bustle, nature, or late night?",
+            "How often do you get to be in that environment?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-129",
+        "text": "What is a book, podcast, or documentary that genuinely changed how you see the world?",
+        "category": "VALUES",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What was the central idea that shook you?",
+            "Did you change any daily habits after consuming it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-130",
+        "text": "What does a truly meaningful friendship look like to you in this chapter of your life?",
+        "category": "CONNECTION",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "How has that changed from when you were younger?",
+            "What's an instant green flag in a new connection?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-131",
+        "text": "What was the best compliment you ever received from a mentor or teacher?",
+        "category": "IDENTITY",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Why did it stay with you?",
+            "Did it push you to believe in yourself?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-132",
+        "text": "What is an experience where you had to adapt quickly to a culture or environment unlike your own?",
+        "category": "IDENTITY",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What was intimidating at first?",
+            "What did you come to appreciate about that difference?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-133",
+        "text": "What is a cause or issue that you find yourself quietly following or caring about deeply?",
+        "category": "VALUES",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Why does it resonate with you?",
+            "How does it influence your everyday choices?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-134",
+        "text": "What does an ideal weekend recharge look like for your mental health?",
+        "category": "HABITS",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Social gatherings or solitude?",
+            "What allows you to start Monday feeling rested?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-135",
+        "text": "What is a piece of advice you often give others that you struggle to follow yourself?",
+        "category": "VULNERABILITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Why is it so easy to recommend but so hard to practice?",
+            "How are you trying to close that gap?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-136",
+        "text": "What is a risk you took in your life that terrified you, but you are so glad you leaped?",
+        "category": "IDENTITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What pushed you over the edge to take the leap?",
+            "What did you learn about your courage?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-137",
+        "text": "What is something you're still figuring out about who you are?",
+        "category": "IDENTITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Does not having the answer make you anxious or curious?",
+            "What helps you sit with the unknown?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-138",
+        "text": "If you could ask any historical figure or thinker one question over dinner, who and what would it be?",
+        "category": "VALUES",
+        "depth": 3,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Why does their perspective fascinate you?",
+            "What do you think they would say?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-139",
+        "text": "What is a value or tradition from your family of origin that you actively choose to preserve?",
+        "category": "VALUES",
+        "depth": 3,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "Why is it precious to you?",
+            "How will you pass it forward?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-140",
+        "text": "What was an encounter with a total stranger that left a lasting positive impression on your faith in humanity?",
+        "category": "CONNECTION",
+        "depth": 3,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What did they do or say?",
+            "How did it restore your hope?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-141",
+        "text": "What is an intimate memory of us that always makes your heart race?",
+        "category": "MEMORIES",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-142",
+        "text": "Looking back at this past year, what is an intimate memory of us that always makes your heart race?",
+        "category": "MEMORIES",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-143",
+        "text": "In your most authentic moments, what is an intimate memory of us that always makes your heart race?",
+        "category": "MEMORIES",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-144",
+        "text": "If you were being completely honest with yourself right now, what is an intimate memory of us that always makes your heart race?",
+        "category": "MEMORIES",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-145",
+        "text": "What is something you love about how we touch or hold hands without speaking?",
+        "category": "CONNECTION",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-146",
+        "text": "Looking back at this past year, what is something you love about how we touch or hold hands without speaking?",
+        "category": "CONNECTION",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-147",
+        "text": "In your most authentic moments, what is something you love about how we touch or hold hands without speaking?",
+        "category": "CONNECTION",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-148",
+        "text": "If you were being completely honest with yourself right now, what is something you love about how we touch or hold hands without speaking?",
+        "category": "CONNECTION",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-149",
+        "text": "What is a promise you want us to make to each other about how we will handle future stress?",
+        "category": "VALUES",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-150",
+        "text": "Looking back at this past year, what is a promise you want us to make to each other about how we will handle future stress?",
+        "category": "VALUES",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-151",
+        "text": "In your most authentic moments, what is a promise you want us to make to each other about how we will handle future stress?",
+        "category": "VALUES",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-152",
+        "text": "If you were being completely honest with yourself right now, what is a promise you want us to make to each other about how we will handle future stress?",
+        "category": "VALUES",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-153",
+        "text": "What is a dream trip that you think would bring us closer together than ever?",
+        "category": "DREAMS",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-154",
+        "text": "Looking back at this past year, what is a dream trip that you think would bring us closer together than ever?",
+        "category": "DREAMS",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-155",
+        "text": "In your most authentic moments, what is a dream trip that you think would bring us closer together than ever?",
+        "category": "DREAMS",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-156",
+        "text": "If you were being completely honest with yourself right now, what is a dream trip that you think would bring us closer together than ever?",
+        "category": "DREAMS",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-157",
+        "text": "What is a quality of mine that makes you feel deeply anchored when the world is chaotic?",
+        "category": "CONNECTION",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-158",
+        "text": "Looking back at this past year, what is a quality of mine that makes you feel deeply anchored when the world is chaotic?",
+        "category": "CONNECTION",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-159",
+        "text": "In your most authentic moments, what is a quality of mine that makes you feel deeply anchored when the world is chaotic?",
+        "category": "CONNECTION",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-160",
+        "text": "If you were being completely honest with yourself right now, what is a quality of mine that makes you feel deeply anchored when the world is chaotic?",
+        "category": "CONNECTION",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-161",
+        "text": "What is a small romance you wish we engaged in more frequently?",
+        "category": "CONNECTION",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-162",
+        "text": "Looking back at this past year, what is a small romance you wish we engaged in more frequently?",
+        "category": "CONNECTION",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-163",
+        "text": "In your most authentic moments, what is a small romance you wish we engaged in more frequently?",
+        "category": "CONNECTION",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-164",
+        "text": "If you were being completely honest with yourself right now, what is a small romance you wish we engaged in more frequently?",
+        "category": "CONNECTION",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-165",
+        "text": "What was the exact moment on a recent date where you felt totally enchanted by me?",
+        "category": "MEMORIES",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-166",
+        "text": "Looking back at this past year, what was the exact moment on a recent date where you felt totally enchanted by me?",
+        "category": "MEMORIES",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-167",
+        "text": "In your most authentic moments, what was the exact moment on a recent date where you felt totally enchanted by me?",
+        "category": "MEMORIES",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-168",
+        "text": "If you were being completely honest with yourself right now, what was the exact moment on a recent date where you felt totally enchanted by me?",
+        "category": "MEMORIES",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-169",
+        "text": "What is a subtle vulnerability of yours that you only feel safe revealing in my arms?",
+        "category": "VULNERABILITY",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED",
+        "hint": "Take your time. A deep question invites a mindful breath."
+    },
+    {
+        "id": "exp-cpl-170",
+        "text": "Looking back at this past year, what is a subtle vulnerability of yours that you only feel safe revealing in my arms?",
+        "category": "VULNERABILITY",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED",
+        "hint": "Take your time. A deep question invites a mindful breath."
+    },
+    {
+        "id": "exp-cpl-171",
+        "text": "In your most authentic moments, what is a subtle vulnerability of yours that you only feel safe revealing in my arms?",
+        "category": "VULNERABILITY",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED",
+        "hint": "Take your time. A deep question invites a mindful breath."
+    },
+    {
+        "id": "exp-cpl-172",
+        "text": "If you were being completely honest with yourself right now, what is a subtle vulnerability of yours that you only feel safe revealing in my arms?",
+        "category": "VULNERABILITY",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED",
+        "hint": "Take your time. A deep question invites a mindful breath."
+    },
+    {
+        "id": "exp-cpl-173",
+        "text": "What is something you want us to learn to celebrate more loudly together?",
+        "category": "PLAYFUL",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-174",
+        "text": "Looking back at this past year, what is something you want us to learn to celebrate more loudly together?",
+        "category": "PLAYFUL",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-175",
+        "text": "In your most authentic moments, what is something you want us to learn to celebrate more loudly together?",
+        "category": "PLAYFUL",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-176",
+        "text": "If you were being completely honest with yourself right now, what is something you want us to learn to celebrate more loudly together?",
+        "category": "PLAYFUL",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-177",
+        "text": "What is an emotional habit of yours that you are working on out of love for our relationship?",
+        "category": "VULNERABILITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-178",
+        "text": "Looking back at this past year, what is an emotional habit of yours that you are working on out of love for our relationship?",
+        "category": "VULNERABILITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-179",
+        "text": "In your most authentic moments, what is an emotional habit of yours that you are working on out of love for our relationship?",
+        "category": "VULNERABILITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-180",
+        "text": "If you were being completely honest with yourself right now, what is an emotional habit of yours that you are working on out of love for our relationship?",
+        "category": "VULNERABILITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-181",
+        "text": "What is a quiet realization about our partnership that filled you with peace recently?",
+        "category": "CONNECTION",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-182",
+        "text": "Looking back at this past year, what is a quiet realization about our partnership that filled you with peace recently?",
+        "category": "CONNECTION",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-183",
+        "text": "In your most authentic moments, what is a quiet realization about our partnership that filled you with peace recently?",
+        "category": "CONNECTION",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-184",
+        "text": "If you were being completely honest with yourself right now, what is a quiet realization about our partnership that filled you with peace recently?",
+        "category": "CONNECTION",
+        "depth": 3,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-185",
+        "text": "What is something you find endlessly fascinating about how my mind works?",
+        "category": "IDENTITY",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-186",
+        "text": "Looking back at this past year, what is something you find endlessly fascinating about how my mind works?",
+        "category": "IDENTITY",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-187",
+        "text": "In your most authentic moments, what is something you find endlessly fascinating about how my mind works?",
+        "category": "IDENTITY",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-188",
+        "text": "If you were being completely honest with yourself right now, what is something you find endlessly fascinating about how my mind works?",
+        "category": "IDENTITY",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-189",
+        "text": "What is an inside comfort of ours that you wouldn't trade for anything in the world?",
+        "category": "HABITS",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-190",
+        "text": "Looking back at this past year, what is an inside comfort of ours that you wouldn't trade for anything in the world?",
+        "category": "HABITS",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-191",
+        "text": "In your most authentic moments, what is an inside comfort of ours that you wouldn't trade for anything in the world?",
+        "category": "HABITS",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-192",
+        "text": "If you were being completely honest with yourself right now, what is an inside comfort of ours that you wouldn't trade for anything in the world?",
+        "category": "HABITS",
+        "depth": 1,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-193",
+        "text": "How can I love you in a way that helps you heal from past scars?",
+        "category": "VULNERABILITY",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED",
+        "hint": "Take your time. A deep question invites a mindful breath."
+    },
+    {
+        "id": "exp-cpl-194",
+        "text": "Looking back at this past year, how can I love you in a way that helps you heal from past scars?",
+        "category": "VULNERABILITY",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED",
+        "hint": "Take your time. A deep question invites a mindful breath."
+    },
+    {
+        "id": "exp-cpl-195",
+        "text": "In your most authentic moments, how can I love you in a way that helps you heal from past scars?",
+        "category": "VULNERABILITY",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED",
+        "hint": "Take your time. A deep question invites a mindful breath."
+    },
+    {
+        "id": "exp-cpl-196",
+        "text": "If you were being completely honest with yourself right now, how can I love you in a way that helps you heal from past scars?",
+        "category": "VULNERABILITY",
+        "depth": 4,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED",
+        "hint": "Take your time. A deep question invites a mindful breath."
+    },
+    {
+        "id": "exp-cpl-197",
+        "text": "What is a hope you have for our shared laughter in the decades ahead?",
+        "category": "DREAMS",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-198",
+        "text": "Looking back at this past year, what is a hope you have for our shared laughter in the decades ahead?",
+        "category": "DREAMS",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-199",
+        "text": "In your most authentic moments, what is a hope you have for our shared laughter in the decades ahead?",
+        "category": "DREAMS",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-cpl-200",
+        "text": "If you were being completely honest with yourself right now, what is a hope you have for our shared laughter in the decades ahead?",
+        "category": "DREAMS",
+        "depth": 2,
+        "relationshipTypes": [
+            "COUPLE"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-201",
+        "text": "What is a quality of our friendship that you brag about to other people?",
+        "category": "CONNECTION",
+        "depth": 2,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-202",
+        "text": "Looking back at this past year, what is a quality of our friendship that you brag about to other people?",
+        "category": "CONNECTION",
+        "depth": 2,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-203",
+        "text": "In your most authentic moments, what is a quality of our friendship that you brag about to other people?",
+        "category": "CONNECTION",
+        "depth": 2,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-204",
+        "text": "If you were being completely honest with yourself right now, what is a quality of our friendship that you brag about to other people?",
+        "category": "CONNECTION",
+        "depth": 2,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-205",
+        "text": "What is a time when my support made a tangible difference in your life?",
+        "category": "MEMORIES",
+        "depth": 2,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-206",
+        "text": "Looking back at this past year, what is a time when my support made a tangible difference in your life?",
+        "category": "MEMORIES",
+        "depth": 2,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-207",
+        "text": "In your most authentic moments, what is a time when my support made a tangible difference in your life?",
+        "category": "MEMORIES",
+        "depth": 2,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-208",
+        "text": "If you were being completely honest with yourself right now, what is a time when my support made a tangible difference in your life?",
+        "category": "MEMORIES",
+        "depth": 2,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-209",
+        "text": "What is something you've learned about emotional maturity from our conversations?",
+        "category": "VALUES",
+        "depth": 3,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-210",
+        "text": "Looking back at this past year, what is something you've learned about emotional maturity from our conversations?",
+        "category": "VALUES",
+        "depth": 3,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-211",
+        "text": "In your most authentic moments, what is something you've learned about emotional maturity from our conversations?",
+        "category": "VALUES",
+        "depth": 3,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-212",
+        "text": "If you were being completely honest with yourself right now, what is something you've learned about emotional maturity from our conversations?",
+        "category": "VALUES",
+        "depth": 3,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-213",
+        "text": "What is a memory of our group or duo that still feels surreal when you recall it?",
+        "category": "MEMORIES",
+        "depth": 1,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-214",
+        "text": "Looking back at this past year, what is a memory of our group or duo that still feels surreal when you recall it?",
+        "category": "MEMORIES",
+        "depth": 1,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-215",
+        "text": "In your most authentic moments, what is a memory of our group or duo that still feels surreal when you recall it?",
+        "category": "MEMORIES",
+        "depth": 1,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-216",
+        "text": "If you were being completely honest with yourself right now, what is a memory of our group or duo that still feels surreal when you recall it?",
+        "category": "MEMORIES",
+        "depth": 1,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-217",
+        "text": "What is a creative idea you have that you've been hesitant to launch?",
+        "category": "DREAMS",
+        "depth": 2,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-218",
+        "text": "Looking back at this past year, what is a creative idea you have that you've been hesitant to launch?",
+        "category": "DREAMS",
+        "depth": 2,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-219",
+        "text": "In your most authentic moments, what is a creative idea you have that you've been hesitant to launch?",
+        "category": "DREAMS",
+        "depth": 2,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-220",
+        "text": "If you were being completely honest with yourself right now, what is a creative idea you have that you've been hesitant to launch?",
+        "category": "DREAMS",
+        "depth": 2,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-221",
+        "text": "What is an unspoken loyalty in our friendship that you know you can always count on?",
+        "category": "VALUES",
+        "depth": 3,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-222",
+        "text": "Looking back at this past year, what is an unspoken loyalty in our friendship that you know you can always count on?",
+        "category": "VALUES",
+        "depth": 3,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-223",
+        "text": "In your most authentic moments, what is an unspoken loyalty in our friendship that you know you can always count on?",
+        "category": "VALUES",
+        "depth": 3,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-224",
+        "text": "If you were being completely honest with yourself right now, what is an unspoken loyalty in our friendship that you know you can always count on?",
+        "category": "VALUES",
+        "depth": 3,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-225",
+        "text": "What is a life philosophy you picked up recently that gave you instant clarity?",
+        "category": "VALUES",
+        "depth": 2,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-226",
+        "text": "Looking back at this past year, what is a life philosophy you picked up recently that gave you instant clarity?",
+        "category": "VALUES",
+        "depth": 2,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-227",
+        "text": "In your most authentic moments, what is a life philosophy you picked up recently that gave you instant clarity?",
+        "category": "VALUES",
+        "depth": 2,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-228",
+        "text": "If you were being completely honest with yourself right now, what is a life philosophy you picked up recently that gave you instant clarity?",
+        "category": "VALUES",
+        "depth": 2,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-229",
+        "text": "What is something about adulthood that nobody properly warned us about?",
+        "category": "VULNERABILITY",
+        "depth": 2,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-230",
+        "text": "Looking back at this past year, what is something about adulthood that nobody properly warned us about?",
+        "category": "VULNERABILITY",
+        "depth": 2,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-231",
+        "text": "In your most authentic moments, what is something about adulthood that nobody properly warned us about?",
+        "category": "VULNERABILITY",
+        "depth": 2,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-232",
+        "text": "If you were being completely honest with yourself right now, what is something about adulthood that nobody properly warned us about?",
+        "category": "VULNERABILITY",
+        "depth": 2,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-233",
+        "text": "How can we create more intentional space for our friendship as life gets busier?",
+        "category": "HABITS",
+        "depth": 2,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-234",
+        "text": "Looking back at this past year, how can we create more intentional space for our friendship as life gets busier?",
+        "category": "HABITS",
+        "depth": 2,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-235",
+        "text": "In your most authentic moments, how can we create more intentional space for our friendship as life gets busier?",
+        "category": "HABITS",
+        "depth": 2,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-236",
+        "text": "If you were being completely honest with yourself right now, how can we create more intentional space for our friendship as life gets busier?",
+        "category": "HABITS",
+        "depth": 2,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-237",
+        "text": "What is a personal breakthrough you've had recently that you haven't properly shared?",
+        "category": "IDENTITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-238",
+        "text": "Looking back at this past year, what is a personal breakthrough you've had recently that you haven't properly shared?",
+        "category": "IDENTITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-239",
+        "text": "In your most authentic moments, what is a personal breakthrough you've had recently that you haven't properly shared?",
+        "category": "IDENTITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-240",
+        "text": "If you were being completely honest with yourself right now, what is a personal breakthrough you've had recently that you haven't properly shared?",
+        "category": "IDENTITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-241",
+        "text": "What is an awkward phase of yours that I witnessed and loved you through anyway?",
+        "category": "PLAYFUL",
+        "depth": 1,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-242",
+        "text": "Looking back at this past year, what is an awkward phase of yours that I witnessed and loved you through anyway?",
+        "category": "PLAYFUL",
+        "depth": 1,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-243",
+        "text": "In your most authentic moments, what is an awkward phase of yours that I witnessed and loved you through anyway?",
+        "category": "PLAYFUL",
+        "depth": 1,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-244",
+        "text": "If you were being completely honest with yourself right now, what is an awkward phase of yours that I witnessed and loved you through anyway?",
+        "category": "PLAYFUL",
+        "depth": 1,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-245",
+        "text": "What is a conversation we had that redirected the course of your thinking?",
+        "category": "CONNECTION",
+        "depth": 3,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-246",
+        "text": "Looking back at this past year, what is a conversation we had that redirected the course of your thinking?",
+        "category": "CONNECTION",
+        "depth": 3,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-247",
+        "text": "In your most authentic moments, what is a conversation we had that redirected the course of your thinking?",
+        "category": "CONNECTION",
+        "depth": 3,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-248",
+        "text": "If you were being completely honest with yourself right now, what is a conversation we had that redirected the course of your thinking?",
+        "category": "CONNECTION",
+        "depth": 3,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-frd-249",
+        "text": "What is something you hope our friendship inspires in people who watch us interact?",
+        "category": "VALUES",
+        "depth": 4,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED",
+        "hint": "Take your time. A deep question invites a mindful breath."
+    },
+    {
+        "id": "exp-frd-250",
+        "text": "Looking back at this past year, what is something you hope our friendship inspires in people who watch us interact?",
+        "category": "VALUES",
+        "depth": 4,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED",
+        "hint": "Take your time. A deep question invites a mindful breath."
+    },
+    {
+        "id": "exp-frd-251",
+        "text": "In your most authentic moments, what is something you hope our friendship inspires in people who watch us interact?",
+        "category": "VALUES",
+        "depth": 4,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED",
+        "hint": "Take your time. A deep question invites a mindful breath."
+    },
+    {
+        "id": "exp-frd-252",
+        "text": "If you were being completely honest with yourself right now, what is something you hope our friendship inspires in people who watch us interact?",
+        "category": "VALUES",
+        "depth": 4,
+        "relationshipTypes": [
+            "FRIEND"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": true,
+        "status": "APPROVED",
+        "hint": "Take your time. A deep question invites a mindful breath."
+    },
+    {
+        "id": "exp-new-253",
+        "text": "What is an underrated life luxury that brings you disproportionate joy?",
+        "category": "HABITS",
+        "depth": 1,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-254",
+        "text": "Looking back at this past year, what is an underrated life luxury that brings you disproportionate joy?",
+        "category": "HABITS",
+        "depth": 1,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-255",
+        "text": "In your most authentic moments, what is an underrated life luxury that brings you disproportionate joy?",
+        "category": "HABITS",
+        "depth": 1,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-256",
+        "text": "If you were being completely honest with yourself right now, what is an underrated life luxury that brings you disproportionate joy?",
+        "category": "HABITS",
+        "depth": 1,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-257",
+        "text": "What is a skill you have that is completely useless in modern society but fun anyway?",
+        "category": "PLAYFUL",
+        "depth": 1,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-258",
+        "text": "Looking back at this past year, what is a skill you have that is completely useless in modern society but fun anyway?",
+        "category": "PLAYFUL",
+        "depth": 1,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-259",
+        "text": "In your most authentic moments, what is a skill you have that is completely useless in modern society but fun anyway?",
+        "category": "PLAYFUL",
+        "depth": 1,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-260",
+        "text": "If you were being completely honest with yourself right now, what is a skill you have that is completely useless in modern society but fun anyway?",
+        "category": "PLAYFUL",
+        "depth": 1,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-261",
+        "text": "What is a documentary or story that made you think about the human condition differently?",
+        "category": "VALUES",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-262",
+        "text": "Looking back at this past year, what is a documentary or story that made you think about the human condition differently?",
+        "category": "VALUES",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-263",
+        "text": "In your most authentic moments, what is a documentary or story that made you think about the human condition differently?",
+        "category": "VALUES",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-264",
+        "text": "If you were being completely honest with yourself right now, what is a documentary or story that made you think about the human condition differently?",
+        "category": "VALUES",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-265",
+        "text": "What is a childhood dream you had that still lives somewhere in your subconscious?",
+        "category": "DREAMS",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-266",
+        "text": "Looking back at this past year, what is a childhood dream you had that still lives somewhere in your subconscious?",
+        "category": "DREAMS",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-267",
+        "text": "In your most authentic moments, what is a childhood dream you had that still lives somewhere in your subconscious?",
+        "category": "DREAMS",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-268",
+        "text": "If you were being completely honest with yourself right now, what is a childhood dream you had that still lives somewhere in your subconscious?",
+        "category": "DREAMS",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-269",
+        "text": "What is a community or subculture you find fascinating even if you're not part of it?",
+        "category": "IDENTITY",
+        "depth": 1,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-270",
+        "text": "Looking back at this past year, what is a community or subculture you find fascinating even if you're not part of it?",
+        "category": "IDENTITY",
+        "depth": 1,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-271",
+        "text": "In your most authentic moments, what is a community or subculture you find fascinating even if you're not part of it?",
+        "category": "IDENTITY",
+        "depth": 1,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-272",
+        "text": "If you were being completely honest with yourself right now, what is a community or subculture you find fascinating even if you're not part of it?",
+        "category": "IDENTITY",
+        "depth": 1,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-273",
+        "text": "What is a quality that makes a conversation truly memorable for you?",
+        "category": "CONNECTION",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-274",
+        "text": "Looking back at this past year, what is a quality that makes a conversation truly memorable for you?",
+        "category": "CONNECTION",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-275",
+        "text": "In your most authentic moments, what is a quality that makes a conversation truly memorable for you?",
+        "category": "CONNECTION",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-276",
+        "text": "If you were being completely honest with yourself right now, what is a quality that makes a conversation truly memorable for you?",
+        "category": "CONNECTION",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-277",
+        "text": "What is something you do to stay grounded when the world feels overwhelmingly noisy?",
+        "category": "HABITS",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-278",
+        "text": "Looking back at this past year, what is something you do to stay grounded when the world feels overwhelmingly noisy?",
+        "category": "HABITS",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-279",
+        "text": "In your most authentic moments, what is something you do to stay grounded when the world feels overwhelmingly noisy?",
+        "category": "HABITS",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-280",
+        "text": "If you were being completely honest with yourself right now, what is something you do to stay grounded when the world feels overwhelmingly noisy?",
+        "category": "HABITS",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-281",
+        "text": "What was the best piece of constructive criticism you've ever received?",
+        "category": "IDENTITY",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-282",
+        "text": "Looking back at this past year, what was the best piece of constructive criticism you've ever received?",
+        "category": "IDENTITY",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-283",
+        "text": "In your most authentic moments, what was the best piece of constructive criticism you've ever received?",
+        "category": "IDENTITY",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-284",
+        "text": "If you were being completely honest with yourself right now, what was the best piece of constructive criticism you've ever received?",
+        "category": "IDENTITY",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-285",
+        "text": "What is an everyday ritual that you protect with fierce dedication?",
+        "category": "HABITS",
+        "depth": 1,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-286",
+        "text": "Looking back at this past year, what is an everyday ritual that you protect with fierce dedication?",
+        "category": "HABITS",
+        "depth": 1,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-287",
+        "text": "In your most authentic moments, what is an everyday ritual that you protect with fierce dedication?",
+        "category": "HABITS",
+        "depth": 1,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-288",
+        "text": "If you were being completely honest with yourself right now, what is an everyday ritual that you protect with fierce dedication?",
+        "category": "HABITS",
+        "depth": 1,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-289",
+        "text": "What is an opinion you hold that is uncommon among your peers?",
+        "category": "VALUES",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-290",
+        "text": "Looking back at this past year, what is an opinion you hold that is uncommon among your peers?",
+        "category": "VALUES",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-291",
+        "text": "In your most authentic moments, what is an opinion you hold that is uncommon among your peers?",
+        "category": "VALUES",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-292",
+        "text": "If you were being completely honest with yourself right now, what is an opinion you hold that is uncommon among your peers?",
+        "category": "VALUES",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-293",
+        "text": "What is a story about yourself that gives people the quickest window into who you are?",
+        "category": "IDENTITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-294",
+        "text": "Looking back at this past year, what is a story about yourself that gives people the quickest window into who you are?",
+        "category": "IDENTITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-295",
+        "text": "In your most authentic moments, what is a story about yourself that gives people the quickest window into who you are?",
+        "category": "IDENTITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-296",
+        "text": "If you were being completely honest with yourself right now, what is a story about yourself that gives people the quickest window into who you are?",
+        "category": "IDENTITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-297",
+        "text": "What is a quality you admire in creative people that you strive to cultivate?",
+        "category": "VALUES",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-298",
+        "text": "Looking back at this past year, what is a quality you admire in creative people that you strive to cultivate?",
+        "category": "VALUES",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-299",
+        "text": "In your most authentic moments, what is a quality you admire in creative people that you strive to cultivate?",
+        "category": "VALUES",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-300",
+        "text": "If you were being completely honest with yourself right now, what is a quality you admire in creative people that you strive to cultivate?",
+        "category": "VALUES",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-301",
+        "text": "What is a place you've traveled to that felt like stepping into another era of time?",
+        "category": "MEMORIES",
+        "depth": 1,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-302",
+        "text": "Looking back at this past year, what is a place you've traveled to that felt like stepping into another era of time?",
+        "category": "MEMORIES",
+        "depth": 1,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-303",
+        "text": "In your most authentic moments, what is a place you've traveled to that felt like stepping into another era of time?",
+        "category": "MEMORIES",
+        "depth": 1,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-304",
+        "text": "If you were being completely honest with yourself right now, what is a place you've traveled to that felt like stepping into another era of time?",
+        "category": "MEMORIES",
+        "depth": 1,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-305",
+        "text": "What is a question you wish people asked more often when making new acquaintances?",
+        "category": "CONNECTION",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-306",
+        "text": "Looking back at this past year, what is a question you wish people asked more often when making new acquaintances?",
+        "category": "CONNECTION",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-307",
+        "text": "In your most authentic moments, what is a question you wish people asked more often when making new acquaintances?",
+        "category": "CONNECTION",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-308",
+        "text": "If you were being completely honest with yourself right now, what is a question you wish people asked more often when making new acquaintances?",
+        "category": "CONNECTION",
+        "depth": 2,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-309",
+        "text": "What is an achievement you worked for that felt completely different than you anticipated?",
+        "category": "IDENTITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-310",
+        "text": "Looking back at this past year, what is an achievement you worked for that felt completely different than you anticipated?",
+        "category": "IDENTITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-311",
+        "text": "In your most authentic moments, what is an achievement you worked for that felt completely different than you anticipated?",
+        "category": "IDENTITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
+    },
+    {
+        "id": "exp-new-312",
+        "text": "If you were being completely honest with yourself right now, what is an achievement you worked for that felt completely different than you anticipated?",
+        "category": "IDENTITY",
+        "depth": 3,
+        "relationshipTypes": [
+            "JUST_MET"
+        ],
+        "followUps": [
+            "What made you think of that?",
+            "How does it feel to share it?"
+        ],
+        "needsHandshake": false,
+        "status": "APPROVED",
+        "hint": "Speak from your honest experience."
     }
 ]

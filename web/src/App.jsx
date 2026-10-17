@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Feather, Flame, ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
+import { Feather, Flame, ChevronLeft, ChevronRight, ArrowRight, SkipForward } from 'lucide-react';
 import Header from './components/Header';
 import LobbyScreen from './components/LobbyScreen';
 import QuestionCard from './components/QuestionCard';
@@ -42,6 +42,11 @@ export default function App() {
   const [bookmarkedMoments, setBookmarkedMoments] = useState([]);
   const [floatingReactions, setFloatingReactions] = useState([]);
   const [swipeClass, setSwipeClass] = useState('');
+
+  // Wildcard and Appreciation States
+  const [activeWildcardPrompt, setActiveWildcardPrompt] = useState(null);
+  const [myAppreciationNote, setMyAppreciationNote] = useState('');
+  const [peerAppreciationNote, setPeerAppreciationNote] = useState('');
 
   // Presence Touch Ripples
   const [touchRipples, setTouchRipples] = useState([]);
@@ -192,11 +197,22 @@ export default function App() {
       setSwipeClass(isNext ? 'swipe-out-left' : 'swipe-out-right');
       setTimeout(() => {
         setCurrentIndex(incoming.currentIndex);
+        setActiveWildcardPrompt(null);
         setSwipeClass(isNext ? 'swipe-in-right' : 'swipe-in-left');
         playChimeSound();
         setBlindState({ myAnswer: '', peerAnswer: '', mySubmitted: false, peerSubmitted: false });
         setTimeout(() => setSwipeClass(''), 360);
       }, 230);
+    }
+
+    if (incoming.wildcardPrompt !== undefined) {
+      setActiveWildcardPrompt(incoming.wildcardPrompt);
+    }
+
+    if (incoming.appreciationNote !== undefined) {
+      if (incoming.appreciationSender !== (stateRef.current.isHost ? 'host' : 'guest')) {
+        setPeerAppreciationNote(incoming.appreciationNote);
+      }
     }
 
     if (incoming.currentTurn !== undefined) {
@@ -430,13 +446,15 @@ export default function App() {
       const nextTurn = currentTurn === 'host' ? 'guest' : 'host';
       setCurrentIndex(nextIdx);
       setCurrentTurn(nextTurn);
+      setActiveWildcardPrompt(null);
       setBlindState({ myAnswer: '', peerAnswer: '', mySubmitted: false, peerSubmitted: false });
       setSwipeClass('swipe-in-right');
 
       if (!isSolo) {
         multiplayerSync.syncState({
           currentIndex: nextIdx,
-          currentTurn: nextTurn
+          currentTurn: nextTurn,
+          wildcardPrompt: null
         });
       }
 
@@ -444,6 +462,67 @@ export default function App() {
         setSwipeClass('');
       }, 360);
     }, 230);
+  };
+
+  // Skip Question (Smoothly pass question with state sync)
+  const handleSkipQuestion = () => {
+    playClickSound();
+    const nextIdx = currentIndex + 1;
+
+    if (nextIdx >= questions.length) {
+      setScreen('CLOSING');
+      if (!isSolo) {
+        multiplayerSync.syncState({ screen: 'CLOSING' });
+      }
+      return;
+    }
+
+    const nextQ = questions[nextIdx];
+    if (!isSolo && nextQ && nextQ.depth >= 4 && !handshakeOpen) {
+      setPendingTargetIndex(nextIdx);
+      setHandshakeOpen(true);
+      setMyReady(false);
+      setPeerReady(false);
+      multiplayerSync.syncState({
+        handshakeAction: 'OPEN',
+        targetIndex: nextIdx
+      });
+      return;
+    }
+
+    setSwipeClass('swipe-out-left');
+    setTimeout(() => {
+      playChimeSound();
+      const nextTurn = currentTurn === 'host' ? 'guest' : 'host';
+      setCurrentIndex(nextIdx);
+      setCurrentTurn(nextTurn);
+      setActiveWildcardPrompt(null);
+      setBlindState({ myAnswer: '', peerAnswer: '', mySubmitted: false, peerSubmitted: false });
+      setSwipeClass('swipe-in-right');
+
+      if (!isSolo) {
+        multiplayerSync.syncState({
+          currentIndex: nextIdx,
+          currentTurn: nextTurn,
+          wildcardPrompt: null
+        });
+      }
+
+      setTimeout(() => {
+        setSwipeClass('');
+      }, 360);
+    }, 230);
+  };
+
+  // Send Appreciation Note
+  const handleSendAppreciationNote = (noteText) => {
+    setMyAppreciationNote(noteText);
+    if (!isSolo) {
+      multiplayerSync.syncState({
+        appreciationNote: noteText,
+        appreciationSender: isHost ? 'host' : 'guest'
+      });
+    }
   };
 
   // Previous Card
@@ -455,10 +534,11 @@ export default function App() {
     setTimeout(() => {
       const prevIdx = currentIndex - 1;
       setCurrentIndex(prevIdx);
+      setActiveWildcardPrompt(null);
       setBlindState({ myAnswer: '', peerAnswer: '', mySubmitted: false, peerSubmitted: false });
       setSwipeClass('swipe-in-left');
       if (!isSolo) {
-        multiplayerSync.syncState({ currentIndex: prevIdx });
+        multiplayerSync.syncState({ currentIndex: prevIdx, wildcardPrompt: null });
       }
 
       setTimeout(() => {
@@ -785,6 +865,14 @@ export default function App() {
                 isSolo={isSolo}
                 hostName={hostName}
                 guestName={guestName}
+                wildcardPrompt={activeWildcardPrompt}
+                onSelectWildcardPrompt={(prompt) => {
+                  setActiveWildcardPrompt(prompt);
+                  if (!isSolo) {
+                    multiplayerSync.syncState({ wildcardPrompt: prompt });
+                  }
+                }}
+                onSkipQuestion={handleSkipQuestion}
               />
             </div>
 
@@ -793,8 +881,9 @@ export default function App() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              gap: '10px',
-              width: '100%'
+              gap: '8px',
+              width: '100%',
+              flexWrap: 'wrap'
             }}>
               {/* Back button */}
               <button
@@ -812,11 +901,11 @@ export default function App() {
               </button>
 
               {/* Lighter / Deeper Quick Swappers */}
-              <div style={{ display: 'flex', gap: '8px' }}>
+              <div style={{ display: 'flex', gap: '6px' }}>
                 <button
                   onClick={() => handleSwap('LIGHTER')}
                   className="btn-secondary"
-                  style={{ padding: '8px 14px', fontSize: '13px', gap: '6px' }}
+                  style={{ padding: '8px 12px', fontSize: '13px', gap: '5px' }}
                   title="Swap for an easier question"
                 >
                   <Feather size={14} strokeWidth={2.4} color="var(--color-sage)" />
@@ -826,7 +915,7 @@ export default function App() {
                 <button
                   onClick={() => handleSwap('DEEPER')}
                   className="btn-secondary"
-                  style={{ padding: '8px 14px', fontSize: '13px', gap: '6px' }}
+                  style={{ padding: '8px 12px', fontSize: '13px', gap: '5px' }}
                   title="Swap for a deeper question"
                 >
                   <Flame size={14} strokeWidth={2.4} color="var(--color-ember)" />
@@ -834,15 +923,35 @@ export default function App() {
                 </button>
               </div>
 
-              {/* Next button */}
-              <button
-                onClick={handleAdvanceCard}
-                className="btn-primary"
-                style={{ padding: '10px 22px', fontSize: '14px', gap: '8px' }}
-              >
-                <span>{currentIndex === questions.length - 1 ? 'Complete' : 'Next'}</span>
-                <ChevronRight size={18} strokeWidth={2.4} />
-              </button>
+              {/* Right Action Buttons: Skip & Next */}
+              <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                {/* Skip button */}
+                <button
+                  onClick={handleSkipQuestion}
+                  className="btn-secondary"
+                  style={{
+                    padding: '8px 12px',
+                    fontSize: '13px',
+                    gap: '5px',
+                    color: 'var(--color-muted)'
+                  }}
+                  title="Skip this question"
+                  aria-label="Skip question"
+                >
+                  <SkipForward size={14} strokeWidth={2.2} />
+                  <span>Skip</span>
+                </button>
+
+                {/* Next button */}
+                <button
+                  onClick={handleAdvanceCard}
+                  className="btn-primary"
+                  style={{ padding: '10px 20px', fontSize: '14px', gap: '6px' }}
+                >
+                  <span>{currentIndex === questions.length - 1 ? 'Complete' : 'Next'}</span>
+                  <ChevronRight size={18} strokeWidth={2.4} />
+                </button>
+              </div>
             </div>
 
             {/* Floating Live Reaction Bar */}
@@ -861,6 +970,12 @@ export default function App() {
             hostName={hostName}
             guestName={guestName}
             peerName={isHost ? guestName : hostName}
+            myName={isHost ? hostName : guestName}
+            isHost={isHost}
+            isSolo={isSolo}
+            myAppreciationNote={myAppreciationNote}
+            peerAppreciationNote={peerAppreciationNote}
+            onSendAppreciationNote={handleSendAppreciationNote}
             onStartNew={() => {
               const newDeck = buildSession(relationshipType, sessionLength);
               setQuestions(newDeck);
@@ -868,6 +983,9 @@ export default function App() {
               setCurrentTurn('host');
               setBookmarkedMoments([]);
               setBlindState({ myAnswer: '', peerAnswer: '', mySubmitted: false, peerSubmitted: false });
+              setActiveWildcardPrompt(null);
+              setMyAppreciationNote('');
+              setPeerAppreciationNote('');
               setScreen('SESSION');
               if (!isSolo) {
                 multiplayerSync.syncState({
@@ -877,7 +995,9 @@ export default function App() {
                   currentTurn: 'host',
                   bookmarkedMoments: [],
                   hostName,
-                  guestName
+                  guestName,
+                  wildcardPrompt: null,
+                  appreciationNote: ''
                 });
               }
             }}
