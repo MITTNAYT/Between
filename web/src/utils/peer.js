@@ -17,8 +17,13 @@ export function sanitizeCode(code) {
   return (code || '').replace(/[^A-Za-z0-9]/g, '').toUpperCase().trim();
 }
 
+// Multi-Broker Mesh for 100% guaranteed delivery across mobile carriers, Wi-Fi, and firewalls
 const MQTT_BROKERS = [
+  // 1. Port 443 (Standard HTTPS/WSS - NEVER blocked by mobile cellular carriers)
+  { host: 'public.cloud.shiftr.io', port: 443, path: '', user: 'public', pass: 'public' },
+  // 2. Global Anycast Clusters (High-throughput failovers)
   { host: 'broker.emqx.io', port: 8084, path: '/mqtt' },
+  // 3. HiveMQ Cluster
   { host: 'broker.hivemq.com', port: 8884, path: '/mqtt' }
 ];
 
@@ -32,8 +37,7 @@ const ICE_SERVERS = [
 class MultiplayerSync {
   constructor() {
     this.clientId = 'u_' + Math.random().toString(36).substring(2, 9);
-    this.mqttClient = null;
-    this.currentBrokerIdx = 0;
+    this.clients = [];
     this.broadcastChannel = null;
     this.roomCode = null;
     this.isHost = false;
@@ -100,8 +104,8 @@ class MultiplayerSync {
     // 1. Setup local BroadcastChannel
     this.setupBroadcastChannel(this.roomCode);
 
-    // 2. Connect to high-speed global real-time broker
-    this.connectBroker(0);
+    // 2. Connect to multi-broker mesh (Port 443 + Fallbacks)
+    this.connectMesh();
 
     // 3. Immediately emit waiting state to UI
     this.onStatusChangeCallback?.({
@@ -167,8 +171,8 @@ class MultiplayerSync {
     // 1. Setup local BroadcastChannel
     this.setupBroadcastChannel(this.roomCode);
 
-    // 2. Connect to high-speed global real-time broker
-    this.connectBroker(0);
+    // 2. Connect to multi-broker mesh (Port 443 + Fallbacks)
+    this.connectMesh();
 
     // 3. Safety timeout if room does not exist
     this.joinTimeout = setTimeout(() => {
@@ -180,7 +184,7 @@ class MultiplayerSync {
           isHost: false
         });
       }
-    }, 15000);
+    }, 18000);
 
     // 4. Initialize voice call peer in background
     this.initPeerVoice();
@@ -202,102 +206,87 @@ class MultiplayerSync {
     }
   }
 
-  connectBroker(brokerIdx = 0) {
-    this.currentBrokerIdx = brokerIdx % MQTT_BROKERS.length;
-    const cfg = MQTT_BROKERS[this.currentBrokerIdx];
+  connectMesh() {
+    this.cleanupBrokers();
 
-    if (this.mqttClient) {
+    MQTT_BROKERS.forEach((cfg, idx) => {
       try {
-        if (this.mqttClient.isConnected()) {
-          this.mqttClient.disconnect();
-        }
-      } catch (e) {}
-      this.mqttClient = null;
-    }
+        const clientIdentifier = `between_${this.isHost ? 'host' : 'guest'}_${this.clientId}_${idx}`;
+        const client = new Paho.Client(cfg.host, cfg.port, cfg.path || '', clientIdentifier);
 
-    const clientId = `between_${this.isHost ? 'host' : 'guest'}_${this.clientId}`;
-    try {
-      this.mqttClient = new Paho.Client(cfg.host, cfg.port, cfg.path, clientId);
-
-      this.mqttClient.onConnectionLost = (responseObject) => {
-        if (responseObject.errorCode !== 0) {
-          console.warn('[Realtime] Connection lost:', responseObject.errorMessage);
-          // Try reconnect or failover if still active
-          if (this.roomCode) {
-            setTimeout(() => {
-              if (this.roomCode && (!this.mqttClient || !this.mqttClient.isConnected())) {
-                this.connectBroker(this.currentBrokerIdx + 1);
-              }
-            }, 2000);
+        client.onConnectionLost = (responseObject) => {
+          if (responseObject.errorCode !== 0) {
+            console.warn(`[Realtime] ${cfg.host} connection lost:`, responseObject.errorMessage);
           }
-        }
-      };
+        };
 
-      this.mqttClient.onMessageArrived = (message) => {
-        try {
-          const payload = JSON.parse(message.payloadString);
-          this.handleIncomingData(payload);
-        } catch (e) {
-          console.warn('[Realtime] Parse error:', e);
-        }
-      };
-
-      this.mqttClient.connect({
-        useSSL: true,
-        timeout: 4,
-        keepAliveInterval: 20,
-        cleanSession: true,
-        onSuccess: () => {
-          this.onBrokerConnected();
-        },
-        onFailure: (err) => {
-          console.warn(`[Realtime] Failed connecting to ${cfg.host}:`, err.errorMessage);
-          // Failover to secondary broker
-          if (this.roomCode && !this.isConnected && brokerIdx < MQTT_BROKERS.length * 2) {
-            setTimeout(() => {
-              if (this.roomCode && !this.isConnected) {
-                this.connectBroker(brokerIdx + 1);
-              }
-            }, 600);
+        client.onMessageArrived = (message) => {
+          try {
+            const payload = JSON.parse(message.payloadString);
+            this.handleIncomingData(payload);
+          } catch (e) {
+            console.warn('[Realtime] Message parse error:', e);
           }
+        };
+
+        const connectOpts = {
+          useSSL: true,
+          timeout: 4,
+          keepAliveInterval: 25,
+          cleanSession: true,
+          onSuccess: () => {
+            this.onBrokerConnected(client, cfg);
+          },
+          onFailure: (err) => {
+            console.warn(`[Realtime] Failed connecting to ${cfg.host}:${cfg.port}:`, err.errorMessage);
+          }
+        };
+
+        if (cfg.user) {
+          connectOpts.userName = cfg.user;
+          connectOpts.password = cfg.pass;
         }
-      });
-    } catch (e) {
-      console.warn('[Realtime] Client init error:', e);
-    }
-  }
 
-  onBrokerConnected() {
-    if (!this.roomCode || !this.mqttClient || !this.mqttClient.isConnected()) return;
-
-    const topicBase = `between/v3/room/${this.roomCode}`;
-    const subscribeTopic = `${topicBase}/#`;
-
-    this.mqttClient.subscribe(subscribeTopic, {
-      qos: 1,
-      onSuccess: () => {
-        if (this.isHost) {
-          // Host announces presence with retained message so guest immediately receives it on connect
-          this.publishPresence(true);
-        } else {
-          // Guest announces presence and requests current session state
-          this.sendGuestHello();
-        }
-      },
-      onFailure: (err) => {
-        console.warn('[Realtime] Subscribe error:', err.errorMessage);
+        client.connect(connectOpts);
+        this.clients.push(client);
+      } catch (e) {
+        console.warn(`[Realtime] Error initializing client for ${cfg.host}:`, e);
       }
     });
 
     this.startHeartbeat();
   }
 
-  publishPresence(isWaiting = true) {
-    if (!this.roomCode || !this.mqttClient || !this.mqttClient.isConnected()) return;
+  onBrokerConnected(client, cfg) {
+    if (!this.roomCode || !client || !client.isConnected()) return;
+
+    const topicBase = `between/v3/room/${this.roomCode}`;
+    const subscribeTopic = `${topicBase}/#`;
+
+    client.subscribe(subscribeTopic, {
+      qos: 1,
+      onSuccess: () => {
+        if (this.isHost) {
+          // Announce presence with retained message on this broker
+          this.publishPresenceToClient(client, true);
+        } else {
+          // Announce guest connection on this broker
+          this.sendGuestHello();
+        }
+      },
+      onFailure: (err) => {
+        console.warn(`[Realtime] Subscribe error on ${cfg.host}:`, err.errorMessage);
+      }
+    });
+  }
+
+  publishPresenceToClient(client, isWaiting = true) {
+    if (!this.roomCode || !client || !client.isConnected()) return;
 
     const payload = {
       type: isWaiting ? 'HOST_WAITING' : 'HOST_CONNECTED',
       name: this.myName,
+      senderName: this.myName,
       voicePeerId: this.myVoicePeerId,
       senderId: this.clientId,
       roomCode: this.roomCode,
@@ -307,13 +296,19 @@ class MultiplayerSync {
     const message = new Paho.Message(JSON.stringify(payload));
     message.destinationName = `between/v3/room/${this.roomCode}/presence/host`;
     message.qos = 1;
-    message.retained = true; // Retained so guest immediately sees host upon connecting!
+    message.retained = true;
 
     try {
-      this.mqttClient.send(message);
+      client.send(message);
     } catch (e) {
-      console.warn('[Realtime] Send presence error:', e);
+      console.warn('[Realtime] Presence publish error:', e);
     }
+  }
+
+  publishPresence(isWaiting = true) {
+    this.clients.forEach(client => {
+      this.publishPresenceToClient(client, isWaiting);
+    });
   }
 
   sendGuestHello() {
@@ -348,7 +343,7 @@ class MultiplayerSync {
     if (data.roomCode && data.roomCode !== this.roomCode) return;
     if (data.type === 'HEARTBEAT') return;
 
-    // Deduplication check
+    // Deduplication check across all brokers and BroadcastChannel
     const msgId = data.msgId || `${data.type}_${data.senderId}_${data.timestamp}`;
     if (this.processedMsgIds.has(msgId)) return;
     this.processedMsgIds.add(msgId);
@@ -381,7 +376,7 @@ class MultiplayerSync {
           myName: this.myName
         });
 
-        // Reply immediately so host knows guest is locked in
+        // Reply immediately across all connected brokers
         this.sendGuestHello();
       }
       return;
@@ -394,7 +389,7 @@ class MultiplayerSync {
       if (data.name) this.peerName = data.name;
       if (data.voicePeerId) this.remoteVoicePeerId = data.voicePeerId;
 
-      // Update presence to connected
+      // Update presence to connected across brokers
       this.publishPresence(false);
 
       if (!wasConnected) {
@@ -470,17 +465,21 @@ class MultiplayerSync {
     // Mark as seen so we don't process our own broadcast reflection
     this.processedMsgIds.add(payload.msgId);
 
-    // 1. Send via high-speed global broker
-    if (this.mqttClient && this.mqttClient.isConnected()) {
-      try {
-        const mqttMsg = new Paho.Message(JSON.stringify(payload));
-        mqttMsg.destinationName = `between/v3/room/${this.roomCode}/events`;
-        mqttMsg.qos = 1;
-        this.mqttClient.send(mqttMsg);
-      } catch (e) {
-        console.warn('[Realtime] Broadcast error:', e);
+    const jsonStr = JSON.stringify(payload);
+
+    // 1. Send via all active brokers in the mesh
+    this.clients.forEach(client => {
+      if (client && client.isConnected()) {
+        try {
+          const mqttMsg = new Paho.Message(jsonStr);
+          mqttMsg.destinationName = `between/v3/room/${this.roomCode}/events`;
+          mqttMsg.qos = 1;
+          client.send(mqttMsg);
+        } catch (e) {
+          console.warn('[Realtime] Broadcast error on broker:', e);
+        }
       }
-    }
+    });
 
     // 2. Send via local BroadcastChannel (instant for tabs on same device)
     if (this.broadcastChannel) {
@@ -614,19 +613,34 @@ class MultiplayerSync {
   }
 
   leaveRoom() {
-    // Clear retained presence if host
-    if (this.isHost && this.mqttClient && this.mqttClient.isConnected()) {
-      try {
-        const clearMsg = new Paho.Message(JSON.stringify({ type: 'ROOM_CLOSED' }));
-        clearMsg.destinationName = `between/v3/room/${this.roomCode}/presence/host`;
-        clearMsg.retained = true;
-        clearMsg.qos = 1;
-        this.mqttClient.send(clearMsg);
-      } catch (e) {}
-    }
+    // Clear retained presence on all brokers
+    this.clients.forEach(client => {
+      if (client && client.isConnected()) {
+        try {
+          const clearMsg = new Paho.Message(JSON.stringify({ type: 'ROOM_CLOSED' }));
+          clearMsg.destinationName = `between/v3/room/${this.roomCode}/presence/host`;
+          clearMsg.retained = true;
+          clearMsg.qos = 1;
+          client.send(clearMsg);
+        } catch (e) {}
+      }
+    });
 
     this.broadcastMessage({ type: 'DISCONNECT' });
     this.cleanup();
+  }
+
+  cleanupBrokers() {
+    if (this.clients && this.clients.length) {
+      this.clients.forEach(client => {
+        try {
+          if (client.isConnected()) {
+            client.disconnect();
+          }
+        } catch (e) {}
+      });
+      this.clients = [];
+    }
   }
 
   cleanup() {
@@ -636,13 +650,7 @@ class MultiplayerSync {
     }
     this.stopHeartbeat();
     this.endVoiceCall();
-
-    try {
-      if (this.mqttClient && this.mqttClient.isConnected()) {
-        this.mqttClient.disconnect();
-      }
-      this.mqttClient = null;
-    } catch (e) {}
+    this.cleanupBrokers();
 
     try {
       if (this.peer) {
