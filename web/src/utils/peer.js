@@ -1,8 +1,25 @@
+import { createClient } from '@supabase/supabase-js';
 import PeerPkg from 'peerjs';
-import PahoPkg from 'paho-mqtt';
 
 const Peer = PeerPkg?.Peer || PeerPkg?.default?.Peer || PeerPkg?.default || PeerPkg;
-const Paho = PahoPkg?.default || PahoPkg;
+
+export const SUPABASE_URL = 
+  (typeof import.meta !== 'undefined' && import.meta.env && (import.meta.env.VITE_SUPABASE_URL || import.meta.env.NEXT_PUBLIC_SUPABASE_URL || import.meta.env.SUPABASE_URL)) ||
+  'https://eqbciwyqkqiyygwseijq.supabase.co';
+
+export const SUPABASE_ANON_KEY = 
+  (typeof import.meta !== 'undefined' && import.meta.env && (import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || import.meta.env.SUPABASE_ANON_KEY || import.meta.env.SUPABASE_PUBLISHABLE_KEY)) ||
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVxYmNpd3lxa3FpeXlnd3NlaWpxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyMTYxMzIsImV4cCI6MjEwNzc5MjEzMn0.z-V53hEY5HLrORR0xqqhIsDwsLuB_7-kd2M7dbCXIiA';
+
+export function createSupabaseClient() {
+  return createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    realtime: {
+      params: {
+        eventsPerSecond: 40
+      }
+    }
+  });
+}
 
 export function generateRandomCode(length = 5) {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -17,16 +34,6 @@ export function sanitizeCode(code) {
   return (code || '').replace(/[^A-Za-z0-9]/g, '').toUpperCase().trim();
 }
 
-// Multi-Broker Mesh for 100% guaranteed delivery across mobile carriers, Wi-Fi, and firewalls
-const MQTT_BROKERS = [
-  // 1. Port 443 (Standard HTTPS/WSS - NEVER blocked by mobile cellular carriers)
-  { host: 'public.cloud.shiftr.io', port: 443, path: '', user: 'public', pass: 'public' },
-  // 2. Global Anycast Clusters (High-throughput failovers)
-  { host: 'broker.emqx.io', port: 8084, path: '/mqtt' },
-  // 3. HiveMQ Cluster
-  { host: 'broker.hivemq.com', port: 8884, path: '/mqtt' }
-];
-
 const ICE_SERVERS = [
   { urls: 'stun:stun.l.google.com:19302' },
   { urls: 'stun:stun1.l.google.com:19302' },
@@ -37,7 +44,8 @@ const ICE_SERVERS = [
 class MultiplayerSync {
   constructor() {
     this.clientId = 'u_' + Math.random().toString(36).substring(2, 9);
-    this.clients = [];
+    this.supabase = createSupabaseClient();
+    this.channel = null;
     this.broadcastChannel = null;
     this.roomCode = null;
     this.isHost = false;
@@ -45,7 +53,8 @@ class MultiplayerSync {
     this.peerName = 'Partner 2';
     this.isConnected = false;
     this.joinTimeout = null;
-    this.heartbeatTimer = null;
+    this.handshakeInterval = null;
+    this.lifecycleSetup = false;
     this.processedMsgIds = new Set();
 
     // Callbacks
@@ -56,14 +65,60 @@ class MultiplayerSync {
     this.onRequestStateCallback = null;
     this.onCallStreamCallback = null;
     this.onCallStateCallback = null;
+    this.onIncomingCallCallback = null;
+    this.onHoldTouchCallback = null;
+    this.onCustomQuestionCallback = null;
 
-    // Optional PeerJS Voice Call
-    this.peer = null;
-    this.mediaCall = null;
+    // WebRTC Native Voice Call
+    this.rtcPeerConnection = null;
     this.localStream = null;
     this.isMuted = false;
-    this.myVoicePeerId = null;
-    this.remoteVoicePeerId = null;
+    this.pendingIceCandidates = [];
+
+    this.setupLifecycleListeners();
+  }
+
+  setupLifecycleListeners() {
+    if (typeof window === 'undefined' || this.lifecycleSetup) return;
+    this.lifecycleSetup = true;
+
+    const handleWakeup = () => {
+      if (typeof document !== 'undefined' && (document.visibilityState === 'visible' || !document.hidden)) {
+        console.log('[MultiplayerSync] Tab active / wake up detected');
+        if (this.roomCode && !this.isConnected) {
+          try {
+            this.supabase.realtime.connect();
+          } catch (e) {}
+          this.pulseHandshake();
+        }
+      }
+    };
+
+    if (typeof document !== 'undefined') {
+      document.addEventListener('visibilitychange', handleWakeup);
+    }
+    window.addEventListener('focus', handleWakeup);
+    window.addEventListener('pageshow', handleWakeup);
+    window.addEventListener('online', handleWakeup);
+  }
+
+  pulseHandshake() {
+    if (!this.roomCode) return;
+    if (this.isHost) {
+      this.broadcastMessage({
+        type: 'HOST_BEACON',
+        name: this.myName,
+        voicePeerId: this.myVoicePeerId,
+        isHost: true
+      });
+    } else {
+      this.broadcastMessage({
+        type: 'GUEST_PING',
+        name: this.myName,
+        voicePeerId: this.myVoicePeerId,
+        isHost: false
+      });
+    }
   }
 
   generateRoomCode(length = 5) {
@@ -97,6 +152,9 @@ class MultiplayerSync {
     this.onTouchRippleCallback = onTouchRipple;
     this.onCallStreamCallback = onCallStream;
     this.onCallStateCallback = onCallState;
+    this.onIncomingCallCallback = opts.onIncomingCall || null;
+    this.onHoldTouchCallback = opts.onHoldTouch || null;
+    this.onCustomQuestionCallback = opts.onCustomQuestion || null;
     this.onRequestStateCallback = opts.onRequestState || null;
 
     this.roomCode = sanitizeCode(opts.roomCode || this.generateRoomCode());
@@ -104,8 +162,8 @@ class MultiplayerSync {
     // 1. Setup local BroadcastChannel
     this.setupBroadcastChannel(this.roomCode);
 
-    // 2. Connect to multi-broker mesh (Port 443 + Fallbacks)
-    this.connectMesh();
+    // 2. Setup Supabase Realtime channel
+    this.setupSupabaseChannel();
 
     // 3. Immediately emit waiting state to UI
     this.onStatusChangeCallback?.({
@@ -115,8 +173,13 @@ class MultiplayerSync {
       myName: this.myName
     });
 
-    // 4. Initialize voice call peer in background
-    this.initPeerVoice();
+    // 4. Start active presence beacon (every 1.4s until guest arrives)
+    this.pulseHandshake();
+    this.handshakeInterval = setInterval(() => {
+      if (!this.isConnected && this.roomCode) {
+        this.pulseHandshake();
+      }
+    }, 1400);
 
     return this.roomCode;
   }
@@ -151,6 +214,9 @@ class MultiplayerSync {
     this.onTouchRippleCallback = onTouchRipple;
     this.onCallStreamCallback = onCallStream;
     this.onCallStateCallback = onCallState;
+    this.onIncomingCallCallback = opts.onIncomingCall || null;
+    this.onHoldTouchCallback = opts.onHoldTouch || null;
+    this.onCustomQuestionCallback = opts.onCustomQuestion || null;
 
     if (!this.roomCode || this.roomCode.length < 3) {
       this.onStatusChangeCallback?.({
@@ -171,10 +237,18 @@ class MultiplayerSync {
     // 1. Setup local BroadcastChannel
     this.setupBroadcastChannel(this.roomCode);
 
-    // 2. Connect to multi-broker mesh (Port 443 + Fallbacks)
-    this.connectMesh();
+    // 2. Setup Supabase Realtime channel
+    this.setupSupabaseChannel();
 
-    // 3. Safety timeout if room does not exist
+    // 3. Continuous Handshake Ping (every 1.2s until connected)
+    this.pulseHandshake();
+    this.handshakeInterval = setInterval(() => {
+      if (!this.isConnected && this.roomCode) {
+        this.pulseHandshake();
+      }
+    }, 1200);
+
+    // 4. Generous 45s safety timeout for mobile app switching
     this.joinTimeout = setTimeout(() => {
       if (!this.isConnected) {
         this.onStatusChangeCallback?.({
@@ -184,10 +258,9 @@ class MultiplayerSync {
           isHost: false
         });
       }
-    }, 18000);
+    }, 45000);
 
-    // 4. Initialize voice call peer in background
-    this.initPeerVoice();
+    // 5. Voice call ready on demand via WebRTC
   }
 
   setupBroadcastChannel(roomCode) {
@@ -206,134 +279,120 @@ class MultiplayerSync {
     }
   }
 
-  connectMesh() {
-    this.cleanupBrokers();
+  setupSupabaseChannel() {
+    if (!this.roomCode) return;
 
-    MQTT_BROKERS.forEach((cfg, idx) => {
+    if (this.channel) {
       try {
-        const clientIdentifier = `between_${this.isHost ? 'host' : 'guest'}_${this.clientId}_${idx}`;
-        const client = new Paho.Client(cfg.host, cfg.port, cfg.path || '', clientIdentifier);
-
-        client.onConnectionLost = (responseObject) => {
-          if (responseObject.errorCode !== 0) {
-            console.warn(`[Realtime] ${cfg.host} connection lost:`, responseObject.errorMessage);
-          }
-        };
-
-        client.onMessageArrived = (message) => {
-          try {
-            const payload = JSON.parse(message.payloadString);
-            this.handleIncomingData(payload);
-          } catch (e) {
-            console.warn('[Realtime] Message parse error:', e);
-          }
-        };
-
-        const connectOpts = {
-          useSSL: true,
-          timeout: 4,
-          keepAliveInterval: 25,
-          cleanSession: true,
-          onSuccess: () => {
-            this.onBrokerConnected(client, cfg);
-          },
-          onFailure: (err) => {
-            console.warn(`[Realtime] Failed connecting to ${cfg.host}:${cfg.port}:`, err.errorMessage);
-          }
-        };
-
-        if (cfg.user) {
-          connectOpts.userName = cfg.user;
-          connectOpts.password = cfg.pass;
-        }
-
-        client.connect(connectOpts);
-        this.clients.push(client);
-      } catch (e) {
-        console.warn(`[Realtime] Error initializing client for ${cfg.host}:`, e);
-      }
-    });
-
-    this.startHeartbeat();
-  }
-
-  onBrokerConnected(client, cfg) {
-    if (!this.roomCode || !client || !client.isConnected()) return;
-
-    const topicBase = `between/v3/room/${this.roomCode}`;
-    const subscribeTopic = `${topicBase}/#`;
-
-    client.subscribe(subscribeTopic, {
-      qos: 1,
-      onSuccess: () => {
-        if (this.isHost) {
-          // Announce presence with retained message on this broker
-          this.publishPresenceToClient(client, true);
-        } else {
-          // Announce guest connection on this broker
-          this.sendGuestHello();
-        }
-      },
-      onFailure: (err) => {
-        console.warn(`[Realtime] Subscribe error on ${cfg.host}:`, err.errorMessage);
-      }
-    });
-  }
-
-  publishPresenceToClient(client, isWaiting = true) {
-    if (!this.roomCode || !client || !client.isConnected()) return;
-
-    const payload = {
-      type: isWaiting ? 'HOST_WAITING' : 'HOST_CONNECTED',
-      name: this.myName,
-      senderName: this.myName,
-      voicePeerId: this.myVoicePeerId,
-      senderId: this.clientId,
-      roomCode: this.roomCode,
-      timestamp: Date.now()
-    };
-
-    const message = new Paho.Message(JSON.stringify(payload));
-    message.destinationName = `between/v3/room/${this.roomCode}/presence/host`;
-    message.qos = 1;
-    message.retained = true;
-
-    try {
-      client.send(message);
-    } catch (e) {
-      console.warn('[Realtime] Presence publish error:', e);
+        this.channel.untrack();
+        this.supabase.removeChannel(this.channel);
+      } catch (e) {}
+      this.channel = null;
     }
-  }
 
-  publishPresence(isWaiting = true) {
-    this.clients.forEach(client => {
-      this.publishPresenceToClient(client, isWaiting);
-    });
-  }
-
-  sendGuestHello() {
-    this.broadcastMessage({
-      type: 'GUEST_CONNECTED',
-      name: this.myName,
-      voicePeerId: this.myVoicePeerId
-    });
-  }
-
-  startHeartbeat() {
-    this.stopHeartbeat();
-    this.heartbeatTimer = setInterval(() => {
-      if (this.roomCode && this.isConnected) {
-        this.broadcastMessage({
-          type: 'HEARTBEAT'
-        });
+    const channelName = `between_room_${this.roomCode}`;
+    this.channel = this.supabase.channel(channelName, {
+      config: {
+        broadcast: { ack: true, self: false },
+        presence: { key: this.clientId }
       }
-    }, 8000);
+    });
+
+    // 1. Broadcast Event Listener
+    this.channel.on('broadcast', { event: 'game_event' }, ({ payload }) => {
+      this.handleIncomingData(payload);
+    });
+
+    // 2. Presence Listeners (both sync and join)
+    this.channel.on('presence', { event: 'sync' }, () => {
+      this.handlePresenceSync();
+    });
+    this.channel.on('presence', { event: 'join' }, () => {
+      this.handlePresenceSync();
+    });
+
+    // 3. Presence Leave Listener
+    this.channel.on('presence', { event: 'leave' }, ({ leftPresences }) => {
+      if (this.isConnected && leftPresences && leftPresences.length > 0) {
+        const otherLeft = leftPresences.some(p => p.clientId !== this.clientId);
+        if (otherLeft) {
+          this.isConnected = false;
+          this.onStatusChangeCallback?.({
+            status: 'DISCONNECTED',
+            roomCode: this.roomCode,
+            isHost: this.isHost,
+            peerName: this.peerName,
+            myName: this.myName
+          });
+        }
+      }
+    });
+
+    // 4. Subscribe and Track Presence
+    this.channel.subscribe(async (status) => {
+      if (status === 'SUBSCRIBED') {
+        try {
+          await this.channel.track({
+            clientId: this.clientId,
+            isHost: this.isHost,
+            name: this.myName,
+            voicePeerId: this.myVoicePeerId,
+            joinedAt: Date.now()
+          });
+
+          // Immediate pulse handshake upon successful subscription
+          this.pulseHandshake();
+        } catch (e) {
+          console.warn('[Supabase Realtime] Track error:', e);
+        }
+      } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+        console.warn(`[Supabase Realtime] Channel status: ${status}, retrying in 1.5s...`);
+        setTimeout(() => {
+          if (!this.isConnected && this.roomCode) {
+            try { this.setupSupabaseChannel(); } catch (e) {}
+          }
+        }, 1500);
+      }
+    });
   }
 
-  stopHeartbeat() {
-    if (this.heartbeatTimer) {
-      clearInterval(this.heartbeatTimer);
-      this.heartbeatTimer = null;
+  handlePresenceSync() {
+    if (!this.channel) return;
+    const presenceState = this.channel.presenceState();
+    const allUsers = Object.values(presenceState).flat();
+
+    const otherUser = allUsers.find(u => u && u.clientId !== this.clientId);
+    if (!otherUser) return;
+
+    // Found partner!
+    const wasConnected = this.isConnected;
+    this.isConnected = true;
+
+    if (this.joinTimeout) {
+      clearTimeout(this.joinTimeout);
+      this.joinTimeout = null;
+    }
+    if (this.handshakeInterval) {
+      clearInterval(this.handshakeInterval);
+      this.handshakeInterval = null;
+    }
+
+    if (otherUser.name) this.peerName = otherUser.name;
+    if (otherUser.voicePeerId) this.remoteVoicePeerId = otherUser.voicePeerId;
+
+    if (!wasConnected) {
+      this.onStatusChangeCallback?.({
+        status: 'CONNECTED',
+        roomCode: this.roomCode,
+        isHost: this.isHost,
+        peerName: this.peerName,
+        myName: this.myName
+      });
+
+      if (this.isHost) {
+        // Host immediately triggers state sync
+        this.onRequestStateCallback?.();
+      }
     }
   }
 
@@ -341,13 +400,12 @@ class MultiplayerSync {
     if (!data || typeof data !== 'object') return;
     if (data.senderId === this.clientId) return;
     if (data.roomCode && data.roomCode !== this.roomCode) return;
-    if (data.type === 'HEARTBEAT') return;
 
-    // Deduplication check across all brokers and BroadcastChannel
+    // Deduplication check
     const msgId = data.msgId || `${data.type}_${data.senderId}_${data.timestamp}`;
     if (this.processedMsgIds.has(msgId)) return;
     this.processedMsgIds.add(msgId);
-    if (this.processedMsgIds.size > 300) {
+    if (this.processedMsgIds.size > 400) {
       const oldest = this.processedMsgIds.values().next().value;
       this.processedMsgIds.delete(oldest);
     }
@@ -356,65 +414,89 @@ class MultiplayerSync {
       this.peerName = data.senderName;
     }
 
-    // 1. Guest sees Host Waiting Beacon or Host Connected
-    if ((data.type === 'HOST_WAITING' || data.type === 'HOST_CONNECTED') && !this.isHost) {
-      if (this.joinTimeout) {
-        clearTimeout(this.joinTimeout);
-        this.joinTimeout = null;
-      }
-      const wasConnected = this.isConnected;
-      this.isConnected = true;
-      if (data.name) this.peerName = data.name;
-      if (data.voicePeerId) this.remoteVoicePeerId = data.voicePeerId;
+    // A. HOST BEACON or PONG received by GUEST
+    if (data.type === 'HOST_BEACON' || data.type === 'HOST_PONG') {
+      if (!this.isHost) {
+        const wasConnected = this.isConnected;
+        this.isConnected = true;
 
-      if (!wasConnected) {
-        this.onStatusChangeCallback?.({
-          status: 'CONNECTED',
-          roomCode: this.roomCode,
-          isHost: false,
-          peerName: this.peerName,
-          myName: this.myName
+        if (this.joinTimeout) {
+          clearTimeout(this.joinTimeout);
+          this.joinTimeout = null;
+        }
+        if (this.handshakeInterval) {
+          clearInterval(this.handshakeInterval);
+          this.handshakeInterval = null;
+        }
+
+        if (data.name) this.peerName = data.name;
+        if (data.voicePeerId) this.remoteVoicePeerId = data.voicePeerId;
+
+        // Reply with GUEST_CONNECTED confirmation
+        this.broadcastMessage({
+          type: 'GUEST_CONNECTED',
+          name: this.myName,
+          voicePeerId: this.myVoicePeerId
         });
 
-        // Reply immediately across all connected brokers
-        this.sendGuestHello();
+        if (!wasConnected) {
+          this.onStatusChangeCallback?.({
+            status: 'CONNECTED',
+            roomCode: this.roomCode,
+            isHost: false,
+            peerName: this.peerName,
+            myName: this.myName
+          });
+        }
       }
       return;
     }
 
-    // 2. Host sees Guest Connected
-    if (data.type === 'GUEST_CONNECTED' && this.isHost) {
-      const wasConnected = this.isConnected;
-      this.isConnected = true;
-      if (data.name) this.peerName = data.name;
-      if (data.voicePeerId) this.remoteVoicePeerId = data.voicePeerId;
+    // B. GUEST PING or CONNECTED received by HOST
+    if (data.type === 'GUEST_PING' || data.type === 'GUEST_CONNECTED') {
+      if (this.isHost) {
+        const wasConnected = this.isConnected;
+        this.isConnected = true;
 
-      // Update presence to connected across brokers
-      this.publishPresence(false);
+        if (this.handshakeInterval) {
+          clearInterval(this.handshakeInterval);
+          this.handshakeInterval = null;
+        }
 
-      if (!wasConnected) {
-        this.onStatusChangeCallback?.({
-          status: 'CONNECTED',
-          roomCode: this.roomCode,
-          isHost: true,
-          peerName: this.peerName,
-          myName: this.myName
+        if (data.name) this.peerName = data.name;
+        if (data.voicePeerId) this.remoteVoicePeerId = data.voicePeerId;
+
+        // Confirm to guest with HOST_PONG
+        this.broadcastMessage({
+          type: 'HOST_PONG',
+          name: this.myName,
+          voicePeerId: this.myVoicePeerId
         });
 
-        // Immediately sync current session state to guest
+        if (!wasConnected) {
+          this.onStatusChangeCallback?.({
+            status: 'CONNECTED',
+            roomCode: this.roomCode,
+            isHost: true,
+            peerName: this.peerName,
+            myName: this.myName
+          });
+        }
+
+        // Always sync latest state to guest
         this.onRequestStateCallback?.();
       }
       return;
     }
 
-    // 3. Guest requests session state
+    // 2. Request State
     if (data.type === 'STATE_REQ' && this.isHost) {
       this.onRequestStateCallback?.();
       return;
     }
 
-    // 4. Partner leaves room
-    if (data.type === 'DISCONNECT' || data.type === 'ROOM_CLOSED') {
+    // 3. Partner Left
+    if (data.type === 'DISCONNECT') {
       this.isConnected = false;
       this.onStatusChangeCallback?.({
         status: 'DISCONNECTED',
@@ -426,9 +508,9 @@ class MultiplayerSync {
       return;
     }
 
-    // 5. Game State Synchronizations
+    // 4. Game State Sync
     if (data.type === 'STATE_SYNC') {
-      if (!this.isConnected && !this.isHost) {
+      if (!this.isConnected) {
         if (this.joinTimeout) {
           clearTimeout(this.joinTimeout);
           this.joinTimeout = null;
@@ -437,7 +519,7 @@ class MultiplayerSync {
         this.onStatusChangeCallback?.({
           status: 'CONNECTED',
           roomCode: this.roomCode,
-          isHost: false,
+          isHost: this.isHost,
           peerName: this.peerName,
           myName: this.myName
         });
@@ -447,6 +529,50 @@ class MultiplayerSync {
       this.onReactionCallback?.(data.payload);
     } else if (data.type === 'TOUCH_RIPPLE') {
       this.onTouchRippleCallback?.(data.payload);
+    }
+
+    // 5. Native WebRTC Voice Call Signaling
+    if (data.type === 'VOICE_CALL_REQUEST') {
+      this.onIncomingCallCallback?.({ callerName: data.senderName || this.peerName });
+      this.onCallStateCallback?.('INCOMING');
+      return;
+    }
+
+    if (data.type === 'VOICE_CALL_ACCEPT') {
+      this.startRtcCaller();
+      return;
+    }
+
+    if (data.type === 'VOICE_CALL_REJECT') {
+      this.cleanupRtc();
+      this.onCallStateCallback?.('REJECTED');
+      setTimeout(() => {
+        if (this.onCallStateCallback) this.onCallStateCallback('IDLE');
+      }, 3000);
+      return;
+    }
+
+    if (data.type === 'VOICE_CALL_END') {
+      this.cleanupRtc();
+      this.onCallStateCallback?.('IDLE');
+      return;
+    }
+
+    if (data.type === 'VOICE_CALL_SIGNAL' && data.signal) {
+      this.handleRtcSignal(data.signal);
+      return;
+    }
+
+    // 6. Hold-to-Touch Presence
+    if (data.type === 'HOLD_TOUCH') {
+      this.onHoldTouchCallback?.(!!data.isHolding);
+      return;
+    }
+
+    // 7. Custom Mystery Question
+    if (data.type === 'CUSTOM_QUESTION' && data.payload) {
+      this.onCustomQuestionCallback?.(data.payload);
+      return;
     }
   }
 
@@ -462,24 +588,20 @@ class MultiplayerSync {
       timestamp: Date.now()
     };
 
-    // Mark as seen so we don't process our own broadcast reflection
     this.processedMsgIds.add(payload.msgId);
 
-    const jsonStr = JSON.stringify(payload);
-
-    // 1. Send via all active brokers in the mesh
-    this.clients.forEach(client => {
-      if (client && client.isConnected()) {
-        try {
-          const mqttMsg = new Paho.Message(jsonStr);
-          mqttMsg.destinationName = `between/v3/room/${this.roomCode}/events`;
-          mqttMsg.qos = 1;
-          client.send(mqttMsg);
-        } catch (e) {
-          console.warn('[Realtime] Broadcast error on broker:', e);
-        }
+    // 1. Send via Supabase Realtime Broadcast (Standard Port 443 HTTPS/WSS)
+    if (this.channel) {
+      try {
+        this.channel.send({
+          type: 'broadcast',
+          event: 'game_event',
+          payload
+        });
+      } catch (e) {
+        console.warn('[Supabase Realtime] Send broadcast error:', e);
       }
-    });
+    }
 
     // 2. Send via local BroadcastChannel (instant for tabs on same device)
     if (this.broadcastChannel) {
@@ -510,94 +632,232 @@ class MultiplayerSync {
     });
   }
 
-  // --- Voice Call WebRTC Support ---
-  initPeerVoice() {
-    try {
-      if (!this.roomCode) return;
-      this.myVoicePeerId = this.isHost
-        ? `between-v3-${this.roomCode.toLowerCase()}`
-        : `between-v3-guest-${this.clientId}`;
-
-      this.peer = new Peer(this.myVoicePeerId, {
-        debug: 0,
-        config: { iceServers: ICE_SERVERS }
-      });
-
-      this.peer.on('call', async (call) => {
-        this.mediaCall = call;
-        try {
-          if (!this.localStream) {
-            this.localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
-          }
-          call.answer(this.localStream);
-          this.onCallStateCallback?.('CONNECTED');
-
-          call.on('stream', (remoteStream) => {
-            this.onCallStreamCallback?.(remoteStream);
-          });
-
-          call.on('close', () => {
-            this.onCallStateCallback?.('ENDED');
-          });
-        } catch (e) {
-          console.warn('Voice auto-answer error:', e);
-        }
-      });
-
-      this.peer.on('error', (err) => {
-        console.warn('PeerJS voice notice:', err?.type);
-      });
-    } catch (e) {
-      console.warn('PeerJS init voice skipped:', e);
-    }
+  // --- Hold to Touch Shared Presence ---
+  sendHoldTouch(isHolding) {
+    this.broadcastMessage({
+      type: 'HOLD_TOUCH',
+      isHolding: !!isHolding
+    });
   }
 
+  // --- Custom Mystery Question ---
+  sendCustomQuestion(questionData) {
+    this.broadcastMessage({
+      type: 'CUSTOM_QUESTION',
+      payload: questionData
+    });
+  }
+
+  // --- Native WebRTC Voice Call (Supabase Signaling) ---
   async startVoiceCall() {
-    if (!this.peer || !this.roomCode) {
-      console.warn('Cannot start call: voice peer not initialized');
+    if (!this.roomCode) return false;
+    if (typeof navigator === 'undefined' || !navigator.mediaDevices?.getUserMedia) {
+      console.warn('Microphone not supported on this browser/platform');
+      this.onCallStateCallback?.('UNSUPPORTED');
       return false;
     }
 
-    const targetPeerId = this.remoteVoicePeerId || (
-      this.isHost
-        ? `between-v3-guest-${this.peerName}`
-        : `between-v3-${this.roomCode.toLowerCase()}`
-    );
-
     try {
-      this.onCallStateCallback?.('CALLING');
-      this.localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
-
-      const call = this.peer.call(targetPeerId, this.localStream);
-      this.mediaCall = call;
-
-      call.on('stream', (remoteStream) => {
-        this.onCallStateCallback?.('CONNECTED');
-        this.onCallStreamCallback?.(remoteStream);
+      this.localStream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true
+        },
+        video: false
       });
 
-      call.on('close', () => {
-        this.endVoiceCall();
+      this.onCallStateCallback?.('CALLING');
+
+      // Request call from partner via Supabase
+      this.broadcastMessage({
+        type: 'VOICE_CALL_REQUEST',
+        callerName: this.myName
       });
 
       return true;
     } catch (e) {
-      console.warn('Could not start voice call:', e);
-      this.onCallStateCallback?.('FAILED');
+      console.warn('Microphone access denied or error:', e);
+      this.onCallStateCallback?.('PERMISSION_DENIED');
       return false;
     }
   }
 
+  async acceptVoiceCall() {
+    if (!this.roomCode) return false;
+    try {
+      this.localStream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true
+        },
+        video: false
+      });
+
+      this.onCallStateCallback?.('CONNECTING');
+
+      // Send acceptance to caller
+      this.broadcastMessage({
+        type: 'VOICE_CALL_ACCEPT',
+        name: this.myName
+      });
+
+      return true;
+    } catch (e) {
+      console.warn('Failed to accept voice call:', e);
+      this.declineVoiceCall();
+      this.onCallStateCallback?.('PERMISSION_DENIED');
+      return false;
+    }
+  }
+
+  declineVoiceCall() {
+    this.broadcastMessage({
+      type: 'VOICE_CALL_REJECT'
+    });
+    this.cleanupRtc();
+    this.onCallStateCallback?.('IDLE');
+  }
+
   endVoiceCall() {
-    if (this.mediaCall) {
-      try { this.mediaCall.close(); } catch (e) {}
-      this.mediaCall = null;
+    this.broadcastMessage({
+      type: 'VOICE_CALL_END'
+    });
+    this.cleanupRtc();
+    this.onCallStateCallback?.('IDLE');
+  }
+
+  cleanupRtc() {
+    if (this.rtcPeerConnection) {
+      try {
+        this.rtcPeerConnection.ontrack = null;
+        this.rtcPeerConnection.onicecandidate = null;
+        this.rtcPeerConnection.onconnectionstatechange = null;
+        this.rtcPeerConnection.close();
+      } catch (e) {}
+      this.rtcPeerConnection = null;
     }
     if (this.localStream) {
-      this.localStream.getTracks().forEach(track => track.stop());
+      try {
+        this.localStream.getTracks().forEach(track => track.stop());
+      } catch (e) {}
       this.localStream = null;
     }
-    this.onCallStateCallback?.('ENDED');
+    this.pendingIceCandidates = [];
+    this.isMuted = false;
+  }
+
+  createRtcConnection() {
+    if (this.rtcPeerConnection) {
+      try { this.rtcPeerConnection.close(); } catch (e) {}
+    }
+
+    if (typeof RTCPeerConnection === 'undefined') return null;
+
+    const pc = new RTCPeerConnection({ iceServers: ICE_SERVERS });
+
+    if (this.localStream) {
+      this.localStream.getTracks().forEach(track => {
+        pc.addTrack(track, this.localStream);
+      });
+    }
+
+    pc.ontrack = (event) => {
+      if (event.streams && event.streams[0]) {
+        this.onCallStreamCallback?.(event.streams[0]);
+        this.onCallStateCallback?.('CONNECTED');
+      }
+    };
+
+    pc.onicecandidate = (event) => {
+      if (event.candidate) {
+        this.broadcastMessage({
+          type: 'VOICE_CALL_SIGNAL',
+          signal: { type: 'candidate', candidate: event.candidate }
+        });
+      }
+    };
+
+    pc.onconnectionstatechange = () => {
+      if (pc.connectionState === 'connected') {
+        this.onCallStateCallback?.('CONNECTED');
+      } else if (pc.connectionState === 'disconnected' || pc.connectionState === 'failed') {
+        this.cleanupRtc();
+        this.onCallStateCallback?.('ENDED');
+        setTimeout(() => {
+          if (this.onCallStateCallback) this.onCallStateCallback('IDLE');
+        }, 2000);
+      }
+    };
+
+    this.rtcPeerConnection = pc;
+    return pc;
+  }
+
+  async startRtcCaller() {
+    try {
+      const pc = this.createRtcConnection();
+      if (!pc) return;
+
+      const offer = await pc.createOffer({ offerToReceiveAudio: true });
+      await pc.setLocalDescription(offer);
+
+      this.broadcastMessage({
+        type: 'VOICE_CALL_SIGNAL',
+        signal: { type: 'offer', sdp: offer }
+      });
+    } catch (e) {
+      console.warn('Caller WebRTC offer error:', e);
+      this.endVoiceCall();
+    }
+  }
+
+  async handleRtcSignal(signal) {
+    if (!signal) return;
+
+    try {
+      if (signal.type === 'offer') {
+        const pc = this.createRtcConnection();
+        if (!pc) return;
+
+        await pc.setRemoteDescription(new RTCSessionDescription(signal.sdp));
+
+        // Process any queued candidates
+        while (this.pendingIceCandidates.length > 0) {
+          const candidate = this.pendingIceCandidates.shift();
+          try { await pc.addIceCandidate(new RTCIceCandidate(candidate)); } catch (e) {}
+        }
+
+        const answer = await pc.createAnswer();
+        await pc.setLocalDescription(answer);
+
+        this.broadcastMessage({
+          type: 'VOICE_CALL_SIGNAL',
+          signal: { type: 'answer', sdp: answer }
+        });
+      } else if (signal.type === 'answer') {
+        if (this.rtcPeerConnection) {
+          await this.rtcPeerConnection.setRemoteDescription(new RTCSessionDescription(signal.sdp));
+
+          // Process any queued candidates
+          while (this.pendingIceCandidates.length > 0) {
+            const candidate = this.pendingIceCandidates.shift();
+            try { await this.rtcPeerConnection.addIceCandidate(new RTCIceCandidate(candidate)); } catch (e) {}
+          }
+        }
+      } else if (signal.type === 'candidate' && signal.candidate) {
+        if (this.rtcPeerConnection && this.rtcPeerConnection.remoteDescription) {
+          try {
+            await this.rtcPeerConnection.addIceCandidate(new RTCIceCandidate(signal.candidate));
+          } catch (e) {}
+        } else {
+          this.pendingIceCandidates.push(signal.candidate);
+        }
+      }
+    } catch (e) {
+      console.warn('WebRTC signal handling notice:', e);
+    }
   }
 
   toggleMute() {
@@ -613,34 +873,8 @@ class MultiplayerSync {
   }
 
   leaveRoom() {
-    // Clear retained presence on all brokers
-    this.clients.forEach(client => {
-      if (client && client.isConnected()) {
-        try {
-          const clearMsg = new Paho.Message(JSON.stringify({ type: 'ROOM_CLOSED' }));
-          clearMsg.destinationName = `between/v3/room/${this.roomCode}/presence/host`;
-          clearMsg.retained = true;
-          clearMsg.qos = 1;
-          client.send(clearMsg);
-        } catch (e) {}
-      }
-    });
-
     this.broadcastMessage({ type: 'DISCONNECT' });
     this.cleanup();
-  }
-
-  cleanupBrokers() {
-    if (this.clients && this.clients.length) {
-      this.clients.forEach(client => {
-        try {
-          if (client.isConnected()) {
-            client.disconnect();
-          }
-        } catch (e) {}
-      });
-      this.clients = [];
-    }
   }
 
   cleanup() {
@@ -648,15 +882,22 @@ class MultiplayerSync {
       clearTimeout(this.joinTimeout);
       this.joinTimeout = null;
     }
-    this.stopHeartbeat();
-    this.endVoiceCall();
-    this.cleanupBrokers();
+    if (this.handshakeInterval) {
+      clearInterval(this.handshakeInterval);
+      this.handshakeInterval = null;
+    }
+    this.cleanupRtc();
+    this.onCallStateCallback?.('IDLE');
+
+    if (this.channel) {
+      try {
+        this.channel.untrack();
+        this.supabase.removeChannel(this.channel);
+      } catch (e) {}
+      this.channel = null;
+    }
 
     try {
-      if (this.peer) {
-        this.peer.destroy();
-        this.peer = null;
-      }
       if (this.broadcastChannel) {
         this.broadcastChannel.close();
         this.broadcastChannel = null;

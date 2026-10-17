@@ -97,23 +97,40 @@ export default function ClosingScreen({
 
     // Outer squircle
     ctx.fillStyle = '#FFFFFF';
+    ctx.strokeStyle = '#E6DDD2';
+    ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.roundRect(centerX - 45, logoY - 45, 90, 90, 20);
+    ctx.roundRect(centerX - 48, logoY - 48, 96, 96, 24);
+    ctx.fill();
+    ctx.stroke();
+
+    // Golden Vesica Lens Fill
+    ctx.fillStyle = 'rgba(229, 169, 60, 0.45)';
+    ctx.beginPath();
+    ctx.arc(centerX - 12, logoY, 20, -Math.PI / 3, Math.PI / 3, false);
+    ctx.arc(centerX + 12, logoY, 20, (2 * Math.PI) / 3, (4 * Math.PI) / 3, false);
+    ctx.closePath();
     ctx.fill();
 
-    // Venn left circle (#C2673B)
-    ctx.strokeStyle = '#C2673B';
+    // Left ring (Ember #D94E34)
+    ctx.strokeStyle = '#D94E34';
     ctx.lineWidth = 4;
     ctx.beginPath();
-    ctx.arc(centerX - 13, logoY, 20, 0, Math.PI * 2);
+    ctx.arc(centerX - 12, logoY, 20, 0, Math.PI * 2);
     ctx.stroke();
 
-    // Venn right circle (#18181B)
-    ctx.strokeStyle = '#18181B';
+    // Right ring (Ink #1C1917)
+    ctx.strokeStyle = '#1C1917';
     ctx.lineWidth = 4;
     ctx.beginPath();
-    ctx.arc(centerX + 13, logoY, 20, 0, Math.PI * 2);
+    ctx.arc(centerX + 12, logoY, 20, 0, Math.PI * 2);
     ctx.stroke();
+
+    // Center spark dot
+    ctx.fillStyle = '#E5A93C';
+    ctx.beginPath();
+    ctx.arc(centerX, logoY, 3, 0, Math.PI * 2);
+    ctx.fill();
 
     // 4. Header Titles
     ctx.fillStyle = '#1C1917';
@@ -617,14 +634,14 @@ export default function ClosingScreen({
           className="btn-secondary"
           style={{
             width: '100%',
-            padding: '14px',
+            padding: '13px 16px',
             gap: '8px',
             borderColor: 'var(--color-hairline-strong)',
             boxShadow: 'var(--shadow-sm)'
           }}
         >
           <Download size={17} strokeWidth={2.4} color="var(--color-ember)" />
-          <span style={{ fontWeight: '700' }}>
+          <span style={{ fontWeight: '700', fontSize: 'clamp(12px, 3.2vw, 14px)', lineHeight: '1.3' }}>
             {isGeneratingKeepsake
               ? 'Rendering Keepsake...'
               : `Download Keepsake with ${peerName}'s Words (PNG)`

@@ -21,8 +21,10 @@ export default function ReactionBar({ onSendReaction }) {
     <div style={{
       display: 'inline-flex',
       alignItems: 'center',
-      gap: '8px',
-      padding: '6px 14px',
+      justifyContent: 'center',
+      gap: 'clamp(3px, 1.5vw, 8px)',
+      padding: '5px clamp(8px, 2.5vw, 14px)',
+      maxWidth: '100%',
       background: 'var(--color-surface)',
       backdropFilter: 'blur(16px)',
       WebkitBackdropFilter: 'blur(16px)',
@@ -36,7 +38,8 @@ export default function ReactionBar({ onSendReaction }) {
         color: 'var(--color-muted)',
         letterSpacing: '0.08em',
         textTransform: 'uppercase',
-        marginRight: '4px'
+        marginRight: '2px',
+        whiteSpace: 'nowrap'
       }}>
         REACT:
       </span>
@@ -51,14 +54,14 @@ export default function ReactionBar({ onSendReaction }) {
               background: 'none',
               border: 'none',
               cursor: 'pointer',
-              padding: '6px 8px',
+              padding: '6px clamp(4px, 1.5vw, 8px)',
               borderRadius: 'var(--radius-pill)',
               color: 'var(--color-body)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '4px',
-              transition: 'transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.18s, color 0.18s'
+              transition: 'transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.18s, color 0.18s',
+              touchAction: 'manipulation'
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.color = item.color;

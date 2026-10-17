@@ -23,7 +23,8 @@ export default function LobbyScreen({
   roomCode = '',
   isConnected = false,
   onStartSession,
-  peerName = ''
+  peerName = '',
+  onOpenLegal
 }) {
   const [tab, setTab] = useState(initialRoomCode ? 'JOIN' : 'CREATE');
   const [selectedRel, setSelectedRel] = useState('COUPLE');
@@ -136,7 +137,7 @@ export default function LobbyScreen({
 
         <h1 style={{
           fontFamily: 'var(--font-serif)',
-          fontSize: '34px',
+          fontSize: 'clamp(24px, 6.5vw, 34px)',
           fontWeight: '600',
           color: 'var(--color-ink)',
           lineHeight: '1.2',
@@ -146,7 +147,7 @@ export default function LobbyScreen({
           Closeness Across Distance
         </h1>
         <p style={{
-          fontSize: '15px',
+          fontSize: 'clamp(13px, 3.8vw, 15px)',
           color: 'var(--color-body)',
           lineHeight: '1.55',
           maxWidth: '420px',
@@ -273,25 +274,66 @@ export default function LobbyScreen({
             fontSize: '14px',
             color: 'var(--color-body)',
             lineHeight: 1.5,
-            marginBottom: '24px',
+            marginBottom: '20px',
             maxWidth: '340px',
-            margin: '0 auto 24px'
+            margin: '0 auto 20px'
           }}>
-            Pairing with your partner across the miles. Please keep this screen open while we connect your rituals.
+            Pinging room {roomCode}. As soon as your partner has the room open, you will connect instantly.
           </p>
 
-          <button
-            type="button"
-            onClick={() => {
-              playClickSound();
-              onCancelRoom?.();
-            }}
-            className="btn-secondary"
-            style={{ width: '100%', padding: '13px', display: 'flex', justifyContent: 'center', gap: '8px' }}
-          >
-            <ChevronLeft size={17} strokeWidth={2.4} />
-            <span>Cancel & Go Back</span>
-          </button>
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '8px',
+            padding: '6px 14px',
+            borderRadius: 'var(--radius-pill)',
+            background: 'rgba(229, 169, 60, 0.12)',
+            color: 'var(--color-gold)',
+            fontSize: '12px',
+            fontWeight: '700',
+            marginBottom: '22px'
+          }}>
+            <span style={{
+              width: '8px',
+              height: '8px',
+              borderRadius: '50%',
+              background: 'var(--color-gold)',
+              boxShadow: '0 0 8px var(--color-gold)',
+              animation: 'pulse 1.2s infinite'
+            }} />
+            <span>Sending continuous connection pulses...</span>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <button
+              type="button"
+              onClick={() => {
+                playClickSound();
+                onJoinRoom({
+                  roomCode: roomCode.trim().toUpperCase(),
+                  userName: guestNameInput.trim() || 'Partner 2'
+                });
+              }}
+              className="btn-primary"
+              style={{ width: '100%', padding: '13px', display: 'flex', justifyContent: 'center', gap: '8px' }}
+            >
+              <Radio size={17} strokeWidth={2.4} />
+              <span>Force Re-connect Pulse</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                playClickSound();
+                onCancelRoom?.();
+              }}
+              className="btn-secondary"
+              style={{ width: '100%', padding: '12px', display: 'flex', justifyContent: 'center', gap: '8px' }}
+            >
+              <ChevronLeft size={17} strokeWidth={2.4} />
+              <span>Cancel & Change Code</span>
+            </button>
+          </div>
         </div>
       ) : (!isHost && isConnected) ? (
         /* 3. Guest Connected Waiting State */
@@ -398,19 +440,21 @@ export default function LobbyScreen({
           <div style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '12px',
-            padding: '12px 24px',
+            gap: '10px',
+            padding: '10px 18px',
             background: 'var(--color-surface-subtle)',
             border: '1px solid var(--color-hairline)',
             borderRadius: 'var(--radius-pill)',
-            marginBottom: '20px'
+            marginBottom: '20px',
+            maxWidth: '100%',
+            overflow: 'hidden'
           }}>
-            <span style={{ fontSize: '11px', fontWeight: '700', color: 'var(--color-muted)', letterSpacing: '0.08em' }}>ROOM CODE:</span>
+            <span style={{ fontSize: '10px', fontWeight: '700', color: 'var(--color-muted)', letterSpacing: '0.08em', whiteSpace: 'nowrap' }}>ROOM CODE:</span>
             <span style={{
               fontFamily: 'monospace',
-              fontSize: '28px',
+              fontSize: 'clamp(20px, 6.2vw, 28px)',
               fontWeight: '800',
-              letterSpacing: '0.18em',
+              letterSpacing: '0.14em',
               color: 'var(--color-ember)'
             }}>
               {roomCode}
@@ -574,34 +618,39 @@ export default function LobbyScreen({
                       type="button"
                       onClick={() => { playClickSound(); setSelectedRel(rel.id); }}
                       style={{
-                        padding: '14px 8px',
+                        padding: '12px 4px',
+                        minHeight: '74px',
                         borderRadius: 'var(--radius-md)',
                         border: isSelected ? `2px solid ${rel.color}` : '1px solid var(--color-hairline)',
                         background: isSelected ? 'var(--color-surface)' : 'var(--color-surface-subtle)',
                         boxShadow: isSelected ? 'var(--shadow-sm)' : 'none',
                         cursor: 'pointer',
                         textAlign: 'center',
-                        transition: 'all 0.15s'
+                        transition: 'all 0.15s',
+                        touchAction: 'manipulation'
                       }}
                     >
                       <div style={{
-                        width: '32px',
-                        height: '32px',
+                        width: '30px',
+                        height: '30px',
                         borderRadius: '50%',
                         background: isSelected ? `${rel.color}18` : 'rgba(0,0,0,0.04)',
                         color: rel.color,
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        margin: '0 auto 8px',
+                        margin: '0 auto 6px',
                         transition: 'transform 0.2s'
                       }}>
-                        <Icon size={17} strokeWidth={2.4} />
+                        <Icon size={16} strokeWidth={2.4} />
                       </div>
                       <div style={{
-                        fontSize: '13px',
+                        fontSize: 'clamp(11px, 3.2vw, 13px)',
                         fontWeight: isSelected ? '700' : '600',
-                        color: isSelected ? 'var(--color-ink)' : 'var(--color-body)'
+                        color: isSelected ? 'var(--color-ink)' : 'var(--color-body)',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis'
                       }}>
                         {rel.label}
                       </div>
@@ -626,7 +675,7 @@ export default function LobbyScreen({
               <div style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(4, 1fr)',
-                gap: '8px',
+                gap: '6px',
                 marginBottom: '20px'
               }}>
                 {Object.values(SESSION_LENGTHS).map((len) => {
@@ -637,20 +686,22 @@ export default function LobbyScreen({
                       type="button"
                       onClick={() => { playClickSound(); setSelectedLength(len.id); }}
                       style={{
-                        padding: '12px 6px',
+                        padding: '10px 2px',
+                        minHeight: '52px',
                         borderRadius: 'var(--radius-md)',
                         border: isSelected ? '2px solid var(--color-ink)' : '1px solid var(--color-hairline)',
                         background: isSelected ? 'var(--color-surface)' : 'var(--color-surface-subtle)',
                         boxShadow: isSelected ? 'var(--shadow-sm)' : 'none',
                         cursor: 'pointer',
                         textAlign: 'center',
-                        transition: 'all 0.15s'
+                        transition: 'all 0.15s',
+                        touchAction: 'manipulation'
                       }}
                     >
-                      <div style={{ fontSize: '14px', fontWeight: '700', color: 'var(--color-ink)' }}>
+                      <div style={{ fontSize: 'clamp(12px, 3.2vw, 14px)', fontWeight: '700', color: 'var(--color-ink)' }}>
                         {len.tabLabel}
                       </div>
-                      <div style={{ fontSize: '10px', color: 'var(--color-muted)', marginTop: '2px' }}>
+                      <div style={{ fontSize: 'clamp(9px, 2.4vw, 10px)', color: 'var(--color-muted)', marginTop: '2px', whiteSpace: 'nowrap' }}>
                         {len.count} cards
                       </div>
                     </button>
@@ -951,15 +1002,52 @@ export default function LobbyScreen({
       {/* Reassurance Footer */}
       <div style={{
         textAlign: 'center',
-        fontSize: '12px',
-        color: 'var(--color-muted)',
         display: 'flex',
+        flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center',
-        gap: '6px'
+        gap: '8px',
+        paddingTop: '6px'
       }}>
-        <ShieldCheck size={14} strokeWidth={2.2} />
-        <span>Peer-to-peer encrypted · Zero accounts required · Private & open source</span>
+        <div style={{
+          fontSize: '12px',
+          color: 'var(--color-muted)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '6px'
+        }}>
+          <ShieldCheck size={14} strokeWidth={2.2} />
+          <span>Peer-to-peer encrypted · Zero accounts required · Private & open source</span>
+        </div>
+
+        <div style={{
+          fontSize: '11px',
+          color: 'var(--color-muted)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px'
+        }}>
+          <span>© 2026 Between</span>
+          <span>·</span>
+          <button
+            type="button"
+            onClick={() => {
+              playClickSound();
+              onOpenLegal?.();
+            }}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'var(--color-muted)',
+              textDecoration: 'underline',
+              cursor: 'pointer',
+              fontSize: '11px',
+              padding: '2px 4px'
+            }}
+          >
+            Privacy Policy & Terms
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Feather, Flame, ChevronLeft, ChevronRight, ArrowRight, SkipForward } from 'lucide-react';
+import { Feather, Flame, ChevronLeft, ChevronRight, ArrowRight, SkipForward, PenLine, Sparkles } from 'lucide-react';
 import Header from './components/Header';
 import LobbyScreen from './components/LobbyScreen';
 import QuestionCard from './components/QuestionCard';
@@ -8,6 +8,10 @@ import HandshakeModal from './components/HandshakeModal';
 import ArrivalPauseModal from './components/ArrivalPauseModal';
 import ClosingScreen from './components/ClosingScreen';
 import ThreeCanvas from './components/ThreeCanvas';
+import CustomQuestionModal from './components/CustomQuestionModal';
+import IncomingCallModal from './components/IncomingCallModal';
+import HoldTouchIndicator from './components/HoldTouchIndicator';
+import LegalModal from './components/LegalModal';
 import { buildSession, swapQuestion, RELATIONSHIP_TYPES } from './utils/engine';
 import { multiplayerSync } from './utils/peer';
 import { playClickSound, playChimeSound, playReactionSound, playHandshakeSound } from './utils/audio';
@@ -71,7 +75,19 @@ export default function App() {
   // WebRTC Voice Call State
   const [voiceCallState, setVoiceCallState] = useState('IDLE');
   const [isVoiceMuted, setIsVoiceMuted] = useState(false);
+  const [incomingCallInfo, setIncomingCallInfo] = useState(null);
   const remoteAudioRef = useRef(null);
+
+  // Hold-to-Touch Presence State
+  const [isHoldingTouchLocal, setIsHoldingTouchLocal] = useState(false);
+  const [isHoldingTouchPartner, setIsHoldingTouchPartner] = useState(false);
+
+  // Custom Mystery Question State
+  const [showCustomQuestionModal, setShowCustomQuestionModal] = useState(false);
+  const [customQuestionToast, setCustomQuestionToast] = useState(null);
+
+  // Legal / Privacy Policy Modal State
+  const [showLegalModal, setShowLegalModal] = useState(false);
 
   // Synchronize document theme
   useEffect(() => {
@@ -281,7 +297,102 @@ export default function App() {
 
   const handleCallState = useCallback((state) => {
     setVoiceCallState(state);
+    if (state === 'REJECTED') {
+      setCustomQuestionToast('Partner declined voice call');
+      setTimeout(() => setCustomQuestionToast(null), 3500);
+    } else if (state === 'PERMISSION_DENIED') {
+      setCustomQuestionToast('Microphone permission required for voice calls');
+      setTimeout(() => setCustomQuestionToast(null), 3500);
+    }
   }, []);
+
+  // Shared Touch Presence Haptic Pulse
+  useEffect(() => {
+    if (isHoldingTouchLocal && (isHoldingTouchPartner || isSolo)) {
+      if (typeof navigator !== 'undefined' && navigator.vibrate) {
+        try {
+          navigator.vibrate([40, 60, 40]);
+        } catch (e) {}
+      }
+      playChimeSound();
+    }
+  }, [isHoldingTouchLocal, isHoldingTouchPartner, isSolo]);
+
+  // Mystery / Custom Question Handlers
+  const handleReceiveCustomQuestion = useCallback((question) => {
+    if (!question) return;
+    setQuestions(prev => {
+      const nextQuestions = [...prev];
+      const targetIdx = stateRef.current.currentIndex + 1;
+      nextQuestions.splice(targetIdx, 0, question);
+      return nextQuestions;
+    });
+    playChimeSound();
+    const sender = question.author || 'Partner';
+    setCustomQuestionToast(`${sender} slipped a secret question into your deck! 💌`);
+    setTimeout(() => {
+      setCustomQuestionToast(null);
+    }, 4500);
+  }, []);
+
+  const handleSendCustomQuestion = (text) => {
+    const authorName = isHost ? hostName : guestName;
+    const mysteryCard = {
+      id: `mystery_${Date.now()}`,
+      text: text,
+      category: 'MYSTERY',
+      depth: 5,
+      phase: currentQuestion?.phase || 'WARMUP',
+      author: authorName,
+      isMystery: true
+    };
+
+    setQuestions(prev => {
+      const nextQuestions = [...prev];
+      const targetIdx = currentIndex + 1;
+      nextQuestions.splice(targetIdx, 0, mysteryCard);
+      return nextQuestions;
+    });
+
+    if (!isSolo) {
+      multiplayerSync.sendCustomQuestion(mysteryCard);
+    }
+
+    setCustomQuestionToast('Secret question sealed into the deck ✨');
+    setTimeout(() => {
+      setCustomQuestionToast(null);
+    }, 3500);
+  };
+
+  // Hold-to-Touch Presence Handlers
+  const handleHoldStart = () => {
+    setIsHoldingTouchLocal(true);
+    if (!isSolo) {
+      multiplayerSync.sendHoldTouch(true);
+    }
+  };
+
+  const handleHoldEnd = () => {
+    setIsHoldingTouchLocal(false);
+    if (!isSolo) {
+      multiplayerSync.sendHoldTouch(false);
+    }
+  };
+
+  // Incoming Voice Call Handlers
+  const handleAcceptIncomingCall = async () => {
+    setIncomingCallInfo(null);
+    const ok = await multiplayerSync.acceptVoiceCall();
+    if (!ok) {
+      setCustomQuestionToast('Microphone access denied or unavailable');
+      setTimeout(() => setCustomQuestionToast(null), 3500);
+    }
+  };
+
+  const handleDeclineIncomingCall = () => {
+    setIncomingCallInfo(null);
+    multiplayerSync.declineVoiceCall();
+  };
 
   // URL Query Param auto-join detection
   useEffect(() => {
@@ -324,6 +435,9 @@ export default function App() {
       onTouchRipple: handleTouchRippleReceived,
       onCallStream: handleRemoteStream,
       onCallState: handleCallState,
+      onIncomingCall: (info) => setIncomingCallInfo(info),
+      onHoldTouch: (isHolding) => setIsHoldingTouchPartner(isHolding),
+      onCustomQuestion: handleReceiveCustomQuestion,
       onRequestState: () => {
         const cur = stateRef.current;
         multiplayerSync.syncState({
@@ -365,7 +479,10 @@ export default function App() {
       onReaction: handleReactionReceived,
       onTouchRipple: handleTouchRippleReceived,
       onCallStream: handleRemoteStream,
-      onCallState: handleCallState
+      onCallState: handleCallState,
+      onIncomingCall: (info) => setIncomingCallInfo(info),
+      onHoldTouch: (isHolding) => setIsHoldingTouchPartner(isHolding),
+      onCustomQuestion: handleReceiveCustomQuestion
     });
   };
 
@@ -747,6 +864,43 @@ export default function App() {
       {/* Atmospheric Radial Backdrop */}
       <div className="app-backdrop" />
 
+      {/* Hold-to-Touch Presence Edge Glow Overlay */}
+      <div className={`hold-presence-overlay ${isHoldingTouchLocal && (isHoldingTouchPartner || isSolo) ? 'active' : ''}`} />
+
+      {/* Active Shared Touch Banner */}
+      {isHoldingTouchLocal && (isHoldingTouchPartner || isSolo) && (
+        <div className="hold-presence-banner">
+          <Sparkles size={14} color="#E5A93C" />
+          <span>Holding hands across screens ✨</span>
+        </div>
+      )}
+
+      {/* Custom Question Alert Toast */}
+      {customQuestionToast && (
+        <div style={{
+          position: 'fixed',
+          top: '76px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 99990,
+          padding: '10px 20px',
+          borderRadius: 'var(--radius-pill)',
+          background: 'rgba(28, 25, 23, 0.92)',
+          border: '1px solid rgba(229, 169, 60, 0.6)',
+          color: '#FBF6F0',
+          fontSize: '13px',
+          fontWeight: '600',
+          boxShadow: '0 8px 30px rgba(0,0,0,0.4)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          animation: 'fadeIn 0.25s ease-out'
+        }}>
+          <span>💌</span>
+          <span>{customQuestionToast}</span>
+        </div>
+      )}
+
       {/* Presence Touch Ripples */}
       {touchRipples.map(r => (
         <div
@@ -803,6 +957,7 @@ export default function App() {
             onStartSession={handleStartSession}
             peerName={isHost ? guestName : hostName}
             myName={isHost ? hostName : guestName}
+            onOpenLegal={() => setShowLegalModal(true)}
           />
         )}
 
@@ -879,36 +1034,31 @@ export default function App() {
               />
             </div>
 
-            {/* Navigation & Question Modifier Controls */}
+            {/* Navigation & Question Modifier Controls - Responsive Two-Tier Layout */}
             <div style={{
               display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: '8px',
+              flexDirection: 'column',
+              gap: '10px',
               width: '100%',
-              flexWrap: 'wrap'
+              marginTop: '4px'
             }}>
-              {/* Back button */}
-              <button
-                onClick={handlePreviousCard}
-                disabled={currentIndex === 0}
-                className="btn-icon"
-                style={{
-                  opacity: currentIndex === 0 ? 0.35 : 1,
-                  cursor: currentIndex === 0 ? 'not-allowed' : 'pointer'
-                }}
-                title="Previous card"
-                aria-label="Previous card"
-              >
-                <ChevronLeft size={20} strokeWidth={2.4} />
-              </button>
-
-              {/* Lighter / Deeper Quick Swappers */}
-              <div style={{ display: 'flex', gap: '6px' }}>
+              {/* Row 1: Swappers / Modifiers (Lighter, Deeper, Secret Card) */}
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(3, 1fr)',
+                gap: '8px',
+                width: '100%'
+              }}>
                 <button
                   onClick={() => handleSwap('LIGHTER')}
                   className="btn-secondary"
-                  style={{ padding: '8px 12px', fontSize: '13px', gap: '5px' }}
+                  style={{
+                    padding: '8px 6px',
+                    fontSize: 'clamp(11px, 3vw, 13px)',
+                    gap: '4px',
+                    minHeight: '44px',
+                    width: '100%'
+                  }}
                   title="Swap for an easier question"
                 >
                   <Feather size={14} strokeWidth={2.4} color="var(--color-sage)" />
@@ -918,25 +1068,74 @@ export default function App() {
                 <button
                   onClick={() => handleSwap('DEEPER')}
                   className="btn-secondary"
-                  style={{ padding: '8px 12px', fontSize: '13px', gap: '5px' }}
+                  style={{
+                    padding: '8px 6px',
+                    fontSize: 'clamp(11px, 3vw, 13px)',
+                    gap: '4px',
+                    minHeight: '44px',
+                    width: '100%'
+                  }}
                   title="Swap for a deeper question"
                 >
                   <Flame size={14} strokeWidth={2.4} color="var(--color-ember)" />
                   <span>Deeper</span>
                 </button>
+
+                <button
+                  onClick={() => {
+                    playClickSound();
+                    setShowCustomQuestionModal(true);
+                  }}
+                  className="btn-secondary"
+                  style={{
+                    padding: '8px 6px',
+                    fontSize: 'clamp(11px, 3vw, 13px)',
+                    gap: '4px',
+                    minHeight: '44px',
+                    width: '100%',
+                    borderColor: 'rgba(198, 136, 44, 0.45)',
+                    color: '#C6882C'
+                  }}
+                  title="Write a surprise question for your partner"
+                >
+                  <PenLine size={14} strokeWidth={2.4} color="#C6882C" />
+                  <span>Secret Card</span>
+                </button>
               </div>
 
-              {/* Right Action Buttons: Skip & Next */}
-              <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+              {/* Row 2: Card Navigation (Previous, Skip, Next) */}
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                width: '100%'
+              }}>
+                {/* Back button */}
+                <button
+                  onClick={handlePreviousCard}
+                  disabled={currentIndex === 0}
+                  className="btn-icon"
+                  style={{
+                    opacity: currentIndex === 0 ? 0.35 : 1,
+                    cursor: currentIndex === 0 ? 'not-allowed' : 'pointer'
+                  }}
+                  title="Previous card"
+                  aria-label="Previous card"
+                >
+                  <ChevronLeft size={20} strokeWidth={2.4} />
+                </button>
+
                 {/* Skip button */}
                 <button
                   onClick={handleSkipQuestion}
                   className="btn-secondary"
                   style={{
-                    padding: '8px 12px',
+                    padding: '10px 14px',
                     fontSize: '13px',
                     gap: '5px',
-                    color: 'var(--color-muted)'
+                    minHeight: '44px',
+                    color: 'var(--color-muted)',
+                    flexShrink: 0
                   }}
                   title="Skip this question"
                   aria-label="Skip question"
@@ -949,7 +1148,13 @@ export default function App() {
                 <button
                   onClick={handleAdvanceCard}
                   className="btn-primary"
-                  style={{ padding: '10px 20px', fontSize: '14px', gap: '6px' }}
+                  style={{
+                    flex: 1,
+                    minHeight: '44px',
+                    padding: '10px 18px',
+                    fontSize: '14px',
+                    gap: '6px'
+                  }}
                 >
                   <span>{currentIndex === questions.length - 1 ? 'Complete' : 'Next'}</span>
                   <ChevronRight size={18} strokeWidth={2.4} />
@@ -957,8 +1162,23 @@ export default function App() {
               </div>
             </div>
 
-            {/* Floating Live Reaction Bar */}
-            <div style={{ marginTop: '14px', width: '100%', display: 'flex', justifyContent: 'center' }}>
+            {/* Sensory Presence & Live Reaction Row */}
+            <div style={{
+              marginTop: '16px',
+              width: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '12px'
+            }}>
+              <HoldTouchIndicator
+                isLocalHolding={isHoldingTouchLocal}
+                isPartnerHolding={isHoldingTouchPartner}
+                onHoldStart={handleHoldStart}
+                onHoldEnd={handleHoldEnd}
+                partnerName={isHost ? guestName : hostName}
+                isSolo={isSolo}
+              />
               <ReactionBar onSendReaction={handleSendReaction} />
             </div>
           </div>
@@ -1023,6 +1243,28 @@ export default function App() {
           onDecline={handleDeclineHandshake}
           myName={isHost ? hostName : guestName}
           peerName={isHost ? guestName : hostName}
+        />
+
+        {/* Incoming WebRTC Voice Call Modal */}
+        <IncomingCallModal
+          isOpen={!!incomingCallInfo}
+          callerName={incomingCallInfo?.callerName || (isHost ? guestName : hostName)}
+          onAccept={handleAcceptIncomingCall}
+          onDecline={handleDeclineIncomingCall}
+        />
+
+        {/* Custom Mystery Question Composer Modal */}
+        <CustomQuestionModal
+          isOpen={showCustomQuestionModal}
+          onClose={() => setShowCustomQuestionModal(false)}
+          onSubmit={handleSendCustomQuestion}
+          partnerName={isHost ? guestName : hostName}
+        />
+
+        {/* Legal / Privacy Policy & Terms Modal */}
+        <LegalModal
+          isOpen={showLegalModal}
+          onClose={() => setShowLegalModal(false)}
         />
       </div>
     </div>

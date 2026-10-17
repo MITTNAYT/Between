@@ -74,10 +74,28 @@ export default class ErrorBoundary extends React.Component {
               fontSize: '14px',
               color: 'var(--color-body, #A0A5B5)',
               lineHeight: 1.6,
-              marginBottom: '24px'
+              marginBottom: '16px'
             }}>
               Something encountered a brief hiccup while loading your cards. Let's get you right back to your connection.
             </p>
+
+            {this.state.error && (
+              <details style={{
+                textAlign: 'left',
+                margin: '0 0 20px',
+                padding: '8px 12px',
+                borderRadius: '8px',
+                background: 'rgba(0,0,0,0.3)',
+                fontSize: '12px',
+                color: '#E0533C',
+                wordBreak: 'break-word'
+              }}>
+                <summary style={{ cursor: 'pointer', fontWeight: 600, color: 'var(--color-body, #A0A5B5)' }}>Error details</summary>
+                <p style={{ marginTop: '6px', fontFamily: 'monospace' }}>
+                  {this.state.error.toString()}
+                </p>
+              </details>
+            )}
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               <button

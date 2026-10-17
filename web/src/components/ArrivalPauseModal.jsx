@@ -42,7 +42,7 @@ export default function ArrivalPauseModal({ isOpen, onComplete }) {
 
   return (
     <div className="modal-overlay" style={{ backdropFilter: 'blur(16px)' }}>
-      <div className="modal-content" style={{ textAlign: 'center', padding: '36px 28px', maxWidth: '420px' }}>
+      <div className="modal-content" style={{ textAlign: 'center', padding: 'clamp(24px, 5vw, 36px) clamp(16px, 4vw, 28px)', maxWidth: 'min(92vw, 420px)' }}>
         <div style={{
           display: 'inline-flex',
           alignItems: 'center',

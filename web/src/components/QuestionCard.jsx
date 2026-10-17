@@ -34,6 +34,7 @@ export default function QuestionCard({
   const [showCustomInput, setShowCustomInput] = useState(false);
 
   const isWildcard = question?.isWildcard || question?.id?.startsWith('wildcard');
+  const isMystery = question?.isMystery || question?.category === 'MYSTERY';
   const allPrompts = WILDCARD_INSPIRATIONS[relationshipType] || WILDCARD_INSPIRATIONS.COUPLE;
 
   const [wildcardOffset, setWildcardOffset] = useState(() => Math.floor(Math.random() * (allPrompts.length || 6)));
@@ -86,8 +87,8 @@ export default function QuestionCard({
   // FRONT CONTENT
   const frontContent = (
     <div style={{
-      padding: '30px 26px',
-      minHeight: '360px',
+      padding: 'clamp(20px, 4.5vw, 30px) clamp(16px, 4vw, 26px)',
+      minHeight: 'clamp(300px, 46vh, 400px)',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-between',
@@ -100,7 +101,8 @@ export default function QuestionCard({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: '20px'
+        gap: '8px',
+        marginBottom: '16px'
       }}>
         {/* Turn Switcher Pill */}
         <button
@@ -182,6 +184,28 @@ export default function QuestionCard({
         }}>
           <Sparkles size={13} strokeWidth={2.5} />
           <span>WILDCARD · ASK ANYTHING</span>
+        </div>
+      )}
+
+      {/* Mystery / Secret Question Badge */}
+      {isMystery && (
+        <div style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '6px',
+          padding: '4px 14px',
+          borderRadius: 'var(--radius-pill)',
+          background: 'rgba(198, 136, 44, 0.15)',
+          border: '1px solid rgba(198, 136, 44, 0.35)',
+          color: '#C6882C',
+          fontSize: '11px',
+          fontWeight: '700',
+          letterSpacing: '0.08em',
+          textTransform: 'uppercase',
+          marginBottom: '16px'
+        }}>
+          <Sparkles size={13} strokeWidth={2.5} />
+          <span>SECRET QUESTION FROM {question.author ? question.author.toUpperCase() : 'PARTNER'}</span>
         </div>
       )}
 
@@ -402,8 +426,8 @@ export default function QuestionCard({
   // BACK CONTENT (3D Flipped Side: Blind Reveal & Notes)
   const backContent = (
     <div style={{
-      padding: '28px 24px',
-      minHeight: '360px',
+      padding: 'clamp(20px, 4.5vw, 28px) clamp(16px, 4vw, 24px)',
+      minHeight: 'clamp(300px, 46vh, 400px)',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-between',
@@ -414,6 +438,7 @@ export default function QuestionCard({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
+        gap: '8px',
         marginBottom: '16px'
       }}>
         {/* Sub Tabs */}
