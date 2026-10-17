@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowRightLeft, Bookmark, Sparkles, Shuffle, ChevronDown, ChevronUp, RotateCw, Eye, EyeOff, Send, Check } from 'lucide-react';
 import InteractiveCard3D from './InteractiveCard3D';
 import { WILDCARD_INSPIRATIONS } from '../utils/engine';
