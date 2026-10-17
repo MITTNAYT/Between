@@ -287,11 +287,14 @@ export default function App() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const roomParam = params.get('room');
-    if (roomParam && roomParam.trim().length >= 4) {
-      handleJoinRoom({
-        roomCode: roomParam.trim().toUpperCase(),
-        userName: localStorage.getItem('between_user_name') || 'Partner 2'
-      });
+    if (roomParam) {
+      const cleanCode = roomParam.replace(/[^A-Za-z0-9]/g, '').toUpperCase().trim();
+      if (cleanCode.length >= 3) {
+        handleJoinRoom({
+          roomCode: cleanCode,
+          userName: localStorage.getItem('between_user_name') || 'Partner 2'
+        });
+      }
     }
   }, []);
 

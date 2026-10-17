@@ -200,18 +200,41 @@ export default function LobbyScreen({
             {errorMessage || 'The room could not be found or the connection timed out. Please verify the code with your partner.'}
           </p>
 
-          <button
-            type="button"
-            onClick={() => {
-              playClickSound();
-              onCancelRoom?.();
-            }}
-            className="btn-primary"
-            style={{ width: '100%', padding: '14px', display: 'flex', justifyContent: 'center', gap: '8px' }}
-          >
-            <ChevronLeft size={18} strokeWidth={2.4} />
-            <span>Back to Lobby / Try Again</span>
-          </button>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <button
+              type="button"
+              onClick={() => {
+                playClickSound();
+                const targetCode = roomCode || joinCodeInput;
+                if (targetCode) {
+                  onJoinRoom({
+                    roomCode: targetCode.trim().toUpperCase(),
+                    userName: guestNameInput.trim() || 'Partner 2'
+                  });
+                } else {
+                  onCancelRoom?.();
+                }
+              }}
+              className="btn-primary"
+              style={{ width: '100%', padding: '14px', display: 'flex', justifyContent: 'center', gap: '8px' }}
+            >
+              <Radio size={18} strokeWidth={2.4} />
+              <span>Retry Connecting to Room {roomCode || joinCodeInput}</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                playClickSound();
+                onCancelRoom?.();
+              }}
+              className="btn-secondary"
+              style={{ width: '100%', padding: '12px', display: 'flex', justifyContent: 'center', gap: '8px' }}
+            >
+              <ChevronLeft size={16} strokeWidth={2.4} />
+              <span>Enter Different Code / Back to Home</span>
+            </button>
+          </div>
         </div>
       ) : (!isHost && connectionStatus === 'CONNECTING') ? (
         /* 2. Guest Connecting State */
@@ -856,9 +879,16 @@ export default function LobbyScreen({
                 </label>
                 <input
                   type="text"
-                  maxLength={6}
+                  maxLength={120}
                   value={joinCodeInput}
-                  onChange={(e) => setJoinCodeInput(e.target.value.toUpperCase())}
+                  onChange={(e) => {
+                    let val = e.target.value;
+                    if (val.includes('room=')) {
+                      const match = val.match(/room=([A-Za-z0-9]+)/i);
+                      if (match) val = match[1];
+                    }
+                    setJoinCodeInput(val.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 6));
+                  }}
                   placeholder="e.g. K7M2W"
                   style={{
                     width: '100%',
@@ -881,13 +911,13 @@ export default function LobbyScreen({
 
               <button
                 type="submit"
-                disabled={joinCodeInput.trim().length < 4}
+                disabled={joinCodeInput.trim().length < 3}
                 className="btn-primary"
                 style={{
                   width: '100%',
                   padding: '15px',
-                  opacity: joinCodeInput.trim().length >= 4 ? 1 : 0.5,
-                  cursor: joinCodeInput.trim().length >= 4 ? 'pointer' : 'not-allowed'
+                  opacity: joinCodeInput.trim().length >= 3 ? 1 : 0.5,
+                  cursor: joinCodeInput.trim().length >= 3 ? 'pointer' : 'not-allowed'
                 }}
               >
                 <span>Connect to Room</span>

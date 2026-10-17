@@ -1,5 +1,5 @@
 import PeerPkg from 'peerjs';
-const Peer = PeerPkg?.Peer || PeerPkg;
+const Peer = PeerPkg?.Peer || PeerPkg?.default?.Peer || PeerPkg?.default || PeerPkg;
 
 export function generateRandomCode(length = 5) {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -33,7 +33,12 @@ class MultiplayerSync {
     this.isConnected = false;
     this.joinTimeout = null;
     this.guestHelloTimer = null;
+    this.hostWaitingTimer = null;
+    this.microPollTimer = null;
     this.heartbeatTimer = null;
+
+    // Deduplication tracking
+    this.processedMsgIds = new Set();
 
     // Callbacks
     this.onStateChangeCallback = null;
@@ -89,10 +94,16 @@ class MultiplayerSync {
     // 1. Setup local BroadcastChannel for same-device tabs
     this.setupBroadcastChannel(this.roomCode);
 
-    // 2. Connect to real-time pubsub stream
+    // 2. Connect to real-time pubsub stream via WebSocket
     this.connectRealtimeStream();
 
-    // 3. Immediately emit waiting state
+    // 3. Start active HTTP micro-polling fallback
+    this.startMicroPolling();
+
+    // 4. Start Host waiting beacon so guest immediately finds host
+    this.startHostWaitingBeacon();
+
+    // 5. Immediately emit waiting state
     this.onStatusChangeCallback?.({
       status: 'WAITING_FOR_GUEST',
       roomCode: this.roomCode,
@@ -100,7 +111,7 @@ class MultiplayerSync {
       myName: this.myName
     });
 
-    // 4. Initialize optional voice calling
+    // 6. Initialize optional voice calling
     this.initPeerVoice();
 
     return this.roomCode;
@@ -156,26 +167,29 @@ class MultiplayerSync {
     // 1. Setup local BroadcastChannel
     this.setupBroadcastChannel(this.roomCode);
 
-    // 2. Connect to real-time pubsub stream
+    // 2. Connect to real-time pubsub stream via WebSocket
     this.connectRealtimeStream();
 
-    // 3. Timeout for connection (20 seconds)
+    // 3. Start active HTTP micro-polling fallback
+    this.startMicroPolling();
+
+    // 4. Timeout for connection (extended to 30 seconds with automatic active retries)
     this.joinTimeout = setTimeout(() => {
       if (!this.isConnected) {
         this.stopGuestHelloPing();
         this.onStatusChangeCallback?.({
           status: 'ERROR',
-          error: `Could not connect to room "${this.roomCode}". Please ensure the host has the room open and check the code.`,
+          error: `Could not connect to room "${this.roomCode}". Please ensure your partner has the room open and check the code.`,
           roomCode: this.roomCode,
           isHost: false
         });
       }
-    }, 20000);
+    }, 30000);
 
-    // 4. Start sending hello ping immediately and repeatedly
+    // 5. Start sending hello ping immediately and repeatedly
     this.startGuestHelloPing();
 
-    // 5. Initialize optional voice calling
+    // 6. Initialize optional voice calling
     this.initPeerVoice();
   }
 
@@ -186,7 +200,7 @@ class MultiplayerSync {
         this.broadcastChannel.onmessage = (event) => {
           const data = event.data;
           if (data && data.senderId !== this.clientId) {
-            this.handleIncomingData(data);
+            this.handleIncomingData(data, data.msgId);
           }
         };
       } catch (e) {
@@ -201,6 +215,8 @@ class MultiplayerSync {
       this.ws = null;
     }
 
+    if (!this.roomCode) return;
+
     const topic = `between_v2_room_${this.roomCode}`;
     const wsUrl = `wss://ntfy.sh/${topic}/ws`;
 
@@ -210,6 +226,8 @@ class MultiplayerSync {
       this.ws.addEventListener('open', () => {
         if (!this.isHost && !this.isConnected) {
           this.sendHello();
+        } else if (this.isHost && !this.isConnected) {
+          this.sendHostWaitingBeacon();
         }
       });
 
@@ -219,7 +237,7 @@ class MultiplayerSync {
           if (outer.event === 'message' && outer.message) {
             const data = JSON.parse(outer.message);
             if (data && data.senderId !== this.clientId) {
-              this.handleIncomingData(data);
+              this.handleIncomingData(data, data.msgId || outer.id);
             }
           }
         } catch (e) {
@@ -228,11 +246,10 @@ class MultiplayerSync {
       });
 
       this.ws.addEventListener('error', (err) => {
-        console.warn('Realtime WS notice:', err);
+        console.warn('Realtime WS notice (polling fallback active):', err);
       });
 
       this.ws.addEventListener('close', () => {
-        // Reconnect if room is still active and not cleaned up
         if (this.roomCode) {
           setTimeout(() => {
             if (this.roomCode && !this.ws) {
@@ -246,6 +263,80 @@ class MultiplayerSync {
     }
   }
 
+  startMicroPolling() {
+    this.stopMicroPolling();
+    const pollInterval = this.isConnected ? 1200 : 750;
+
+    // Immediately poll once
+    this.pollOnce();
+
+    this.microPollTimer = setInterval(() => {
+      this.pollOnce();
+    }, pollInterval);
+  }
+
+  stopMicroPolling() {
+    if (this.microPollTimer) {
+      clearInterval(this.microPollTimer);
+      this.microPollTimer = null;
+    }
+  }
+
+  async pollOnce() {
+    if (!this.roomCode) return;
+    const topic = `between_v2_room_${this.roomCode}`;
+    try {
+      const res = await fetch(`https://ntfy.sh/${topic}/json?poll=1&since=1m`, {
+        cache: 'no-store'
+      });
+      if (!res.ok) return;
+      const text = await res.text();
+      if (!text) return;
+
+      const lines = text.trim().split('\n');
+      for (const line of lines) {
+        if (!line) continue;
+        try {
+          const item = JSON.parse(line);
+          if (item.event === 'message' && item.message) {
+            const data = JSON.parse(item.message);
+            if (data && data.senderId !== this.clientId) {
+              this.handleIncomingData(data, data.msgId || item.id);
+            }
+          }
+        } catch (e) {}
+      }
+    } catch (e) {
+      // Network hiccup - polling will automatically retry
+    }
+  }
+
+  startHostWaitingBeacon() {
+    this.stopHostWaitingBeacon();
+    this.sendHostWaitingBeacon();
+    this.hostWaitingTimer = setInterval(() => {
+      if (!this.isConnected && this.isHost) {
+        this.sendHostWaitingBeacon();
+      } else {
+        this.stopHostWaitingBeacon();
+      }
+    }, 1200);
+  }
+
+  stopHostWaitingBeacon() {
+    if (this.hostWaitingTimer) {
+      clearInterval(this.hostWaitingTimer);
+      this.hostWaitingTimer = null;
+    }
+  }
+
+  sendHostWaitingBeacon() {
+    this.broadcastMessage({
+      type: 'HOST_WAITING',
+      name: this.myName
+    });
+  }
+
   startGuestHelloPing() {
     this.stopGuestHelloPing();
     this.sendHello();
@@ -255,7 +346,7 @@ class MultiplayerSync {
       } else {
         this.stopGuestHelloPing();
       }
-    }, 1200);
+    }, 900);
   }
 
   stopGuestHelloPing() {
@@ -272,11 +363,24 @@ class MultiplayerSync {
     });
   }
 
-  handleIncomingData(data) {
+  handleIncomingData(data, rawId = null) {
     if (!data || typeof data !== 'object') return;
     if (data.type === 'HEARTBEAT') return;
 
+    // Deduplication check
+    const msgId = data.msgId || rawId || `${data.type}_${data.senderId}_${data.timestamp}`;
+    if (this.processedMsgIds.has(msgId)) {
+      return;
+    }
+    this.processedMsgIds.add(msgId);
+    if (this.processedMsgIds.size > 500) {
+      const oldest = this.processedMsgIds.values().next().value;
+      this.processedMsgIds.delete(oldest);
+    }
+
+    // 1. Host sees Guest Hello
     if (data.type === 'GUEST_HELLO') {
+      this.stopHostWaitingBeacon();
       this.isConnected = true;
       if (data.name) this.peerName = data.name;
 
@@ -296,9 +400,21 @@ class MultiplayerSync {
         peerName: this.peerName,
         myName: this.myName
       });
+
+      // Switch to standard polling interval
+      this.startMicroPolling();
       return;
     }
 
+    // 2. Guest sees Host Waiting Beacon
+    if (data.type === 'HOST_WAITING' && !this.isHost) {
+      if (data.name) this.peerName = data.name;
+      // Immediately reply with hello to close the handshake loop
+      this.sendHello();
+      return;
+    }
+
+    // 3. Guest receives Host Connected
     if (data.type === 'HOST_CONNECTED') {
       if (this.joinTimeout) {
         clearTimeout(this.joinTimeout);
@@ -315,6 +431,9 @@ class MultiplayerSync {
         peerName: this.peerName,
         myName: this.myName
       });
+
+      // Switch to standard polling interval
+      this.startMicroPolling();
 
       // Request latest session state immediately from host
       this.broadcastMessage({
@@ -350,21 +469,32 @@ class MultiplayerSync {
   }
 
   broadcastMessage(message) {
+    if (!this.roomCode) return;
+
     const payload = {
       ...message,
+      msgId: `${this.clientId}_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`,
       senderId: this.clientId,
       roomCode: this.roomCode,
       timestamp: Date.now()
     };
 
-    const topic = `between_v2_room_${this.roomCode}`;
+    // Remember our own message id so we don't process reflections
+    this.processedMsgIds.add(payload.msgId);
 
-    // 1. Send via HTTP POST pubsub (instant delivery to all subscribers worldwide)
+    const topic = `between_v2_room_${this.roomCode}`;
+    const jsonStr = JSON.stringify(payload);
+
+    // 1. Send via HTTP POST pubsub (with explicit cache headers so poll picks it up)
     try {
       fetch(`https://ntfy.sh/${topic}`, {
         method: 'POST',
-        headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify(payload)
+        headers: {
+          'Content-Type': 'text/plain',
+          'X-Cache': 'yes',
+          'Cache': 'yes'
+        },
+        body: jsonStr
       }).catch((e) => {
         console.warn('PubSub publish notice:', e);
       });
@@ -402,6 +532,7 @@ class MultiplayerSync {
   // --- Voice Call WebRTC Support ---
   initPeerVoice() {
     try {
+      if (!this.roomCode) return;
       const myPeerId = this.isHost
         ? `between-v2-${this.roomCode.toLowerCase()}`
         : `between-guest-${this.clientId}`;
@@ -509,6 +640,8 @@ class MultiplayerSync {
       this.joinTimeout = null;
     }
     this.stopGuestHelloPing();
+    this.stopHostWaitingBeacon();
+    this.stopMicroPolling();
     this.endVoiceCall();
 
     try {
@@ -532,3 +665,4 @@ class MultiplayerSync {
 }
 
 export const multiplayerSync = new MultiplayerSync();
+export { MultiplayerSync };
