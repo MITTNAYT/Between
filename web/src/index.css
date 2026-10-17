@@ -322,6 +322,12 @@ input, textarea, select {
   }
 }
 
+@media (max-width: 380px) {
+  .header-btn-label {
+    display: none !important;
+  }
+}
+
 /* Breathing Wildcard Glow */
 @keyframes breathingGlow {
   0% {

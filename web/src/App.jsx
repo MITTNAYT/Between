@@ -931,13 +931,17 @@ export default function App() {
           isHost={isHost}
           phaseName={currentQuestion?.phase || 'WARMUP'}
           onExit={handleExitToLobby}
-          isSessionActive={screen === 'SESSION'}
+          isSessionActive={screen !== 'LOBBY'}
           theme={theme}
           onToggleTheme={toggleTheme}
           voiceCallState={voiceCallState}
           isVoiceMuted={isVoiceMuted}
           onToggleVoiceCall={handleToggleVoiceCall}
           onToggleVoiceMute={handleToggleVoiceMute}
+          onShowToast={(msg) => {
+            setCustomQuestionToast(msg);
+            setTimeout(() => setCustomQuestionToast(null), 3500);
+          }}
         />
 
         {/* SCREEN 1: LOBBY */}
