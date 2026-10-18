@@ -262,3 +262,91 @@ export function swapQuestion(currentQuestion, direction, relationshipType, curre
 
   return candidates[Math.floor(Math.random() * candidates.length)];
 }
+
+export const DIG_DEEPER_CHALLENGES = [
+  {
+    id: 'gaze_15s',
+    title: 'The 15-Second Gaze',
+    instruction: 'Look directly into each other’s eyes across the camera or in person for 15 seconds without speaking before answering.',
+    hasTimer: true,
+    timerSeconds: 15,
+    tag: 'EYE CONTACT'
+  },
+  {
+    id: 'three_words',
+    title: 'The Three-Word Constraint',
+    instruction: 'Answer this question using exactly three words. No explanations until your partner repeats them back.',
+    hasTimer: false,
+    tag: 'BREVITY'
+  },
+  {
+    id: 'unfiltered_first',
+    title: 'First Thought Unedited',
+    instruction: 'Speak the very first sentence that flashed in your head, before your mind tried to polish or protect it.',
+    hasTimer: false,
+    tag: 'HONESTY'
+  },
+  {
+    id: 'swap_seats',
+    title: 'Partner Prediction',
+    instruction: 'Before you speak, tell your partner what you predict they would answer to this question.',
+    hasTimer: false,
+    tag: 'PERSPECTIVE'
+  },
+  {
+    id: 'whisper_mode',
+    title: 'The Quiet Whisper',
+    instruction: 'Lower your voice to a quiet whisper. Speak as if you are sharing a secret in the middle of the night.',
+    hasTimer: false,
+    tag: 'INTIMACY'
+  },
+  {
+    id: 'deep_breath',
+    title: 'Shared Exhale',
+    instruction: 'Take one synchronous deep breath together—inhale for 4 seconds, exhale slowly for 6—then answer.',
+    hasTimer: true,
+    timerSeconds: 10,
+    tag: 'PRESENCE'
+  }
+];
+
+export const DIG_DEEPER_PROMPTS = {
+  DEPTH_1_2: [
+    "What memory or image immediately flashed in your mind when you heard this?",
+    "If you had to answer in just one sentence without overthinking, what is it?",
+    "What is a small detail about your answer that you rarely tell anyone?",
+    "How has your answer to this question changed compared to who you were two years ago?"
+  ],
+  DEPTH_3: [
+    "If you answered with 100% honesty, what part of your answer did you hesitate to say?",
+    "When was the last time you felt that exact emotion with me?",
+    "What do you hope I understand about you after hearing that answer?",
+    "If you had to ask me the same question right now, what do you hope to hear from me?"
+  ],
+  DEPTH_4_5: [
+    "What fear or vulnerability surfaced in your chest as you formed that answer?",
+    "If tonight was our only chance to speak without fear of judgment, what else belongs in that answer?",
+    "What part of your past taught you to feel or protect this part of yourself?",
+    "What do you need from me right now after sharing that vulnerability?"
+  ]
+};
+
+export function getDigDeeperData(question) {
+  if (!question) {
+    return {
+      followUp: "What part of your answer was hardest to admit?",
+      challenge: DIG_DEEPER_CHALLENGES[0]
+    };
+  }
+  
+  const depth = question.depth || 1;
+  const pool = depth >= 4 
+    ? DIG_DEEPER_PROMPTS.DEPTH_4_5 
+    : (depth === 3 ? DIG_DEEPER_PROMPTS.DEPTH_3 : DIG_DEEPER_PROMPTS.DEPTH_1_2);
+  
+  const hash = (question.id || '').split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+  const followUp = pool[hash % pool.length];
+  const challenge = DIG_DEEPER_CHALLENGES[hash % DIG_DEEPER_CHALLENGES.length];
+
+  return { followUp, challenge };
+}

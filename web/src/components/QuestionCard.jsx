@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRightLeft, Bookmark, Sparkles, Shuffle, ChevronDown, ChevronUp, RotateCw, Eye, EyeOff, Send, Check } from 'lucide-react';
+import { ArrowRightLeft, Bookmark, Sparkles, Shuffle, ChevronDown, ChevronUp, RotateCw, Eye, EyeOff, Send, Check, Flame, Clock, Play, RotateCcw } from 'lucide-react';
 import InteractiveCard3D from './InteractiveCard3D';
-import { WILDCARD_INSPIRATIONS } from '../utils/engine';
+import { WILDCARD_INSPIRATIONS, getDigDeeperData, DIG_DEEPER_CHALLENGES } from '../utils/engine';
 import { playClickSound, playChimeSound, playHandshakeSound } from '../utils/audio';
 import { triggerHaptic } from '../utils/haptics';
 
@@ -29,11 +29,50 @@ export default function QuestionCard({
   isPartnerSpeaking = false
 }) {
   const [isFlipped, setIsFlipped] = useState(false);
-  const [backTab, setBackTab] = useState('BLIND'); // 'BLIND' | 'NOTES'
+  const [backTab, setBackTab] = useState('DIG_DEEPER'); // 'DIG_DEEPER' | 'BLIND'
   const [hintExpanded, setHintExpanded] = useState(false);
   const [selectedWildcardPrompt, setSelectedWildcardPrompt] = useState(wildcardPrompt || null);
   const [customWildcardInput, setCustomWildcardInput] = useState('');
   const [showCustomInput, setShowCustomInput] = useState(false);
+
+  // Dig Deeper & Micro-Challenge State
+  const digDeeperData = getDigDeeperData(question);
+  const [challengeOffset, setChallengeOffset] = useState(0);
+  const currentChallenge = DIG_DEEPER_CHALLENGES[(DIG_DEEPER_CHALLENGES.indexOf(digDeeperData.challenge) + challengeOffset) % DIG_DEEPER_CHALLENGES.length];
+
+  const [timerSecondsLeft, setTimerSecondsLeft] = useState(15);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [timerCompleted, setTimerCompleted] = useState(false);
+
+  // Reset timer if question or challenge changes
+  useEffect(() => {
+    setIsTimerRunning(false);
+    setTimerCompleted(false);
+    setTimerSecondsLeft(currentChallenge.timerSeconds || 15);
+  }, [question?.id, currentChallenge?.id]);
+
+  // Interactive Countdown Interval
+  useEffect(() => {
+    let interval = null;
+    if (isTimerRunning && timerSecondsLeft > 0) {
+      interval = setInterval(() => {
+        setTimerSecondsLeft(prev => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            setIsTimerRunning(false);
+            setTimerCompleted(true);
+            playHandshakeSound();
+            triggerHaptic('success');
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isTimerRunning, timerSecondsLeft]);
 
   const isWildcard = question?.isWildcard || question?.id?.startsWith('wildcard');
   const isMystery = question?.isMystery || question?.category === 'MYSTERY';
@@ -143,11 +182,20 @@ export default function QuestionCard({
           <button
             onClick={toggleFlip}
             className="pill-badge pill-badge-surface"
-            style={{ cursor: 'pointer', gap: '4px', fontSize: '11px', padding: '5px 10px' }}
-            title="Flip card for Notes & Blind Reveal"
+            style={{ 
+              cursor: 'pointer', 
+              gap: '5px', 
+              fontSize: '11px', 
+              padding: '6px 12px',
+              border: '1px solid rgba(198, 136, 44, 0.4)',
+              background: 'rgba(198, 136, 44, 0.08)',
+              color: 'var(--color-ink)',
+              transition: 'all 0.2s'
+            }}
+            title="Flip card for Dig Deeper follow-up & connection challenge"
           >
-            <RotateCw size={12} strokeWidth={2.4} />
-            <span>Flip</span>
+            <Sparkles size={12} strokeWidth={2.4} color="var(--color-gold)" />
+            <span>Dig Deeper</span>
           </button>
 
           <button
@@ -457,15 +505,16 @@ export default function QuestionCard({
     </div>
   );
 
-  // BACK CONTENT (3D Flipped Side: Blind Reveal & Notes)
+  // BACK CONTENT (3D Flipped Side: Dig Deeper & Secret Reveal)
   const backContent = (
     <div style={{
       padding: 'clamp(20px, 4.5vw, 28px) clamp(16px, 4vw, 24px)',
-      minHeight: 'clamp(300px, 46vh, 400px)',
+      minHeight: 'clamp(320px, 48vh, 420px)',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-between',
-      textAlign: 'left'
+      textAlign: 'left',
+      gap: '12px'
     }}>
       {/* Back Header */}
       <div style={{
@@ -473,58 +522,238 @@ export default function QuestionCard({
         alignItems: 'center',
         justifyContent: 'space-between',
         gap: '8px',
-        marginBottom: '16px'
+        marginBottom: '6px'
       }}>
         {/* Sub Tabs */}
-        <div style={{ display: 'flex', gap: '6px', background: 'var(--color-surface-subtle)', padding: '3px', borderRadius: 'var(--radius-pill)' }}>
+        <div style={{ display: 'flex', gap: '4px', background: 'var(--color-surface-subtle)', padding: '3px', borderRadius: 'var(--radius-pill)' }}>
           <button
-            onClick={() => { playClickSound(); setBackTab('BLIND'); }}
+            onClick={() => { playClickSound(); triggerHaptic('light'); setBackTab('DIG_DEEPER'); }}
             style={{
               border: 'none',
-              padding: '6px 12px',
+              padding: '6px 14px',
+              borderRadius: 'var(--radius-pill)',
+              fontSize: '12px',
+              fontWeight: backTab === 'DIG_DEEPER' ? '700' : '500',
+              background: backTab === 'DIG_DEEPER' ? 'var(--color-surface)' : 'transparent',
+              color: backTab === 'DIG_DEEPER' ? 'var(--color-ink)' : 'var(--color-muted)',
+              boxShadow: backTab === 'DIG_DEEPER' ? 'var(--shadow-sm)' : 'none',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '5px'
+            }}
+          >
+            <Sparkles size={12} color="var(--color-gold)" />
+            <span>Dig Deeper</span>
+          </button>
+          <button
+            onClick={() => { playClickSound(); triggerHaptic('light'); setBackTab('BLIND'); }}
+            style={{
+              border: 'none',
+              padding: '6px 14px',
               borderRadius: 'var(--radius-pill)',
               fontSize: '12px',
               fontWeight: backTab === 'BLIND' ? '700' : '500',
               background: backTab === 'BLIND' ? 'var(--color-surface)' : 'transparent',
               color: backTab === 'BLIND' ? 'var(--color-ink)' : 'var(--color-muted)',
-              cursor: 'pointer'
+              boxShadow: backTab === 'BLIND' ? 'var(--shadow-sm)' : 'none',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '5px'
             }}
           >
-            Blind Reveal
-          </button>
-          <button
-            onClick={() => { playClickSound(); setBackTab('NOTES'); }}
-            style={{
-              border: 'none',
-              padding: '6px 12px',
-              borderRadius: 'var(--radius-pill)',
-              fontSize: '12px',
-              fontWeight: backTab === 'NOTES' ? '700' : '500',
-              background: backTab === 'NOTES' ? 'var(--color-surface)' : 'transparent',
-              color: backTab === 'NOTES' ? 'var(--color-ink)' : 'var(--color-muted)',
-              cursor: 'pointer'
-            }}
-          >
-            Scratchpad
+            <Eye size={12} />
+            <span>Secret Reveal</span>
           </button>
         </div>
 
         <button
           onClick={toggleFlip}
           className="pill-badge pill-badge-surface"
-          style={{ cursor: 'pointer', gap: '4px', fontSize: '11px', padding: '5px 10px' }}
+          style={{ cursor: 'pointer', gap: '4px', fontSize: '11px', padding: '6px 12px' }}
         >
           <RotateCw size={12} strokeWidth={2.4} />
-          <span>Flip to Front</span>
+          <span>Front</span>
         </button>
       </div>
 
-      {/* TAB 1: BLIND REVEAL */}
+      {/* TAB 1: DIG DEEPER (Follow-up & Connection Challenge) */}
+      {backTab === 'DIG_DEEPER' && (
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '14px', animation: 'fadeIn 0.25s ease-out' }}>
+          {/* Section 1: The Unspoken Follow-up Question */}
+          <div style={{
+            padding: '14px 16px',
+            borderRadius: 'var(--radius-md)',
+            background: 'rgba(229, 169, 60, 0.08)',
+            border: '1px solid rgba(229, 169, 60, 0.28)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '6px'
+          }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              fontSize: '10.5px',
+              fontWeight: '700',
+              color: 'var(--color-gold)',
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase'
+            }}>
+              <Flame size={13} strokeWidth={2.4} />
+              <span>The Unspoken Layer</span>
+            </div>
+
+            <p style={{
+              fontFamily: 'var(--font-serif)',
+              fontStyle: 'italic',
+              fontSize: 'clamp(15px, 3.8vw, 17px)',
+              lineHeight: '1.45',
+              color: 'var(--color-ink)',
+              margin: '2px 0 0'
+            }}>
+              “{digDeeperData.followUp}”
+            </p>
+          </div>
+
+          {/* Section 2: Connection Micro-Challenge */}
+          <div style={{
+            padding: '14px 16px',
+            borderRadius: 'var(--radius-md)',
+            background: 'var(--color-surface-subtle)',
+            border: '1px solid var(--color-hairline)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '8px'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px',
+                fontSize: '10px',
+                fontWeight: '700',
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                color: 'var(--color-ember)'
+              }}>
+                <Sparkles size={11} />
+                <span>CHALLENGE · {currentChallenge.tag}</span>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => {
+                  playClickSound();
+                  triggerHaptic('light');
+                  setChallengeOffset(prev => prev + 1);
+                }}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: 'var(--color-muted)',
+                  fontSize: '11px',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px'
+                }}
+                title="Roll another connection challenge"
+              >
+                <Shuffle size={11} strokeWidth={2.2} />
+                <span>Roll Next</span>
+              </button>
+            </div>
+
+            <div style={{ fontSize: '14px', fontWeight: '700', color: 'var(--color-ink)' }}>
+              {currentChallenge.title}
+            </div>
+
+            <p style={{ fontSize: '13px', color: 'var(--color-body)', lineHeight: '1.45', margin: 0 }}>
+              {currentChallenge.instruction}
+            </p>
+
+            {/* Optional Countdown Timer Widget for Eye Contact / Breathe */}
+            {currentChallenge.hasTimer && (
+              <div style={{ marginTop: '6px' }}>
+                {timerCompleted ? (
+                  <div style={{
+                    padding: '8px 12px',
+                    borderRadius: 'var(--radius-pill)',
+                    background: 'rgba(56, 123, 106, 0.12)',
+                    border: '1px solid rgba(56, 123, 106, 0.3)',
+                    color: 'var(--color-sage)',
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px'
+                  }}>
+                    <Check size={14} strokeWidth={2.6} />
+                    <span>Eye Contact Challenge Completed ✨</span>
+                  </div>
+                ) : isTimerRunning ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      playClickSound();
+                      setIsTimerRunning(false);
+                    }}
+                    className="btn-primary"
+                    style={{
+                      padding: '8px 16px',
+                      fontSize: '13px',
+                      background: 'var(--color-ember)',
+                      animation: 'pulse 1.2s infinite',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px'
+                    }}
+                  >
+                    <Clock size={15} strokeWidth={2.4} />
+                    <span>00:{String(timerSecondsLeft).padStart(2, '0')} · Hold Eye Contact (Stop)</span>
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      playClickSound();
+                      triggerHaptic('medium');
+                      setIsTimerRunning(true);
+                    }}
+                    className="btn-secondary"
+                    style={{
+                      width: '100%',
+                      padding: '8px 14px',
+                      fontSize: '12.5px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '6px',
+                      borderColor: 'rgba(198, 136, 44, 0.35)',
+                      color: 'var(--color-ink)'
+                    }}
+                  >
+                    <Play size={13} fill="currentColor" strokeWidth={0} />
+                    <span>Start {currentChallenge.timerSeconds}s Gaze Timer</span>
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* TAB 2: SECRET DOUBLE-BLIND REVEAL */}
       {backTab === 'BLIND' && (
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '12px', animation: 'fadeIn 0.25s ease-out' }}>
           <div>
             <div style={{ fontSize: '11px', fontWeight: '700', color: 'var(--color-ember)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-              Double Blind Reveal
+              Secret Double-Blind Answer
             </div>
             <p style={{ fontSize: '13px', color: 'var(--color-body)', marginTop: '2px' }}>
               Both write your honest answer in secret. Neither sees until both press submit!
@@ -614,39 +843,6 @@ export default function QuestionCard({
               </div>
             </div>
           )}
-        </div>
-      )}
-
-      {/* TAB 2: SCRATCHPAD */}
-      {backTab === 'NOTES' && (
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          <div>
-            <div style={{ fontSize: '11px', fontWeight: '700', color: 'var(--color-muted)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-              Scratchpad
-            </div>
-            <p style={{ fontSize: '13px', color: 'var(--color-body)' }}>
-              Jot down quick thoughts, jokes, or key takeaways from this card.
-            </p>
-          </div>
-
-          <textarea
-            rows={5}
-            value={noteText}
-            onChange={(e) => setNoteText(e.target.value)}
-            placeholder="Jot down notes or quotes here..."
-            style={{
-              width: '100%',
-              flex: 1,
-              padding: '12px',
-              borderRadius: 'var(--radius-sm)',
-              border: '1px solid var(--color-hairline)',
-              background: 'var(--color-surface-subtle)',
-              fontSize: '14px',
-              outline: 'none',
-              resize: 'none',
-              fontFamily: 'inherit'
-            }}
-          />
         </div>
       )}
     </div>
