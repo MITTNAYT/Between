@@ -130,7 +130,9 @@ export default function QuestionCard({
   const frontContent = (
     <div style={{
       padding: 'clamp(20px, 4.5vw, 30px) clamp(16px, 4vw, 26px)',
-      minHeight: 'clamp(300px, 46vh, 400px)',
+      minHeight: 'clamp(320px, 48vh, 420px)',
+      width: '100%',
+      boxSizing: 'border-box',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-between',
@@ -510,6 +512,8 @@ export default function QuestionCard({
     <div style={{
       padding: 'clamp(20px, 4.5vw, 28px) clamp(16px, 4vw, 24px)',
       minHeight: 'clamp(320px, 48vh, 420px)',
+      width: '100%',
+      boxSizing: 'border-box',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-between',

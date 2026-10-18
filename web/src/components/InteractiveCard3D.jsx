@@ -76,6 +76,31 @@ export default function InteractiveCard3D({
     ? `translateX(${dragOffset}px) rotateZ(${dragRotation}deg) rotateX(${tilt.rotateX * 0.5}deg) rotateY(${baseFlipAngle + tilt.rotateY * 0.5}deg) scale(0.985)`
     : `rotateX(${tilt.rotateX}deg) rotateY(${baseFlipAngle + tilt.rotateY}deg) ${tilt.isHovered ? 'scale3d(1.015, 1.015, 1.015)' : 'scale3d(1, 1, 1)'}`;
 
+  const renderSpecularSheen = () => (
+    <div
+      style={{
+        position: 'absolute',
+        inset: 0,
+        pointerEvents: 'none',
+        background: `radial-gradient(circle 380px at ${tilt.glareX}% ${tilt.glareY}%, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0.12) 45%, rgba(255, 255, 255, 0) 75%)`,
+        opacity: tilt.isHovered || isDragging ? 1 : 0,
+        transition: 'opacity 0.25s ease-out',
+        zIndex: 1,
+        borderRadius: 'inherit'
+      }}
+      aria-hidden="true"
+    />
+  );
+
+  const renderCornerMarks = () => (
+    <>
+      <div style={{ position: 'absolute', top: '12px', left: '14px', fontSize: '10px', color: 'rgba(198, 136, 44, 0.4)', pointerEvents: 'none', zIndex: 3, userSelect: 'none' }}>◇</div>
+      <div style={{ position: 'absolute', top: '12px', right: '14px', fontSize: '10px', color: 'rgba(198, 136, 44, 0.4)', pointerEvents: 'none', zIndex: 3, userSelect: 'none' }}>◇</div>
+      <div style={{ position: 'absolute', bottom: '12px', left: '14px', fontSize: '10px', color: 'rgba(198, 136, 44, 0.4)', pointerEvents: 'none', zIndex: 3, userSelect: 'none' }}>◇</div>
+      <div style={{ position: 'absolute', bottom: '12px', right: '14px', fontSize: '10px', color: 'rgba(198, 136, 44, 0.4)', pointerEvents: 'none', zIndex: 3, userSelect: 'none' }}>◇</div>
+    </>
+  );
+
   return (
     <div
       style={{
@@ -93,88 +118,90 @@ export default function InteractiveCard3D({
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
         onPointerLeave={handlePointerLeave}
-        className={`editorial-card ${isWildcard ? 'wildcard-card' : ''} ${swipeClass} ${className}`}
+        className={`${swipeClass} ${className}`}
         style={{
           width: '100%',
           position: 'relative',
           transformStyle: 'preserve-3d',
+          WebkitTransformStyle: 'preserve-3d',
           transform: currentTransform,
           transition: isDragging 
             ? 'none' 
-            : 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease-out',
-          boxShadow: isDragging
-            ? '0 32px 72px -12px rgba(28, 25, 23, 0.2), 0 20px 32px -8px rgba(28, 25, 23, 0.12)'
-            : (tilt.isHovered
-                ? '0 28px 64px -12px rgba(28, 25, 23, 0.14), 0 16px 24px -8px rgba(28, 25, 23, 0.08)'
-                : undefined),
+            : 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease-out',
           cursor: isDragging ? 'grabbing' : 'grab'
         }}
       >
-        {/* Dynamic Specular Sheen (Curved Light Reflection) */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            pointerEvents: 'none',
-            background: `radial-gradient(circle 380px at ${tilt.glareX}% ${tilt.glareY}%, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0.12) 45%, rgba(255, 255, 255, 0) 75%)`,
-            opacity: tilt.isHovered || isDragging ? 1 : 0,
-            transition: 'opacity 0.25s ease-out',
-            zIndex: 1,
-            borderRadius: 'inherit'
-          }}
-          aria-hidden="true"
-        />
-
-        {/* Tactile Letterpress Corner Marks */}
-        <div style={{ position: 'absolute', top: '12px', left: '14px', fontSize: '10px', color: 'rgba(198, 136, 44, 0.4)', pointerEvents: 'none', zIndex: 3, userSelect: 'none' }}>◇</div>
-        <div style={{ position: 'absolute', top: '12px', right: '14px', fontSize: '10px', color: 'rgba(198, 136, 44, 0.4)', pointerEvents: 'none', zIndex: 3, userSelect: 'none' }}>◇</div>
-        <div style={{ position: 'absolute', bottom: '12px', left: '14px', fontSize: '10px', color: 'rgba(198, 136, 44, 0.4)', pointerEvents: 'none', zIndex: 3, userSelect: 'none' }}>◇</div>
-        <div style={{ position: 'absolute', bottom: '12px', right: '14px', fontSize: '10px', color: 'rgba(198, 136, 44, 0.4)', pointerEvents: 'none', zIndex: 3, userSelect: 'none' }}>◇</div>
-
-        {/* If double-sided front and back are passed */}
         {frontContent && backContent ? (
           <>
             {/* FRONT FACE */}
-            <div style={{
-              width: '100%',
-              height: '100%',
-              backfaceVisibility: 'hidden',
-              WebkitBackfaceVisibility: 'hidden',
-              transform: 'translateZ(26px)',
-              position: 'relative',
-              zIndex: 2,
-              display: isFlipped ? 'none' : 'flex',
-              flexDirection: 'column'
-            }}>
-              {frontContent}
+            <div
+              className={`editorial-card ${isWildcard ? 'wildcard-card' : ''}`}
+              style={{
+                width: '100%',
+                position: isFlipped ? 'absolute' : 'relative',
+                top: 0,
+                left: 0,
+                backfaceVisibility: 'hidden',
+                WebkitBackfaceVisibility: 'hidden',
+                transform: 'rotateY(0deg) translateZ(1px)',
+                zIndex: isFlipped ? 1 : 2,
+                pointerEvents: isFlipped ? 'none' : 'auto',
+                boxShadow: isDragging
+                  ? '0 32px 72px -12px rgba(28, 25, 23, 0.2), 0 20px 32px -8px rgba(28, 25, 23, 0.12)'
+                  : (tilt.isHovered
+                      ? '0 28px 64px -12px rgba(28, 25, 23, 0.14), 0 16px 24px -8px rgba(28, 25, 23, 0.08)'
+                      : undefined)
+              }}
+            >
+              {renderSpecularSheen()}
+              {renderCornerMarks()}
+              <div style={{ position: 'relative', zIndex: 5 }}>
+                {frontContent}
+              </div>
             </div>
 
-            {/* BACK FACE (Rotated 180deg) */}
-            <div style={{
-              width: '100%',
-              height: '100%',
-              backfaceVisibility: 'hidden',
-              WebkitBackfaceVisibility: 'hidden',
-              transform: 'rotateY(180deg) translateZ(26px)',
-              position: 'relative',
-              zIndex: 2,
-              display: isFlipped ? 'flex' : 'none',
-              flexDirection: 'column'
-            }}>
-              {backContent}
+            {/* BACK FACE */}
+            <div
+              className={`editorial-card ${isWildcard ? 'wildcard-card' : ''}`}
+              style={{
+                width: '100%',
+                position: isFlipped ? 'relative' : 'absolute',
+                top: 0,
+                left: 0,
+                backfaceVisibility: 'hidden',
+                WebkitBackfaceVisibility: 'hidden',
+                transform: 'rotateY(180deg) translateZ(1px)',
+                zIndex: isFlipped ? 2 : 1,
+                pointerEvents: isFlipped ? 'auto' : 'none',
+                boxShadow: isDragging
+                  ? '0 32px 72px -12px rgba(28, 25, 23, 0.2), 0 20px 32px -8px rgba(28, 25, 23, 0.12)'
+                  : (tilt.isHovered
+                      ? '0 28px 64px -12px rgba(28, 25, 23, 0.14), 0 16px 24px -8px rgba(28, 25, 23, 0.08)'
+                      : undefined)
+              }}
+            >
+              {renderSpecularSheen()}
+              {renderCornerMarks()}
+              <div style={{ position: 'relative', zIndex: 5 }}>
+                {backContent}
+              </div>
             </div>
           </>
         ) : (
-          <div style={{
-            position: 'relative',
-            zIndex: 2,
-            transform: 'translateZ(26px)',
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column'
-          }}>
-            {children}
+          <div
+            className={`editorial-card ${isWildcard ? 'wildcard-card' : ''}`}
+            style={{
+              position: 'relative',
+              width: '100%',
+              display: 'flex',
+              flexDirection: 'column'
+            }}
+          >
+            {renderSpecularSheen()}
+            {renderCornerMarks()}
+            <div style={{ position: 'relative', zIndex: 5 }}>
+              {children}
+            </div>
           </div>
         )}
       </div>
