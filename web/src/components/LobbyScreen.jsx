@@ -688,7 +688,7 @@ export default function LobbyScreen({
                 display: 'grid',
                 gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))',
                 gap: '8px',
-                marginBottom: '10px'
+                marginBottom: '20px'
               }}>
                 {Object.values(RELATIONSHIP_TYPES).map((rel) => {
                   const isSelected = selectedRel === rel.id;
@@ -739,27 +739,6 @@ export default function LobbyScreen({
                   );
                 })}
               </div>
-
-              {/* Selected Connection Description Banner */}
-              {RELATIONSHIP_TYPES[selectedRel] && (
-                <div style={{
-                  padding: '9px 12px',
-                  borderRadius: 'var(--radius-sm)',
-                  background: `${RELATIONSHIP_TYPES[selectedRel].color}12`,
-                  border: `1px solid ${RELATIONSHIP_TYPES[selectedRel].color}30`,
-                  fontSize: '12px',
-                  color: 'var(--color-ink)',
-                  marginBottom: '18px',
-                  lineHeight: '1.4',
-                  animation: 'fadeIn 0.2s ease-out',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px'
-                }}>
-                  <Sparkles size={13} color={RELATIONSHIP_TYPES[selectedRel].color} style={{ flexShrink: 0 }} />
-                  <span>{RELATIONSHIP_TYPES[selectedRel].description}</span>
-                </div>
-              )}
 
               {/* Duration Selector */}
               <label style={{
