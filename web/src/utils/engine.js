@@ -8,6 +8,20 @@ export const RELATIONSHIP_TYPES = {
     description: 'Vulnerability, shared dreams, quiet appreciations, and deep intimacy.',
     maxDepth: 5
   },
+  LONG_DISTANCE: {
+    id: 'LONG_DISTANCE',
+    label: 'Long Distance',
+    color: '#3B79C4',
+    description: 'Bridging the miles, timezone dates, countdowns, and connection across distance.',
+    maxDepth: 5
+  },
+  MIDNIGHT: {
+    id: 'MIDNIGHT',
+    label: 'Midnight Whispers',
+    color: '#8354C8',
+    description: 'Vulnerable late-night confessions, unspoken desires, and raw bedtime truths.',
+    maxDepth: 5
+  },
   FRIEND: {
     id: 'FRIEND',
     label: 'Friend',
@@ -79,6 +93,46 @@ export const WILDCARD_INSPIRATIONS = {
     "What is an insecurity of yours that you wish I could kiss away forever?",
     "What is a quiet moment of ours that felt like a movie scene?",
     "What is one thing you promise to always cherish about our connection?"
+  ],
+  LONG_DISTANCE: [
+    "What is an item of mine you hold or look at when you miss me the most?",
+    "What is the very first thing you want us to do within the first 60 minutes of our next airport reunion?",
+    "What's a song that instantly transports you to being beside me, wherever you are?",
+    "What is something funny or quirky about my timezone or daily routine that makes you smile?",
+    "If you could teleport to my bedroom for exactly 15 minutes tonight, what would we do?",
+    "What is a voice note or message from me that you've replayed or re-read more than once?",
+    "What is a dream trip or safe haven where you want us to escape together next?",
+    "What is something you wish I could physically do for you right now (a hug, forehead kiss, backrub, hold hands)?",
+    "When during the day do you feel my absence the most acutely?",
+    "What is a promise we made about our future that keeps you grounded when distance feels heavy?",
+    "What's the best virtual date or late-night call we've ever shared across the miles?",
+    "What is a habit or mannerism of mine you miss seeing in person every day?",
+    "If we had our own shared apartment tomorrow morning, what is the first thing we'd put in the kitchen?",
+    "What is a fear about the distance that you've been holding back from telling me?",
+    "What is something I do on our video calls that always melts your heart?",
+    "If you could send a sensory care package to me right now, what 3 scents or flavors would be inside?",
+    "What is one thing you are most proud of us for navigating across the miles?",
+    "Close your eyes and picture our next hug: where are we, and how tight are you holding on?"
+  ],
+  MIDNIGHT: [
+    "What is an unsaid truth you only feel safe admitting after midnight?",
+    "What is a secret thought that kept you awake staring at the ceiling recently?",
+    "What is something about your body or desires that you rarely talk about out loud?",
+    "What is an irrational fear you have about losing someone you love?",
+    "If nobody in the world could judge you, what is one desire you would claim right now?",
+    "What is a memory that still gives you a quiet rush of chills when you replay it?",
+    "What is an emotional wound from your past that still feels a little tender in the dark?",
+    "What is a question you've always wanted to ask me in the quiet of 2 AM?",
+    "What does intimacy mean to you right now—is it physical touch, safety, or being truly known?",
+    "What is a fantasy or adventure that you've never dared to say out loud to anyone?",
+    "When did you last cry by yourself, and what was the root feeling behind the tears?",
+    "What is something about the way I look at you that makes you feel exposed in a good way?",
+    "If tonight was our very last night on earth, what would you need me to know about your soul?",
+    "What is a side of your personality you only reveal when you feel completely safe?",
+    "What is an unspoken boundary or craving you've been thinking about lately?",
+    "What is your favorite kind of silence between two people?",
+    "What is something you forgive yourself for now that used to weigh heavily on you?",
+    "If you could whisper one unfiltered confession into my ear right now, what would it be?"
   ],
   FRIEND: [
     "What's a memory of us that always makes you laugh when you think about it?",

@@ -14,7 +14,8 @@ import HoldTouchIndicator from './components/HoldTouchIndicator';
 import LegalModal from './components/LegalModal';
 import { buildSession, swapQuestion, RELATIONSHIP_TYPES } from './utils/engine';
 import { multiplayerSync } from './utils/peer';
-import { playClickSound, playChimeSound, playReactionSound, playHandshakeSound } from './utils/audio';
+import { playClickSound, playChimeSound, playReactionSound, playHandshakeSound, playHeartbeatPulse } from './utils/audio';
+import { triggerHaptic, stopHaptic } from './utils/haptics';
 
 export default function App() {
   const [screen, setScreen] = useState('LOBBY'); // 'LOBBY' | 'SESSION' | 'CLOSING'
@@ -76,7 +77,11 @@ export default function App() {
   const [voiceCallState, setVoiceCallState] = useState('IDLE');
   const [isVoiceMuted, setIsVoiceMuted] = useState(false);
   const [incomingCallInfo, setIncomingCallInfo] = useState(null);
+  const [isPartnerSpeaking, setIsPartnerSpeaking] = useState(false);
   const remoteAudioRef = useRef(null);
+  const voiceAudioContextRef = useRef(null);
+  const voiceAnalyserRef = useRef(null);
+  const voiceSpeakingIntervalRef = useRef(null);
 
   // Hold-to-Touch Presence State
   const [isHoldingTouchLocal, setIsHoldingTouchLocal] = useState(false);
@@ -141,6 +146,7 @@ export default function App() {
     const id = `${Date.now()}-${Math.random()}`;
     const xPos = 38 + Math.random() * 24;
     setFloatingReactions(prev => [...prev, { id, emoji, sender, xPos }]);
+    triggerHaptic('pop');
     setTimeout(() => {
       setFloatingReactions(prev => prev.filter(r => r.id !== id));
     }, 2600);
@@ -151,6 +157,7 @@ export default function App() {
     const id = `${Date.now()}-${Math.random()}`;
     setTouchRipples(prev => [...prev, { id, x: xPercent, y: yPercent }]);
     playClickSound();
+    triggerHaptic('tap');
     setTimeout(() => {
       setTouchRipples(prev => prev.filter(r => r.id !== id));
     }, 1600);
@@ -289,14 +296,64 @@ export default function App() {
     }
   }, [spawnTouchRipple]);
 
+  const cleanupSpeakingDetection = useCallback(() => {
+    if (voiceSpeakingIntervalRef.current) {
+      clearInterval(voiceSpeakingIntervalRef.current);
+      voiceSpeakingIntervalRef.current = null;
+    }
+    setIsPartnerSpeaking(false);
+    if (voiceAudioContextRef.current && voiceAudioContextRef.current.state !== 'closed') {
+      try { voiceAudioContextRef.current.close(); } catch (e) {}
+      voiceAudioContextRef.current = null;
+    }
+    voiceAnalyserRef.current = null;
+  }, []);
+
   const handleRemoteStream = useCallback((stream) => {
     if (remoteAudioRef.current) {
       remoteAudioRef.current.srcObject = stream;
+    }
+
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (AudioCtx && stream && stream.getAudioTracks().length > 0) {
+        if (!voiceAudioContextRef.current || voiceAudioContextRef.current.state === 'closed') {
+          voiceAudioContextRef.current = new AudioCtx();
+        }
+        const ctx = voiceAudioContextRef.current;
+        if (ctx.state === 'suspended') ctx.resume();
+
+        const source = ctx.createMediaStreamSource(stream);
+        const analyser = ctx.createAnalyser();
+        analyser.fftSize = 128;
+        source.connect(analyser);
+        voiceAnalyserRef.current = analyser;
+
+        const dataArray = new Uint8Array(analyser.frequencyBinCount);
+        if (voiceSpeakingIntervalRef.current) clearInterval(voiceSpeakingIntervalRef.current);
+
+        voiceSpeakingIntervalRef.current = setInterval(() => {
+          if (!voiceAnalyserRef.current) return;
+          voiceAnalyserRef.current.getByteFrequencyData(dataArray);
+          let sum = 0;
+          for (let i = 0; i < dataArray.length; i++) {
+            sum += dataArray[i];
+          }
+          const avg = sum / dataArray.length;
+          // Threshold of 13+ indicates active speaking vs room silence
+          setIsPartnerSpeaking(avg > 13);
+        }, 110);
+      }
+    } catch (e) {
+      console.warn('Speaking volume analysis not supported:', e);
     }
   }, []);
 
   const handleCallState = useCallback((state) => {
     setVoiceCallState(state);
+    if (state === 'ENDED' || state === 'IDLE' || state === 'REJECTED' || state === 'FAILED') {
+      cleanupSpeakingDetection();
+    }
     if (state === 'REJECTED') {
       setCustomQuestionToast('Partner declined voice call');
       setTimeout(() => setCustomQuestionToast(null), 3500);
@@ -304,18 +361,30 @@ export default function App() {
       setCustomQuestionToast('Microphone permission required for voice calls');
       setTimeout(() => setCustomQuestionToast(null), 3500);
     }
-  }, []);
+  }, [cleanupSpeakingDetection]);
 
-  // Shared Touch Presence Haptic Pulse
+  // Shared Touch Presence Rhythmic Heartbeat Haptic Loop
   useEffect(() => {
+    let heartbeatInterval = null;
+
     if (isHoldingTouchLocal && (isHoldingTouchPartner || isSolo)) {
-      if (typeof navigator !== 'undefined' && navigator.vibrate) {
-        try {
-          navigator.vibrate([40, 60, 40]);
-        } catch (e) {}
-      }
-      playChimeSound();
+      // Immediate pulse upon mutual contact
+      triggerHaptic('heartbeat');
+      playHeartbeatPulse();
+
+      // Recurring rhythmic heartbeat pulse every 1.15 seconds
+      heartbeatInterval = setInterval(() => {
+        triggerHaptic('heartbeat');
+        playHeartbeatPulse();
+      }, 1150);
+    } else {
+      stopHaptic();
     }
+
+    return () => {
+      if (heartbeatInterval) clearInterval(heartbeatInterval);
+      stopHaptic();
+    };
   }, [isHoldingTouchLocal, isHoldingTouchPartner, isSolo]);
 
   // Mystery / Custom Question Handlers
@@ -559,6 +628,7 @@ export default function App() {
     }
 
     playClickSound();
+    triggerHaptic('medium');
     setSwipeClass('swipe-out-left');
 
     setTimeout(() => {
@@ -587,6 +657,7 @@ export default function App() {
   // Skip Question (Smoothly pass question with state sync)
   const handleSkipQuestion = () => {
     playClickSound();
+    triggerHaptic('light');
     const nextIdx = currentIndex + 1;
 
     if (nextIdx >= questions.length) {
@@ -649,6 +720,7 @@ export default function App() {
   const handlePreviousCard = () => {
     if (currentIndex <= 0) return;
     playClickSound();
+    triggerHaptic('medium');
     setSwipeClass('swipe-out-right');
 
     setTimeout(() => {
@@ -680,6 +752,7 @@ export default function App() {
   // Swap Question
   const handleSwap = (direction) => {
     playClickSound();
+    triggerHaptic('light');
     const currentQ = questions[currentIndex];
     const sessionIds = questions.map(q => q.id);
     const replacement = swapQuestion(currentQ, direction, relationshipType, sessionIds);
@@ -781,6 +854,7 @@ export default function App() {
   // Handshake Confirmation
   const handleConfirmHandshake = () => {
     playHandshakeSound();
+    triggerHaptic('success');
     setMyReady(true);
 
     if (peerReady) {
@@ -938,6 +1012,8 @@ export default function App() {
           isVoiceMuted={isVoiceMuted}
           onToggleVoiceCall={handleToggleVoiceCall}
           onToggleVoiceMute={handleToggleVoiceMute}
+          isPartnerSpeaking={isPartnerSpeaking}
+          peerName={isHost ? guestName : hostName}
           onShowToast={(msg) => {
             setCustomQuestionToast(msg);
             setTimeout(() => setCustomQuestionToast(null), 3500);
@@ -1035,6 +1111,7 @@ export default function App() {
                   }
                 }}
                 onSkipQuestion={handleSkipQuestion}
+                isPartnerSpeaking={isPartnerSpeaking}
               />
             </div>
 

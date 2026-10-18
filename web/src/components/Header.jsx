@@ -16,7 +16,9 @@ export default function Header({
   isVoiceMuted = false,
   onToggleVoiceCall,
   onToggleVoiceMute,
-  onShowToast
+  onShowToast,
+  isPartnerSpeaking = false,
+  peerName = ''
 }) {
   const [isPlayingSoundscape, setIsPlayingSoundscape] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -226,34 +228,53 @@ export default function Header({
             gap: '5px',
             padding: '3px 8px',
             borderRadius: 'var(--radius-pill)',
-            background: 'rgba(56, 123, 106, 0.12)',
-            border: '1px solid rgba(56, 123, 106, 0.35)',
-            minHeight: '38px'
+            background: isPartnerSpeaking ? 'rgba(56, 123, 106, 0.22)' : 'rgba(56, 123, 106, 0.12)',
+            border: isPartnerSpeaking ? '1.5px solid #387B6A' : '1px solid rgba(56, 123, 106, 0.35)',
+            boxShadow: isPartnerSpeaking ? '0 0 14px rgba(56, 123, 106, 0.55)' : 'none',
+            minHeight: '38px',
+            transition: 'all 0.18s ease-out'
           }}>
             {/* Speaking waveform bars */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '2px', height: '14px' }}>
               <span style={{
                 width: '2.5px',
-                height: isVoiceMuted ? '4px' : '12px',
-                backgroundColor: isVoiceMuted ? 'var(--color-muted)' : '#387B6A',
+                height: isVoiceMuted ? '4px' : (isPartnerSpeaking ? '14px' : '10px'),
+                backgroundColor: isVoiceMuted ? 'var(--color-muted)' : (isPartnerSpeaking ? '#2D937B' : '#387B6A'),
                 borderRadius: '2px',
-                animation: isVoiceMuted ? 'none' : 'voicePulse1 0.7s infinite alternate ease-in-out'
+                animation: isVoiceMuted ? 'none' : 'voicePulse1 0.6s infinite alternate ease-in-out',
+                transition: 'height 0.15s, background-color 0.15s'
               }} />
               <span style={{
                 width: '2.5px',
-                height: isVoiceMuted ? '4px' : '16px',
-                backgroundColor: isVoiceMuted ? 'var(--color-muted)' : '#387B6A',
+                height: isVoiceMuted ? '4px' : (isPartnerSpeaking ? '17px' : '14px'),
+                backgroundColor: isVoiceMuted ? 'var(--color-muted)' : (isPartnerSpeaking ? '#2D937B' : '#387B6A'),
                 borderRadius: '2px',
-                animation: isVoiceMuted ? 'none' : 'voicePulse2 0.85s infinite alternate ease-in-out 0.2s'
+                animation: isVoiceMuted ? 'none' : 'voicePulse2 0.75s infinite alternate ease-in-out 0.15s',
+                transition: 'height 0.15s, background-color 0.15s'
               }} />
               <span style={{
                 width: '2.5px',
-                height: isVoiceMuted ? '4px' : '9px',
-                backgroundColor: isVoiceMuted ? 'var(--color-muted)' : '#387B6A',
+                height: isVoiceMuted ? '4px' : (isPartnerSpeaking ? '12px' : '8px'),
+                backgroundColor: isVoiceMuted ? 'var(--color-muted)' : (isPartnerSpeaking ? '#2D937B' : '#387B6A'),
                 borderRadius: '2px',
-                animation: isVoiceMuted ? 'none' : 'voicePulse3 0.65s infinite alternate ease-in-out 0.4s'
+                animation: isVoiceMuted ? 'none' : 'voicePulse3 0.55s infinite alternate ease-in-out 0.3s',
+                transition: 'height 0.15s, background-color 0.15s'
               }} />
             </div>
+
+            {/* Speaking Dot Indicator */}
+            {isPartnerSpeaking && (
+              <span 
+                title={`${peerName || 'Partner'} speaking`}
+                style={{
+                  width: '6px',
+                  height: '6px',
+                  borderRadius: '50%',
+                  backgroundColor: '#387B6A',
+                  boxShadow: '0 0 8px #387B6A'
+                }}
+              />
+            )}
 
             {/* Call Duration */}
             <span style={{

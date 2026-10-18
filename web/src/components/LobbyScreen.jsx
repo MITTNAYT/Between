@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Heart, Users, Compass, Sparkles, ShieldCheck, Copy, Check, ArrowRight, Radio, Shuffle, User, ChevronDown, ChevronUp, Home, ChevronLeft } from 'lucide-react';
+import { Heart, Users, Compass, Globe, Moon, QrCode, Sparkles, ShieldCheck, Copy, Check, ArrowRight, Radio, Shuffle, User, ChevronDown, ChevronUp, Home, ChevronLeft } from 'lucide-react';
+import QRCode from 'qrcode';
 import { RELATIONSHIP_TYPES, SESSION_LENGTHS } from '../utils/engine';
 import { playClickSound } from '../utils/audio';
 import { generateRandomCode } from '../utils/peer';
 
 const REL_ICONS = {
   COUPLE: Heart,
+  LONG_DISTANCE: Globe,
+  MIDNIGHT: Moon,
   FRIEND: Users,
   JUST_MET: Compass
 };
@@ -32,6 +35,10 @@ export default function LobbyScreen({
   const [joinCodeInput, setJoinCodeInput] = useState(initialRoomCode);
   const [copiedLink, setCopiedLink] = useState(false);
 
+  // QR Code Instant Connect
+  const [showQrCode, setShowQrCode] = useState(false);
+  const [qrDataUrl, setQrDataUrl] = useState('');
+
   // Player Names
   const [hostNameInput, setHostNameInput] = useState(() => localStorage.getItem('between_user_name') || '');
   const [guestNameInput, setGuestNameInput] = useState(() => localStorage.getItem('between_user_name') || '');
@@ -48,6 +55,23 @@ export default function LobbyScreen({
       setJoinCodeInput(initialRoomCode);
     }
   }, [initialRoomCode]);
+
+  useEffect(() => {
+    if (roomCode) {
+      const url = `${window.location.origin}${window.location.pathname}?room=${roomCode}`;
+      QRCode.toDataURL(url, {
+        margin: 1,
+        width: 260,
+        color: { dark: '#242124', light: '#FFFFFF' }
+      }).then(urlData => {
+        setQrDataUrl(urlData);
+      }).catch(err => {
+        console.warn('QR code generation error:', err);
+      });
+    } else {
+      setQrDataUrl('');
+    }
+  }, [roomCode]);
 
   const handleRegenerateCode = () => {
     playClickSound();
@@ -472,6 +496,65 @@ export default function LobbyScreen({
               <span>{copiedLink ? 'Link Copied to Clipboard!' : 'Copy 1-Click Invite Link'}</span>
             </button>
 
+            {/* Instant Camera QR Code */}
+            {roomCode && (
+              <div style={{
+                margin: '2px 0 4px',
+                padding: '10px 14px',
+                background: 'var(--color-surface-subtle)',
+                border: '1px solid var(--color-hairline)',
+                borderRadius: 'var(--radius-md)',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '8px'
+              }}>
+                <button
+                  type="button"
+                  onClick={() => { playClickSound(); setShowQrCode(prev => !prev); }}
+                  style={{
+                    border: 'none',
+                    background: 'transparent',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    color: 'var(--color-ink)'
+                  }}
+                >
+                  <QrCode size={15} strokeWidth={2.4} color="var(--color-ember)" />
+                  <span>{showQrCode ? 'Hide Camera QR Code' : 'Show Camera QR Code to Connect'}</span>
+                </button>
+
+                {showQrCode && qrDataUrl && (
+                  <div style={{
+                    marginTop: '4px',
+                    padding: '12px',
+                    background: '#FFFFFF',
+                    borderRadius: '12px',
+                    boxShadow: 'var(--shadow-sm)',
+                    border: '1px solid rgba(0,0,0,0.06)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '6px',
+                    animation: 'fadeIn 0.2s ease-out'
+                  }}>
+                    <img 
+                      src={qrDataUrl} 
+                      alt={`Scan to join room ${roomCode}`} 
+                      style={{ width: '140px', height: '140px', display: 'block', borderRadius: '4px' }} 
+                    />
+                    <span style={{ fontSize: '11px', color: 'var(--color-muted)', fontWeight: '600' }}>
+                      Point phone camera to join in 1 second
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
+
             <button
               onClick={() => {
                 playClickSound();
@@ -605,9 +688,9 @@ export default function LobbyScreen({
 
               <div style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(3, 1fr)',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))',
                 gap: '8px',
-                marginBottom: '20px'
+                marginBottom: '10px'
               }}>
                 {Object.values(RELATIONSHIP_TYPES).map((rel) => {
                   const isSelected = selectedRel === rel.id;
@@ -618,7 +701,7 @@ export default function LobbyScreen({
                       type="button"
                       onClick={() => { playClickSound(); setSelectedRel(rel.id); }}
                       style={{
-                        padding: '12px 4px',
+                        padding: '10px 4px',
                         minHeight: '74px',
                         borderRadius: 'var(--radius-md)',
                         border: isSelected ? `2px solid ${rel.color}` : '1px solid var(--color-hairline)',
@@ -631,10 +714,10 @@ export default function LobbyScreen({
                       }}
                     >
                       <div style={{
-                        width: '30px',
-                        height: '30px',
+                        width: '28px',
+                        height: '28px',
                         borderRadius: '50%',
-                        background: isSelected ? `${rel.color}18` : 'rgba(0,0,0,0.04)',
+                        background: isSelected ? `${rel.color}20` : 'rgba(0,0,0,0.04)',
                         color: rel.color,
                         display: 'flex',
                         alignItems: 'center',
@@ -642,10 +725,10 @@ export default function LobbyScreen({
                         margin: '0 auto 6px',
                         transition: 'transform 0.2s'
                       }}>
-                        <Icon size={16} strokeWidth={2.4} />
+                        <Icon size={15} strokeWidth={2.4} />
                       </div>
                       <div style={{
-                        fontSize: 'clamp(11px, 3.2vw, 13px)',
+                        fontSize: 'clamp(10.5px, 2.9vw, 12px)',
                         fontWeight: isSelected ? '700' : '600',
                         color: isSelected ? 'var(--color-ink)' : 'var(--color-body)',
                         whiteSpace: 'nowrap',
@@ -658,6 +741,27 @@ export default function LobbyScreen({
                   );
                 })}
               </div>
+
+              {/* Selected Connection Description Banner */}
+              {RELATIONSHIP_TYPES[selectedRel] && (
+                <div style={{
+                  padding: '9px 12px',
+                  borderRadius: 'var(--radius-sm)',
+                  background: `${RELATIONSHIP_TYPES[selectedRel].color}12`,
+                  border: `1px solid ${RELATIONSHIP_TYPES[selectedRel].color}30`,
+                  fontSize: '12px',
+                  color: 'var(--color-ink)',
+                  marginBottom: '18px',
+                  lineHeight: '1.4',
+                  animation: 'fadeIn 0.2s ease-out',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}>
+                  <Sparkles size={13} color={RELATIONSHIP_TYPES[selectedRel].color} style={{ flexShrink: 0 }} />
+                  <span>{RELATIONSHIP_TYPES[selectedRel].description}</span>
+                </div>
+              )}
 
               {/* Duration Selector */}
               <label style={{

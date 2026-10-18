@@ -3,6 +3,7 @@ import { ArrowRightLeft, Bookmark, Sparkles, Shuffle, ChevronDown, ChevronUp, Ro
 import InteractiveCard3D from './InteractiveCard3D';
 import { WILDCARD_INSPIRATIONS } from '../utils/engine';
 import { playClickSound, playChimeSound, playHandshakeSound } from '../utils/audio';
+import { triggerHaptic } from '../utils/haptics';
 
 export default function QuestionCard({
   question,
@@ -24,7 +25,8 @@ export default function QuestionCard({
   guestName = 'Partner 2',
   wildcardPrompt = null,
   onSelectWildcardPrompt = null,
-  onSkipQuestion = null
+  onSkipQuestion = null,
+  isPartnerSpeaking = false
 }) {
   const [isFlipped, setIsFlipped] = useState(false);
   const [backTab, setBackTab] = useState('BLIND'); // 'BLIND' | 'NOTES'
@@ -75,6 +77,7 @@ export default function QuestionCard({
 
   const toggleFlip = () => {
     playClickSound();
+    triggerHaptic('light');
     setIsFlipped(prev => !prev);
   };
 
@@ -104,23 +107,35 @@ export default function QuestionCard({
         gap: '8px',
         marginBottom: '16px'
       }}>
-        {/* Turn Switcher Pill */}
+        {/* Turn Switcher Pill with Live Speaking Glow */}
         <button
           onClick={() => {
             playClickSound();
+            triggerHaptic('light');
             onPassTurn?.();
           }}
           className={`pill-badge ${isWildcard ? 'pill-badge-ember' : 'pill-badge-surface'}`}
           style={{
             cursor: 'pointer',
-            transition: 'transform 0.15s, background-color 0.2s',
-            boxShadow: 'var(--shadow-sm)',
+            transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+            boxShadow: isPartnerSpeaking ? '0 0 16px rgba(56, 123, 106, 0.55)' : 'var(--shadow-sm)',
+            borderColor: isPartnerSpeaking ? '#387B6A' : undefined,
             gap: '6px'
           }}
-          title="Click to pass turn to your friend"
+          title={isPartnerSpeaking ? `${peerName} is currently speaking` : "Click to pass turn to your partner"}
         >
           <ArrowRightLeft size={13} strokeWidth={2.4} />
           <span>{turnIndicator}</span>
+          {isPartnerSpeaking && (
+            <span style={{
+              width: '6px',
+              height: '6px',
+              borderRadius: '50%',
+              backgroundColor: '#387B6A',
+              boxShadow: '0 0 8px #387B6A',
+              display: 'inline-block'
+            }} />
+          )}
         </button>
 
         {/* Right Corner Buttons: Flip & Bookmark */}
@@ -530,6 +545,7 @@ export default function QuestionCard({
                 <button
                   onClick={() => {
                     playHandshakeSound();
+                    triggerHaptic('success');
                     onSubmitBlindAnswer?.();
                   }}
                   disabled={!blindState.myAnswer.trim() || blindState.mySubmitted}
