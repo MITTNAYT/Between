@@ -35,20 +35,26 @@ export default function QuestionCard({
   const [customWildcardInput, setCustomWildcardInput] = useState('');
   const [showCustomInput, setShowCustomInput] = useState(false);
 
-  // Dig Deeper & Micro-Challenge State
-  const digDeeperData = getDigDeeperData(question);
+  // Dig Deeper & Micro-Challenge State (Tailored to question & mode: Offline vs Open Space)
+  const digDeeperData = getDigDeeperData(question, isSolo);
   const [challengeOffset, setChallengeOffset] = useState(0);
-  const currentChallenge = DIG_DEEPER_CHALLENGES[(DIG_DEEPER_CHALLENGES.indexOf(digDeeperData.challenge) + challengeOffset) % DIG_DEEPER_CHALLENGES.length];
+  const challengeList = digDeeperData.challenges || [digDeeperData.challenge];
+  const currentChallenge = challengeList[challengeOffset % challengeList.length] || challengeList[0];
 
-  const [timerSecondsLeft, setTimerSecondsLeft] = useState(15);
+  const [timerSecondsLeft, setTimerSecondsLeft] = useState(currentChallenge?.timerSeconds || 15);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [timerCompleted, setTimerCompleted] = useState(false);
+
+  // Reset challenge offset when card or mode changes
+  useEffect(() => {
+    setChallengeOffset(0);
+  }, [question?.id, isSolo]);
 
   // Reset timer if question or challenge changes
   useEffect(() => {
     setIsTimerRunning(false);
     setTimerCompleted(false);
-    setTimerSecondsLeft(currentChallenge.timerSeconds || 15);
+    setTimerSecondsLeft(currentChallenge?.timerSeconds || 15);
   }, [question?.id, currentChallenge?.id]);
 
   // Interactive Countdown Interval
@@ -733,7 +739,7 @@ export default function QuestionCard({
                     gap: '6px'
                   }}>
                     <Check size={14} strokeWidth={2.6} />
-                    <span>Eye Contact Challenge Completed ✨</span>
+                    <span>{currentChallenge.title} Completed ✨</span>
                   </div>
                 ) : isTimerRunning ? (
                   <button
@@ -755,7 +761,7 @@ export default function QuestionCard({
                     }}
                   >
                     <Clock size={15} strokeWidth={2.4} />
-                    <span>00:{String(timerSecondsLeft).padStart(2, '0')} · Hold Eye Contact (Stop)</span>
+                    <span>00:{String(timerSecondsLeft).padStart(2, '0')} · {currentChallenge.timerLabel || 'Timer'} (Tap to Stop)</span>
                   </button>
                 ) : (
                   <button
@@ -779,7 +785,7 @@ export default function QuestionCard({
                     }}
                   >
                     <Play size={13} fill="currentColor" strokeWidth={0} />
-                    <span>Start {currentChallenge.timerSeconds}s Gaze Timer</span>
+                    <span>Start {currentChallenge.timerSeconds}s {currentChallenge.timerLabel || 'Timer'}</span>
                   </button>
                 )}
               </div>
