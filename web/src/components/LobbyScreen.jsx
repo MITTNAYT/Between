@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Heart, Users, Compass, Globe, Moon, QrCode, Sparkles, ShieldCheck, Copy, Check, ArrowRight, Radio, Shuffle, User, ChevronDown, ChevronUp, Home, ChevronLeft } from 'lucide-react';
+import { Heart, Users, Compass, QrCode, Sparkles, ShieldCheck, Copy, Check, ArrowRight, Radio, Shuffle, User, ChevronDown, ChevronUp, Home, ChevronLeft } from 'lucide-react';
 import QRCode from 'qrcode';
 import { RELATIONSHIP_TYPES, SESSION_LENGTHS } from '../utils/engine';
 import { playClickSound } from '../utils/audio';
@@ -7,8 +7,6 @@ import { generateRandomCode } from '../utils/peer';
 
 const REL_ICONS = {
   COUPLE: Heart,
-  LONG_DISTANCE: Globe,
-  MIDNIGHT: Moon,
   FRIEND: Users,
   JUST_MET: Compass
 };
