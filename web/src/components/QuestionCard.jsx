@@ -585,7 +585,7 @@ export default function QuestionCard({
       {/* TAB 1: DIG DEEPER (Follow-up & Connection Challenge) */}
       {backTab === 'DIG_DEEPER' && (
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '14px', animation: 'fadeIn 0.25s ease-out' }}>
-          {/* Section 1: The Unspoken Follow-up Question */}
+          {/* Section 1: The Tailored Follow-up Questions */}
           <div style={{
             padding: '14px 16px',
             borderRadius: 'var(--radius-md)',
@@ -593,32 +593,68 @@ export default function QuestionCard({
             border: '1px solid rgba(229, 169, 60, 0.28)',
             display: 'flex',
             flexDirection: 'column',
-            gap: '6px'
+            gap: '8px'
           }}>
             <div style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '6px',
-              fontSize: '10.5px',
-              fontWeight: '700',
-              color: 'var(--color-gold)',
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase'
+              justifyContent: 'space-between',
+              gap: '6px'
             }}>
-              <Flame size={13} strokeWidth={2.4} />
-              <span>The Unspoken Layer</span>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                fontSize: '10.5px',
+                fontWeight: '700',
+                color: 'var(--color-gold)',
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase'
+              }}>
+                <Flame size={13} strokeWidth={2.4} />
+                <span>The Unspoken Layer · Tailored Follow-Up</span>
+              </div>
+              {digDeeperData.followUps && digDeeperData.followUps.length > 1 && (
+                <span style={{ fontSize: '10px', color: 'var(--color-muted)', fontWeight: '600', letterSpacing: '0.04em' }}>
+                  {digDeeperData.followUps.length} Prompts
+                </span>
+              )}
             </div>
 
-            <p style={{
-              fontFamily: 'var(--font-serif)',
-              fontStyle: 'italic',
-              fontSize: 'clamp(15px, 3.8vw, 17px)',
-              lineHeight: '1.45',
-              color: 'var(--color-ink)',
-              margin: '2px 0 0'
-            }}>
-              “{digDeeperData.followUp}”
-            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {(digDeeperData.followUps || [digDeeperData.followUp]).map((fu, idx) => (
+                <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+                  {digDeeperData.followUps && digDeeperData.followUps.length > 1 && (
+                    <span style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '18px',
+                      height: '18px',
+                      borderRadius: '50%',
+                      background: 'rgba(229, 169, 60, 0.2)',
+                      color: 'var(--color-gold)',
+                      fontSize: '10.5px',
+                      fontWeight: '700',
+                      flexShrink: 0,
+                      marginTop: '2px'
+                    }}>
+                      {idx + 1}
+                    </span>
+                  )}
+                  <p style={{
+                    fontFamily: 'var(--font-serif)',
+                    fontStyle: 'italic',
+                    fontSize: 'clamp(14.5px, 3.6vw, 16.5px)',
+                    lineHeight: '1.45',
+                    color: 'var(--color-ink)',
+                    margin: 0
+                  }}>
+                    “{fu}”
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Section 2: Connection Micro-Challenge */}

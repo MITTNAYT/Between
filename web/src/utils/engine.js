@@ -334,19 +334,34 @@ export const DIG_DEEPER_PROMPTS = {
 export function getDigDeeperData(question) {
   if (!question) {
     return {
+      followUps: ["What part of your answer was hardest to admit?"],
       followUp: "What part of your answer was hardest to admit?",
       challenge: DIG_DEEPER_CHALLENGES[0]
     };
   }
   
-  const depth = question.depth || 1;
-  const pool = depth >= 4 
-    ? DIG_DEEPER_PROMPTS.DEPTH_4_5 
-    : (depth === 3 ? DIG_DEEPER_PROMPTS.DEPTH_3 : DIG_DEEPER_PROMPTS.DEPTH_1_2);
-  
+  // 1. Prioritize specifically tailored follow-up questions from the question database
+  let followUps = [];
+  if (Array.isArray(question.followUps) && question.followUps.length > 0) {
+    followUps = question.followUps.filter(f => Boolean(f && typeof f === 'string' && f.trim()));
+  }
+
+  // 2. Graceful fallback to depth-based follow-up prompts if question has no custom follow-ups
+  if (followUps.length === 0) {
+    const depth = question.depth || 1;
+    const pool = depth >= 4 
+      ? DIG_DEEPER_PROMPTS.DEPTH_4_5 
+      : (depth === 3 ? DIG_DEEPER_PROMPTS.DEPTH_3 : DIG_DEEPER_PROMPTS.DEPTH_1_2);
+    const hash = (question.id || '').split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+    followUps = [pool[hash % pool.length]];
+  }
+
   const hash = (question.id || '').split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
-  const followUp = pool[hash % pool.length];
   const challenge = DIG_DEEPER_CHALLENGES[hash % DIG_DEEPER_CHALLENGES.length];
 
-  return { followUp, challenge };
+  return { 
+    followUps, 
+    followUp: followUps[0], 
+    challenge 
+  };
 }
