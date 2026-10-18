@@ -1264,7 +1264,7 @@ export default function App() {
                     gap: '6px'
                   }}
                 >
-                  <span>{currentIndex === questions.length - 1 ? 'Complete Ritual' : 'Continue Deeper'}</span>
+                  <span>{currentIndex === questions.length - 1 ? 'Complete' : 'Next'}</span>
                   <ChevronRight size={18} strokeWidth={2.4} />
                 </button>
               </div>
