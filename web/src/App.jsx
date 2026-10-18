@@ -1050,34 +1050,61 @@ export default function App() {
             gap: '16px',
             animation: 'fadeIn 0.3s ease-out'
           }}>
-            {/* Progress bar & question counter */}
+            {/* Editorial Progress Bar & Roman Depth Indicator */}
             <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <div style={{
                 display: 'flex',
-                alignItems: 'center',
+                alignItems: 'baseline',
                 justifyContent: 'space-between',
-                fontSize: '11px',
-                fontWeight: '700',
-                color: 'var(--color-muted)',
-                letterSpacing: '0.08em'
+                fontSize: '12px',
+                letterSpacing: '0.04em'
               }}>
-                <span>QUESTION {currentIndex + 1} OF {questions.length}</span>
-                <span style={{ color: 'var(--color-ember)' }}>DEPTH {currentQuestion.depth}/5</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{
+                    fontFamily: 'var(--font-serif)',
+                    fontStyle: 'italic',
+                    fontWeight: '600',
+                    fontSize: '15px',
+                    color: 'var(--color-ink)'
+                  }}>
+                    № {String(currentIndex + 1).padStart(2, '0')}
+                  </span>
+                  <span style={{ fontSize: '11px', color: 'var(--color-muted)', fontWeight: '600' }}>
+                    OF {questions.length}
+                  </span>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                  <span style={{
+                    fontSize: '10.5px',
+                    fontWeight: '700',
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                    color: 'var(--color-gold)'
+                  }}>
+                    DEPTH {['I', 'II', 'III', 'IV', 'V'][Math.max(0, (currentQuestion.depth || 1) - 1)]}
+                  </span>
+                  <span style={{ fontSize: '10px', color: 'var(--color-muted)', fontWeight: '500' }}>
+                    · {currentQuestion.phase || 'CONNECTION'}
+                  </span>
+                </div>
               </div>
 
-              {/* Progress track */}
+              {/* Glowing Warm Gold/Ember Progress Track */}
               <div style={{
                 width: '100%',
-                height: '4px',
+                height: '3px',
                 background: 'rgba(0,0,0,0.06)',
                 borderRadius: 'var(--radius-pill)',
-                overflow: 'hidden'
+                overflow: 'hidden',
+                boxShadow: '0 1px 2px rgba(0,0,0,0.06) inset'
               }}>
                 <div style={{
                   height: '100%',
                   width: `${((currentIndex + 1) / (questions.length || 1)) * 100}%`,
-                  background: 'var(--color-ember)',
+                  background: 'linear-gradient(90deg, var(--color-gold) 0%, var(--color-ember) 100%)',
                   borderRadius: 'var(--radius-pill)',
+                  boxShadow: '0 0 10px rgba(229, 169, 60, 0.4)',
                   transition: 'width 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
                 }} />
               </div>
@@ -1237,7 +1264,7 @@ export default function App() {
                     gap: '6px'
                   }}
                 >
-                  <span>{currentIndex === questions.length - 1 ? 'Complete' : 'Next'}</span>
+                  <span>{currentIndex === questions.length - 1 ? 'Complete Ritual' : 'Continue Deeper'}</span>
                   <ChevronRight size={18} strokeWidth={2.4} />
                 </button>
               </div>

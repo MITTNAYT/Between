@@ -131,20 +131,46 @@ input, textarea, select {
   }
 }
 
-/* Ceramic Soft Card */
+/* Luxury Editorial Stationery & Tactile Paper Card */
 .soft-card {
   background: var(--color-surface);
   border: 1px solid var(--color-hairline);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
+  box-shadow: 
+    0 1px 0 rgba(255, 255, 255, 0.8) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.04) inset,
+    var(--shadow-md);
+  position: relative;
   transition: transform 0.25s var(--ease-calm), box-shadow 0.25s var(--ease-calm), border-color 0.25s var(--ease-calm);
 }
 
-.soft-card:hover {
-  box-shadow: var(--shadow-lg);
+/* Subtle organic paper texture overlay */
+.soft-card::before,
+.editorial-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
+  opacity: 0.6;
+  mix-blend-mode: multiply;
+  z-index: 1;
 }
 
-/* Tactile Buttons */
+[data-theme="candlelight"] .soft-card::before,
+[data-theme="candlelight"] .editorial-card::before {
+  opacity: 0.45;
+  mix-blend-mode: screen;
+}
+
+.soft-card:hover {
+  box-shadow: 
+    0 1px 0 rgba(255, 255, 255, 0.9) inset,
+    var(--shadow-lg);
+}
+
+/* Tactile Luxury Buttons */
 .btn-primary {
   display: inline-flex;
   align-items: center;
@@ -153,35 +179,21 @@ input, textarea, select {
   width: 100%;
   min-height: 48px;
   padding: 13px 20px;
-  background: var(--color-ink);
-  color: var(--color-surface);
-  border: none;
+  background: linear-gradient(180deg, #272320 0%, #161413 100%);
+  color: #FAF6F0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: var(--radius-pill);
   font-family: var(--font-sans);
   font-size: 15px;
   font-weight: 600;
+  letter-spacing: 0.01em;
   cursor: pointer;
-  box-shadow: var(--shadow-sm);
-  transition: transform 0.15s var(--ease-calm), background-color 0.2s, box-shadow 0.2s;
+  box-shadow: 
+    0 1px 0 rgba(255, 255, 255, 0.2) inset,
+    0 4px 14px rgba(28, 25, 23, 0.15);
+  transition: transform 0.15s var(--ease-calm), background 0.2s, box-shadow 0.2s;
   user-select: none;
   touch-action: manipulation;
-}
-
-@media (min-width: 480px) {
-  .btn-primary {
-    min-height: 54px;
-    padding: 14px 24px;
-    font-size: 16px;
-  }
-}
-
-.btn-primary:active {
-  transform: scale(0.975);
-}
-
-.btn-primary:hover {
-  background: #2b2724;
-  box-shadow: var(--shadow-md);
 }
 
 .btn-secondary {
@@ -293,17 +305,22 @@ input, textarea, select {
   border: 1px solid var(--color-hairline);
 }
 
-/* Question Serif Typography - Fluid Scaling */
+/* Question Serif Typography - Fluid Scaling with Letterpress Depth */
 .question-serif {
   font-family: var(--font-serif);
-  font-size: clamp(20px, 5.2vw, 31px);
-  line-height: 1.36;
+  font-size: clamp(21px, 5.4vw, 32px);
+  line-height: 1.4;
   font-weight: 400;
   color: var(--color-ink);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
   word-break: break-word;
   overflow-wrap: break-word;
   hyphens: auto;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.7);
+}
+
+[data-theme="candlelight"] .question-serif {
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8), 0 0 24px rgba(229, 169, 60, 0.15);
 }
 
 /* Responsive Helper Rules for Compact Screens (< 420px) */
@@ -537,48 +554,104 @@ input, textarea, select {
 }
 
 [data-theme="candlelight"] .btn-primary {
-  background: #E5A93C;
+  background: linear-gradient(135deg, #E5A93C 0%, #D49226 100%);
   color: #12100E;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 
+    0 1px 0 rgba(255, 255, 255, 0.45) inset,
+    0 6px 20px rgba(229, 169, 60, 0.35);
+  font-weight: 700;
 }
 
 [data-theme="candlelight"] .btn-primary:hover {
-  background: #F3BC55;
-  box-shadow: 0 6px 20px rgba(229, 169, 60, 0.3);
+  background: linear-gradient(135deg, #F3BC55 0%, #E5A93C 100%);
+  box-shadow: 
+    0 1px 0 rgba(255, 255, 255, 0.6) inset,
+    0 8px 26px rgba(229, 169, 60, 0.45);
 }
 
 [data-theme="candlelight"] .btn-secondary {
-  background: #181614;
+  background: rgba(24, 22, 20, 0.85);
   color: #FBF6F0;
-  border-color: #2E2924;
+  border: 1px solid rgba(229, 169, 60, 0.2);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05) inset;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 [data-theme="candlelight"] .btn-secondary:hover {
-  background: #221F1C;
-  border-color: #3D3730;
+  background: rgba(36, 32, 28, 0.95);
+  border-color: rgba(229, 169, 60, 0.38);
+  box-shadow: 0 0 14px rgba(229, 169, 60, 0.12);
 }
 
 [data-theme="candlelight"] .soft-card {
-  background: #181614;
-  border-color: rgba(229, 169, 60, 0.15);
-  box-shadow: 0 10px 30px -8px rgba(0, 0, 0, 0.75), 0 0 20px rgba(224, 86, 56, 0.06);
+  background: linear-gradient(165deg, rgba(26, 23, 21, 0.96) 0%, rgba(18, 16, 14, 0.98) 100%);
+  border: 1px solid rgba(229, 169, 60, 0.2);
+  box-shadow: 
+    0 1px 0 rgba(229, 169, 60, 0.3) inset,
+    0 0 24px rgba(224, 86, 56, 0.08),
+    0 20px 48px -10px rgba(0, 0, 0, 0.85);
 }
 
 [data-theme="candlelight"] .soft-card:hover {
-  border-color: rgba(229, 169, 60, 0.3);
-  box-shadow: 0 14px 40px -8px rgba(0, 0, 0, 0.85), 0 0 25px rgba(224, 86, 56, 0.1);
+  border-color: rgba(229, 169, 60, 0.35);
+  box-shadow: 
+    0 1px 0 rgba(229, 169, 60, 0.4) inset,
+    0 0 30px rgba(224, 86, 56, 0.12),
+    0 24px 54px -10px rgba(0, 0, 0, 0.9);
+}
+
+/* Editorial Card with Debossed Frame and Gold Foil Accents */
+.editorial-card {
+  position: relative;
+  background: var(--color-surface);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-lg);
+  box-shadow: 
+    0 1px 0 rgba(255, 255, 255, 0.9) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.05) inset,
+    0 18px 48px -12px rgba(28, 25, 23, 0.12),
+    0 8px 24px -6px rgba(28, 25, 23, 0.06);
+  overflow: hidden;
+}
+
+[data-theme="candlelight"] .editorial-card {
+  background: linear-gradient(165deg, rgba(26, 23, 21, 0.96) 0%, rgba(18, 16, 14, 0.98) 100%);
+  border: 1px solid rgba(229, 169, 60, 0.25);
+  box-shadow: 
+    0 1px 0 rgba(229, 169, 60, 0.35) inset,
+    0 0 24px rgba(224, 86, 56, 0.08),
+    0 24px 60px -12px rgba(0, 0, 0, 0.85);
+}
+
+.editorial-card::after {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border: 1px solid rgba(198, 136, 44, 0.18);
+  border-radius: calc(var(--radius-lg) - 6px);
+  pointer-events: none;
+  z-index: 2;
+}
+
+[data-theme="candlelight"] .editorial-card::after {
+  border-color: rgba(229, 169, 60, 0.2);
+  box-shadow: 0 0 14px rgba(229, 169, 60, 0.05) inset;
 }
 
 [data-theme="candlelight"] input,
 [data-theme="candlelight"] textarea {
   color: #FBF6F0 !important;
-  background: #221F1C !important;
-  border-color: #2E2924 !important;
+  background: rgba(30, 26, 23, 0.85) !important;
+  border: 1.5px solid rgba(229, 169, 60, 0.22) !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) inset !important;
 }
 
 [data-theme="candlelight"] input:focus,
 [data-theme="candlelight"] textarea:focus {
   border-color: #E5A93C !important;
-  box-shadow: 0 0 0 3px rgba(229, 169, 60, 0.15) !important;
+  box-shadow: 0 0 0 3px rgba(229, 169, 60, 0.22), 0 2px 6px rgba(0, 0, 0, 0.3) inset !important;
 }
 
 [data-theme="candlelight"] .pill-badge-surface {

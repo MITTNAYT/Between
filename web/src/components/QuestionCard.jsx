@@ -224,7 +224,7 @@ export default function QuestionCard({
         </div>
       )}
 
-      {/* Main Question Text */}
+      {/* Main Question Text with Large Editorial Watermark */}
       <div style={{
         flex: '1',
         display: 'flex',
@@ -232,9 +232,28 @@ export default function QuestionCard({
         alignItems: 'center',
         justifyContent: 'center',
         width: '100%',
-        padding: '10px 0'
+        padding: '16px 0',
+        position: 'relative'
       }}>
-        <h2 className="question-serif">
+        {/* Subtle Luxury Quotation Watermark */}
+        <div style={{
+          position: 'absolute',
+          fontFamily: 'var(--font-serif)',
+          fontSize: 'clamp(90px, 20vw, 130px)',
+          lineHeight: 1,
+          color: 'var(--color-gold)',
+          opacity: 0.08,
+          pointerEvents: 'none',
+          userSelect: 'none',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -52%)',
+          zIndex: 0
+        }} aria-hidden="true">
+          “
+        </div>
+
+        <h2 className="question-serif" style={{ position: 'relative', zIndex: 1, maxWidth: '440px' }}>
           {isWildcard
             ? (activeQuestionText ? `“${activeQuestionText}”` : question.text)
             : question.text

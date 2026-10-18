@@ -699,23 +699,27 @@ export default function LobbyScreen({
                       type="button"
                       onClick={() => { playClickSound(); setSelectedRel(rel.id); }}
                       style={{
-                        padding: '10px 4px',
-                        minHeight: '74px',
+                        padding: '12px 6px',
+                        minHeight: '78px',
                         borderRadius: 'var(--radius-md)',
-                        border: isSelected ? `2px solid ${rel.color}` : '1px solid var(--color-hairline)',
+                        border: isSelected ? `1.5px solid ${rel.color}` : '1px solid var(--color-hairline)',
                         background: isSelected ? 'var(--color-surface)' : 'var(--color-surface-subtle)',
-                        boxShadow: isSelected ? 'var(--shadow-sm)' : 'none',
+                        boxShadow: isSelected 
+                          ? `0 0 16px ${rel.color}25, 0 1px 0 rgba(255,255,255,0.7) inset, var(--shadow-sm)` 
+                          : 'none',
                         cursor: 'pointer',
                         textAlign: 'center',
-                        transition: 'all 0.15s',
+                        transition: 'all 0.2s',
                         touchAction: 'manipulation'
                       }}
                     >
                       <div style={{
-                        width: '28px',
-                        height: '28px',
+                        width: '32px',
+                        height: '32px',
                         borderRadius: '50%',
-                        background: isSelected ? `${rel.color}20` : 'rgba(0,0,0,0.04)',
+                        background: isSelected ? `${rel.color}22` : 'rgba(0,0,0,0.03)',
+                        border: isSelected ? `1.5px solid ${rel.color}` : '1px solid var(--color-hairline)',
+                        boxShadow: isSelected ? `0 0 10px ${rel.color}35` : 'none',
                         color: rel.color,
                         display: 'flex',
                         alignItems: 'center',
@@ -723,10 +727,10 @@ export default function LobbyScreen({
                         margin: '0 auto 6px',
                         transition: 'transform 0.2s'
                       }}>
-                        <Icon size={15} strokeWidth={2.4} />
+                        <Icon size={16} strokeWidth={2.4} />
                       </div>
                       <div style={{
-                        fontSize: 'clamp(10.5px, 2.9vw, 12px)',
+                        fontSize: 'clamp(11px, 2.9vw, 12.5px)',
                         fontWeight: isSelected ? '700' : '600',
                         color: isSelected ? 'var(--color-ink)' : 'var(--color-body)',
                         whiteSpace: 'nowrap',
@@ -836,7 +840,7 @@ export default function LobbyScreen({
                   className="btn-primary"
                   style={{ width: '100%', padding: '15px' }}
                 >
-                  <span>Create Synchronized Room</span>
+                  <span>Open Space Together</span>
                   <ArrowRight size={18} strokeWidth={2.4} />
                 </button>
 

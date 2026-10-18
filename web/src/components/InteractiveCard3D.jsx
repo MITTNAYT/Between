@@ -93,7 +93,7 @@ export default function InteractiveCard3D({
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
         onPointerLeave={handlePointerLeave}
-        className={`soft-card ${isWildcard ? 'wildcard-card' : ''} ${swipeClass} ${className}`}
+        className={`editorial-card ${isWildcard ? 'wildcard-card' : ''} ${swipeClass} ${className}`}
         style={{
           width: '100%',
           position: 'relative',
@@ -106,7 +106,7 @@ export default function InteractiveCard3D({
             ? '0 32px 72px -12px rgba(28, 25, 23, 0.2), 0 20px 32px -8px rgba(28, 25, 23, 0.12)'
             : (tilt.isHovered
                 ? '0 28px 64px -12px rgba(28, 25, 23, 0.14), 0 16px 24px -8px rgba(28, 25, 23, 0.08)'
-                : 'var(--shadow-md)'),
+                : undefined),
           cursor: isDragging ? 'grabbing' : 'grab'
         }}
       >
@@ -124,6 +124,12 @@ export default function InteractiveCard3D({
           }}
           aria-hidden="true"
         />
+
+        {/* Tactile Letterpress Corner Marks */}
+        <div style={{ position: 'absolute', top: '12px', left: '14px', fontSize: '10px', color: 'rgba(198, 136, 44, 0.4)', pointerEvents: 'none', zIndex: 3, userSelect: 'none' }}>◇</div>
+        <div style={{ position: 'absolute', top: '12px', right: '14px', fontSize: '10px', color: 'rgba(198, 136, 44, 0.4)', pointerEvents: 'none', zIndex: 3, userSelect: 'none' }}>◇</div>
+        <div style={{ position: 'absolute', bottom: '12px', left: '14px', fontSize: '10px', color: 'rgba(198, 136, 44, 0.4)', pointerEvents: 'none', zIndex: 3, userSelect: 'none' }}>◇</div>
+        <div style={{ position: 'absolute', bottom: '12px', right: '14px', fontSize: '10px', color: 'rgba(198, 136, 44, 0.4)', pointerEvents: 'none', zIndex: 3, userSelect: 'none' }}>◇</div>
 
         {/* If double-sided front and back are passed */}
         {frontContent && backContent ? (
