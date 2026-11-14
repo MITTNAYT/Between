@@ -181,94 +181,37 @@ export default function QuestionCard({
         alignItems: 'center',
         justifyContent: 'space-between',
         gap: '8px',
-        marginBottom: '4px'
+        marginBottom: '6px'
       }}>
-        {/* Left: Tabletop Star Circle Badge + Turn Indicator */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <div className="tabletop-star-badge" title="Between Tabletop Deck" aria-hidden="true">
-            ★
-          </div>
+        {/* Left: Tabletop Star Circle Badge */}
+        <div className="tabletop-star-badge" title="Between Tabletop Deck" aria-hidden="true">
+          ★
+        </div>
 
-          {/* Turn Switcher Pill */}
+        {/* Right: Turn Switcher Pill & Bookmark */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <button
             onClick={() => {
               playClickSound();
               triggerHaptic('light');
               onPassTurn?.();
             }}
-            className={`pill-badge ${isWildcard ? 'pill-badge-ember' : 'pill-badge-surface'}`}
+            className="pill-badge pill-badge-surface"
             style={{
               cursor: 'pointer',
-              transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
-              boxShadow: isPartnerSpeaking ? '0 0 14px rgba(56, 123, 106, 0.55)' : 'var(--shadow-sm)',
-              borderColor: isPartnerSpeaking ? '#387B6A' : undefined,
               gap: '5px',
-              fontSize: '11px',
-              padding: '4px 10px',
-              background: 'rgba(255, 255, 255, 0.88)',
-              backdropFilter: 'blur(4px)',
-              color: '#1C1917'
+              fontSize: '11.5px',
+              fontWeight: '700',
+              padding: '6px 12px',
+              background: '#FFFFFF',
+              color: '#1C1917',
+              border: '1px solid rgba(0, 0, 0, 0.08)',
+              boxShadow: '0 2px 5px rgba(0, 0, 0, 0.06)'
             }}
-            title={isPartnerSpeaking ? `${peerName} is currently speaking` : "Click to pass turn to your partner"}
+            title="Click to pass turn to your partner"
           >
             <ArrowRightLeft size={12} strokeWidth={2.4} />
             <span>{turnIndicator}</span>
-            {isPartnerSpeaking && (
-              <span style={{
-                width: '6px',
-                height: '6px',
-                borderRadius: '50%',
-                backgroundColor: '#387B6A',
-                boxShadow: '0 0 8px #387B6A',
-                display: 'inline-block'
-              }} />
-            )}
-          </button>
-        </div>
-
-        {/* Right Corner Buttons: Flip, Download Mini Card & Bookmark */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <button
-            onClick={toggleFlip}
-            className="pill-badge"
-            style={{ 
-              cursor: 'pointer', 
-              gap: '4px', 
-              fontSize: '11px', 
-              fontWeight: '700',
-              padding: '5px 12px',
-              border: '1px solid rgba(28, 25, 23, 0.15)',
-              background: '#FFFFFF',
-              color: '#1C1917',
-              boxShadow: '0 2px 4px rgba(0, 0, 0, 0.06)',
-              transition: 'all 0.2s'
-            }}
-            title="Flip card for Tailored Follow-up & Connection Challenge"
-          >
-            <Sparkles size={11} strokeWidth={2.4} color="#C6882C" />
-            <span>Flip</span>
-          </button>
-
-          <button
-            onClick={handleExportCard}
-            disabled={isExportingCard}
-            style={{
-              background: 'rgba(255, 255, 255, 0.85)',
-              border: '1px solid rgba(28, 25, 23, 0.12)',
-              borderRadius: '50%',
-              cursor: 'pointer',
-              width: '28px',
-              height: '28px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: exportedSuccess ? 'var(--color-sage)' : '#1C1917',
-              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
-              transition: 'all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)'
-            }}
-            title={exportedSuccess ? "Card PNG saved!" : "Save / Download physical mini card PNG"}
-          >
-            {exportedSuccess ? <Check size={14} strokeWidth={2.6} /> : <Download size={14} strokeWidth={2.2} />}
           </button>
 
           <button
@@ -277,22 +220,22 @@ export default function QuestionCard({
               onToggleBookmark?.();
             }}
             style={{
-              background: 'rgba(255, 255, 255, 0.85)',
+              background: '#FFFFFF',
               border: '1px solid rgba(28, 25, 23, 0.12)',
               borderRadius: '50%',
               cursor: 'pointer',
-              width: '28px',
-              height: '28px',
+              width: '32px',
+              height: '32px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               color: isBookmarked ? 'var(--color-ember)' : '#1C1917',
-              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
-              transition: 'transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)'
+              boxShadow: '0 2px 5px rgba(0, 0, 0, 0.06)',
+              transition: 'transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1)'
             }}
-            onMouseDown={(e) => e.currentTarget.style.transform = 'scale(1.2)'}
+            onMouseDown={(e) => e.currentTarget.style.transform = 'scale(1.15)'}
             onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
-            title={isBookmarked ? 'Moment saved' : 'Save this moment'}
+            title={isBookmarked ? 'Moment saved to your hand' : 'Save this moment'}
           >
             <Bookmark
               size={15}
@@ -552,29 +495,27 @@ export default function QuestionCard({
         </div>
       )}
 
-      {/* Tactile Flip Prompt Hint */}
+      {/* Primary Action: Tactile Flip Button */}
       <button
         type="button"
         onClick={toggleFlip}
+        className="card-label-sticker"
         style={{
-          background: 'none',
-          border: 'none',
           cursor: 'pointer',
-          color: 'rgba(28, 25, 23, 0.65)',
-          fontSize: '11px',
-          fontWeight: '700',
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: '4px',
-          padding: '4px 8px',
-          marginTop: '6px',
-          transition: 'color 0.2s',
-          userSelect: 'none'
+          gap: '7px',
+          fontSize: '12px',
+          padding: '8px 20px',
+          background: '#FFFFFF',
+          color: '#1C1917',
+          marginTop: '10px',
+          boxShadow: '0 2px 6px rgba(0, 0, 0, 0.08)',
+          border: '1px solid rgba(0, 0, 0, 0.1)',
+          transition: 'all 0.18s'
         }}
-        title="Flip card for follow-up and micro-challenge"
+        title="Flip card for follow-up question & challenge"
       >
-        <RotateCw size={11} strokeWidth={2.4} />
-        <span>Flip for Dig Deeper & Challenge</span>
+        <RotateCw size={13} strokeWidth={2.4} color="#C6882C" />
+        <span>Flip for Follow-up & Challenge</span>
       </button>
     </div>
   );

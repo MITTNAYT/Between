@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Heart, Users, Compass, QrCode, Sparkles, ShieldCheck, Copy, Check, ArrowRight, Radio, Shuffle, User, ChevronDown, ChevronUp, Home, ChevronLeft } from 'lucide-react';
+import { Heart, Users, Compass, QrCode, Sparkles, ShieldCheck, Copy, Check, ArrowRight, Radio, Shuffle, User, Smartphone, Home, ChevronLeft } from 'lucide-react';
 import QRCode from 'qrcode';
 import { RELATIONSHIP_TYPES, SESSION_LENGTHS } from '../utils/engine';
 import { playClickSound } from '../utils/audio';
@@ -25,31 +25,31 @@ export default function LobbyScreen({
   isConnected = false,
   onStartSession,
   peerName = '',
+  myName = 'Partner 1',
   onOpenLegal
 }) {
-  const [tab, setTab] = useState(initialRoomCode ? 'JOIN' : 'CREATE');
+  // Mode: 'SOLO' | 'CREATE' | 'JOIN'
+  const [mode, setMode] = useState(initialRoomCode ? 'JOIN' : 'SOLO');
   const [selectedRel, setSelectedRel] = useState('COUPLE');
   const [selectedLength, setSelectedLength] = useState('FIFTEEN_MIN');
   const [joinCodeInput, setJoinCodeInput] = useState(initialRoomCode);
   const [copiedLink, setCopiedLink] = useState(false);
 
-  // QR Code Instant Connect
+  // Player Names
+  const [soloP1Input, setSoloP1Input] = useState(() => localStorage.getItem('between_p1_name') || localStorage.getItem('between_user_name') || 'Partner 1');
+  const [soloP2Input, setSoloP2Input] = useState(() => localStorage.getItem('between_p2_name') || 'Partner 2');
+  const [userNameInput, setUserNameInput] = useState(() => localStorage.getItem('between_user_name') || '');
+
+  // QR Code
   const [showQrCode, setShowQrCode] = useState(false);
   const [qrDataUrl, setQrDataUrl] = useState('');
 
-  // Player Names
-  const [hostNameInput, setHostNameInput] = useState(() => localStorage.getItem('between_user_name') || '');
-  const [guestNameInput, setGuestNameInput] = useState(() => localStorage.getItem('between_user_name') || '');
-  const [soloP1Input, setSoloP1Input] = useState(() => localStorage.getItem('between_p1_name') || localStorage.getItem('between_user_name') || '');
-  const [soloP2Input, setSoloP2Input] = useState(() => localStorage.getItem('between_p2_name') || '');
-  const [showSoloConfig, setShowSoloConfig] = useState(false);
-
-  // Randomly Generated Room Code
+  // Random 5-character Room Code for host
   const [randomRoomCode, setRandomRoomCode] = useState(() => generateRandomCode(5));
 
   useEffect(() => {
     if (initialRoomCode) {
-      setTab('JOIN');
+      setMode('JOIN');
       setJoinCodeInput(initialRoomCode);
     }
   }, [initialRoomCode]);
@@ -59,22 +59,15 @@ export default function LobbyScreen({
       const url = `${window.location.origin}${window.location.pathname}?room=${roomCode}`;
       QRCode.toDataURL(url, {
         margin: 1,
-        width: 260,
-        color: { dark: '#242124', light: '#FFFFFF' }
+        width: 240,
+        color: { dark: '#1C1917', light: '#FFFFFF' }
       }).then(urlData => {
         setQrDataUrl(urlData);
-      }).catch(err => {
-        console.warn('QR code generation error:', err);
-      });
+      }).catch(err => console.warn('QR code generation error:', err));
     } else {
       setQrDataUrl('');
     }
   }, [roomCode]);
-
-  const handleRegenerateCode = () => {
-    playClickSound();
-    setRandomRoomCode(generateRandomCode(5));
-  };
 
   const handleCopyInviteLink = () => {
     playClickSound();
@@ -82,37 +75,11 @@ export default function LobbyScreen({
     navigator.clipboard.writeText(url).then(() => {
       setCopiedLink(true);
       setTimeout(() => setCopiedLink(false), 2400);
-    }).catch(() => {
-      prompt('Copy invite link:', url);
-    });
+    }).catch(() => prompt('Copy invite link:', url));
   };
 
-  const handleCreateSubmit = (e) => {
+  const handlePlaySolo = (e) => {
     if (e) e.preventDefault();
-    playClickSound();
-    const myName = hostNameInput.trim() || 'Partner 1';
-    localStorage.setItem('between_user_name', myName);
-    onCreateRoom({
-      relationshipType: selectedRel,
-      sessionLength: selectedLength,
-      roomCode: randomRoomCode,
-      userName: myName
-    });
-  };
-
-  const handleJoinSubmit = (e) => {
-    e.preventDefault();
-    if (!joinCodeInput.trim()) return;
-    playClickSound();
-    const myName = guestNameInput.trim() || 'Partner 2';
-    localStorage.setItem('between_user_name', myName);
-    onJoinRoom({
-      roomCode: joinCodeInput.trim().toUpperCase(),
-      userName: myName
-    });
-  };
-
-  const handleSoloSubmit = () => {
     playClickSound();
     const p1 = soloP1Input.trim() || 'Partner 1';
     const p2 = soloP2Input.trim() || 'Partner 2';
@@ -126,1034 +93,713 @@ export default function LobbyScreen({
     });
   };
 
+  const handleCreateRoomSubmit = (e) => {
+    if (e) e.preventDefault();
+    playClickSound();
+    const myName = userNameInput.trim() || 'Partner 1';
+    localStorage.setItem('between_user_name', myName);
+    onCreateRoom({
+      relationshipType: selectedRel,
+      sessionLength: selectedLength,
+      roomCode: randomRoomCode,
+      userName: myName
+    });
+  };
+
+  const handleJoinRoomSubmit = (e) => {
+    if (e) e.preventDefault();
+    if (!joinCodeInput.trim()) return;
+    playClickSound();
+    const myName = userNameInput.trim() || 'Partner 2';
+    localStorage.setItem('between_user_name', myName);
+    onJoinRoom({
+      roomCode: joinCodeInput.trim().toUpperCase(),
+      userName: myName
+    });
+  };
+
   return (
     <div style={{
       width: '100%',
-      maxWidth: '480px',
+      maxWidth: '460px',
       margin: '0 auto',
       display: 'flex',
       flexDirection: 'column',
-      gap: '24px',
-      animation: 'fadeIn 0.35s ease-out'
+      gap: '16px',
+      animation: 'fadeIn 0.3s ease-out',
+      userSelect: 'none'
     }}>
-      {/* Brand Hero Greeting */}
-      <div style={{ textAlign: 'center', padding: '8px 0 4px' }}>
-        <div style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: '6px',
-          padding: '6px 14px',
-          borderRadius: 'var(--radius-pill)',
-          background: 'rgba(217, 78, 52, 0.08)',
-          border: '1px solid rgba(217, 78, 52, 0.2)',
-          color: 'var(--color-ember)',
-          fontSize: '11px',
-          fontWeight: '700',
-          letterSpacing: '0.08em',
-          textTransform: 'uppercase',
-          marginBottom: '14px'
-        }}>
-          <Sparkles size={12} strokeWidth={2.5} />
-          <span>Intimate Multiplayer</span>
+      {/* Tabletop Box Header */}
+      <div style={{ textAlign: 'center', padding: '4px 0 2px' }}>
+        <div className="card-label-sticker" style={{ margin: '0 auto 8px', gap: '6px' }}>
+          <span>★ Tabletop Edition</span>
         </div>
-
         <h1 style={{
-          fontFamily: 'var(--font-serif)',
-          fontSize: 'clamp(24px, 6.5vw, 34px)',
-          fontWeight: '600',
-          color: 'var(--color-ink)',
-          lineHeight: '1.2',
+          fontFamily: 'var(--font-sans)',
+          fontSize: 'clamp(22px, 5.5vw, 28px)',
+          fontWeight: '800',
           letterSpacing: '-0.02em',
-          marginBottom: '8px'
+          color: 'var(--color-ink)',
+          lineHeight: '1.25',
+          margin: '0 0 6px'
         }}>
-          Closeness Across Distance
+          A Tabletop Game for Two
         </h1>
         <p style={{
-          fontSize: 'clamp(13px, 3.8vw, 15px)',
+          fontSize: '13.5px',
           color: 'var(--color-body)',
-          lineHeight: '1.55',
-          maxWidth: '420px',
+          lineHeight: '1.45',
+          maxWidth: '380px',
           margin: '0 auto'
         }}>
-          A synchronized card ritual for two screens. Flip questions, pass turns, and share moments in real-time.
+          Thought-provoking questions, tailored follow-ups, and interactive challenges.
         </p>
       </div>
 
-      {/* 1. Connection Error State */}
+      {/* 1. ERROR STATE */}
       {(errorMessage || connectionStatus === 'ERROR') ? (
-        <div className="soft-card" style={{
-          padding: '32px 24px',
-          textAlign: 'center',
-          border: '1.5px solid rgba(217, 78, 52, 0.45)',
-          background: 'var(--color-surface)',
-          boxShadow: 'var(--shadow-md)',
-          animation: 'fadeIn 0.25s ease-out'
-        }}>
+        <div className="tabletop-playing-card" style={{ padding: '24px 20px', textAlign: 'center' }}>
           <div style={{
-            width: '60px',
-            height: '60px',
+            width: '54px',
+            height: '54px',
             borderRadius: '50%',
-            background: 'rgba(217, 78, 52, 0.12)',
+            background: 'rgba(217, 78, 52, 0.1)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            margin: '0 auto 16px',
+            margin: '0 auto 12px',
             color: 'var(--color-ember)'
           }}>
-            <ShieldCheck size={30} strokeWidth={2.2} />
+            <ShieldCheck size={26} strokeWidth={2.4} />
           </div>
-
-          <h2 style={{
-            fontFamily: 'var(--font-serif)',
-            fontSize: '22px',
-            fontWeight: '600',
-            marginBottom: '8px'
-          }}>
-            Unable to Connect
+          <h2 style={{ fontSize: '18px', fontWeight: '800', margin: '0 0 6px', color: 'var(--color-ink)' }}>
+            Connection Failed
           </h2>
-
-          <p style={{
-            fontSize: '14px',
-            color: 'var(--color-body)',
-            lineHeight: 1.5,
-            marginBottom: '22px',
-            maxWidth: '380px',
-            margin: '0 auto 22px'
-          }}>
-            {errorMessage || 'The room could not be found or the connection timed out. Please verify the code with your partner.'}
+          <p style={{ fontSize: '13px', color: 'var(--color-body)', margin: '0 0 16px' }}>
+            {errorMessage || 'Could not connect to room. Check code and partner connection.'}
           </p>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             <button
-              type="button"
-              onClick={() => {
-                playClickSound();
-                const targetCode = roomCode || joinCodeInput;
-                if (targetCode) {
-                  onJoinRoom({
-                    roomCode: targetCode.trim().toUpperCase(),
-                    userName: guestNameInput.trim() || 'Partner 2'
-                  });
-                } else {
-                  onCancelRoom?.();
-                }
-              }}
+              onClick={() => onCancelRoom?.()}
               className="btn-primary"
-              style={{ width: '100%', padding: '14px', display: 'flex', justifyContent: 'center', gap: '8px' }}
+              style={{ width: '100%', padding: '12px', minHeight: '44px' }}
             >
-              <Radio size={18} strokeWidth={2.4} />
-              <span>Retry Connecting to Room {roomCode || joinCodeInput}</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                playClickSound();
-                onCancelRoom?.();
-              }}
-              className="btn-secondary"
-              style={{ width: '100%', padding: '12px', display: 'flex', justifyContent: 'center', gap: '8px' }}
-            >
-              <ChevronLeft size={16} strokeWidth={2.4} />
-              <span>Enter Different Code / Back to Home</span>
+              Return to Menu
             </button>
           </div>
         </div>
       ) : (!isHost && connectionStatus === 'CONNECTING') ? (
-        /* 2. Guest Connecting State */
-        <div className="soft-card" style={{
-          padding: '36px 24px',
-          textAlign: 'center',
-          border: '1.5px solid rgba(229, 169, 60, 0.4)',
-          background: 'var(--color-surface)',
-          boxShadow: 'var(--shadow-md)',
-          animation: 'fadeIn 0.25s ease-out'
-        }}>
+        /* 2. GUEST CONNECTING STATE */
+        <div className="tabletop-playing-card" style={{ padding: '32px 20px', textAlign: 'center' }}>
           <div style={{
-            width: '64px',
-            height: '64px',
+            width: '54px',
+            height: '54px',
             borderRadius: '50%',
-            background: 'rgba(229, 169, 60, 0.14)',
+            background: 'rgba(229, 169, 60, 0.12)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            margin: '0 auto 16px',
+            margin: '0 auto 12px',
             color: 'var(--color-gold)'
           }}>
-            <Radio size={30} strokeWidth={2.2} className="audio-bar" />
+            <Radio size={26} strokeWidth={2.4} className="audio-bar" />
           </div>
-
-          <h2 style={{
-            fontFamily: 'var(--font-serif)',
-            fontSize: '22px',
-            fontWeight: '600',
-            marginBottom: '8px'
-          }}>
+          <h2 style={{ fontSize: '18px', fontWeight: '800', margin: '0 0 6px', color: 'var(--color-ink)' }}>
             Connecting to Room {roomCode}...
           </h2>
-
-          <p style={{
-            fontSize: '14px',
-            color: 'var(--color-body)',
-            lineHeight: 1.5,
-            marginBottom: '20px',
-            maxWidth: '340px',
-            margin: '0 auto 20px'
-          }}>
-            Pinging room {roomCode}. As soon as your partner has the room open, you will connect instantly.
+          <p style={{ fontSize: '13px', color: 'var(--color-body)', margin: '0 0 16px' }}>
+            Synchronizing cards with your partner...
           </p>
-
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '8px',
-            padding: '6px 14px',
-            borderRadius: 'var(--radius-pill)',
-            background: 'rgba(229, 169, 60, 0.12)',
-            color: 'var(--color-gold)',
-            fontSize: '12px',
-            fontWeight: '700',
-            marginBottom: '22px'
-          }}>
-            <span style={{
-              width: '8px',
-              height: '8px',
-              borderRadius: '50%',
-              background: 'var(--color-gold)',
-              boxShadow: '0 0 8px var(--color-gold)',
-              animation: 'pulse 1.2s infinite'
-            }} />
-            <span>Sending continuous connection pulses...</span>
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <button
-              type="button"
-              onClick={() => {
-                playClickSound();
-                onJoinRoom({
-                  roomCode: roomCode.trim().toUpperCase(),
-                  userName: guestNameInput.trim() || 'Partner 2'
-                });
-              }}
-              className="btn-primary"
-              style={{ width: '100%', padding: '13px', display: 'flex', justifyContent: 'center', gap: '8px' }}
-            >
-              <Radio size={17} strokeWidth={2.4} />
-              <span>Force Re-connect Pulse</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                playClickSound();
-                onCancelRoom?.();
-              }}
-              className="btn-secondary"
-              style={{ width: '100%', padding: '12px', display: 'flex', justifyContent: 'center', gap: '8px' }}
-            >
-              <ChevronLeft size={17} strokeWidth={2.4} />
-              <span>Cancel & Change Code</span>
-            </button>
-          </div>
+          <button
+            onClick={() => onCancelRoom?.()}
+            className="btn-secondary"
+            style={{ width: '100%', padding: '10px', minHeight: '44px' }}
+          >
+            Cancel
+          </button>
         </div>
       ) : (!isHost && isConnected) ? (
-        /* 3. Guest Connected Waiting State */
-        <div className="soft-card" style={{
-          padding: '36px 24px',
-          textAlign: 'center',
-          border: '1.5px solid rgba(56, 123, 106, 0.4)',
-          background: 'var(--color-surface)',
-          boxShadow: 'var(--shadow-md)',
-          animation: 'fadeIn 0.25s ease-out'
-        }}>
+        /* 3. GUEST CONNECTED WAITING FOR HOST */
+        <div className="tabletop-playing-card" style={{ padding: '32px 20px', textAlign: 'center' }}>
           <div style={{
-            width: '64px',
-            height: '64px',
+            width: '54px',
+            height: '54px',
             borderRadius: '50%',
-            background: 'rgba(56, 123, 106, 0.14)',
+            background: 'rgba(56, 123, 106, 0.12)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            margin: '0 auto 16px',
+            margin: '0 auto 12px',
             color: 'var(--color-sage)'
           }}>
-            <Sparkles size={32} strokeWidth={2.2} />
+            <Sparkles size={26} strokeWidth={2.4} />
           </div>
-
-          <h2 style={{
-            fontFamily: 'var(--font-serif)',
-            fontSize: '22px',
-            fontWeight: '600',
-            marginBottom: '8px'
-          }}>
+          <h2 style={{ fontSize: '18px', fontWeight: '800', margin: '0 0 6px', color: 'var(--color-ink)' }}>
             Connected with {peerName || 'Host'}!
           </h2>
-
-          <p style={{
-            fontSize: '14px',
-            color: 'var(--color-body)',
-            lineHeight: 1.5,
-            marginBottom: '24px',
-            maxWidth: '360px',
-            margin: '0 auto 24px'
-          }}>
-            Both screens are synchronized. Waiting for {peerName || 'your partner'} to start the ritual... Settle in and enjoy the moment.
+          <p style={{ fontSize: '13px', color: 'var(--color-body)', margin: '0 0 16px' }}>
+            Both screens are synchronized. Waiting for {peerName || 'host'} to deal the first card...
           </p>
-
           <button
-            type="button"
-            onClick={() => {
-              playClickSound();
-              onCancelRoom?.();
-            }}
+            onClick={() => onCancelRoom?.()}
             className="btn-secondary"
-            style={{ width: '100%', padding: '13px', display: 'flex', justifyContent: 'center', gap: '8px' }}
+            style={{ width: '100%', padding: '10px', minHeight: '44px' }}
           >
-            <Home size={17} strokeWidth={2.2} />
-            <span>Leave Room & Return Home</span>
+            Leave Room
           </button>
         </div>
       ) : isWaitingForGuest ? (
-        /* 4. Host Waiting Room Card */
-        <div className="soft-card" style={{
-          padding: '32px 24px',
-          textAlign: 'center',
-          border: '1.5px solid rgba(217, 78, 52, 0.35)',
-          background: 'var(--color-surface)',
-          boxShadow: 'var(--shadow-md)',
-          position: 'relative',
-          animation: 'fadeIn 0.25s ease-out'
-        }}>
+        /* 4. HOST WAITING ROOM */
+        <div className="tabletop-playing-card" style={{ padding: '24px 20px', textAlign: 'center' }}>
           <div style={{
-            width: '60px',
-            height: '60px',
+            width: '52px',
+            height: '52px',
             borderRadius: '50%',
             background: isConnected ? 'rgba(56, 123, 106, 0.12)' : 'rgba(217, 78, 52, 0.1)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            margin: '0 auto 16px',
+            margin: '0 auto 10px',
             color: isConnected ? 'var(--color-sage)' : 'var(--color-ember)'
           }}>
-            {isConnected ? <Sparkles size={28} strokeWidth={2.2} /> : <Radio size={28} strokeWidth={2.2} className="audio-bar" />}
+            {isConnected ? <Sparkles size={24} strokeWidth={2.4} /> : <Radio size={24} strokeWidth={2.4} />}
           </div>
 
-          <h2 style={{
-            fontFamily: 'var(--font-serif)',
-            fontSize: '22px',
-            fontWeight: '600',
-            marginBottom: '6px'
-          }}>
-            {isConnected ? `${peerName || 'Partner'} Connected!` : 'Waiting for Partner'}
+          <h2 style={{ fontSize: '18px', fontWeight: '800', margin: '0 0 4px', color: 'var(--color-ink)' }}>
+            {isConnected ? `${peerName || 'Partner'} is Ready!` : 'Room Created'}
           </h2>
-
-          <p style={{
-            fontSize: '14px',
-            color: 'var(--color-body)',
-            marginBottom: '20px'
-          }}>
-            {isConnected 
-              ? `Both screens are synchronized! Press below when you and ${peerName || 'your partner'} are ready to begin.`
-              : `Share this randomly generated link or room code with your partner to connect.`}
+          <p style={{ fontSize: '13px', color: 'var(--color-body)', margin: '0 0 14px' }}>
+            {isConnected ? 'Both screens are linked. Tap below to deal the deck!' : 'Share this 5-letter room code with your partner:'}
           </p>
 
-          {/* Big Code Pill with quick copy */}
+          {/* Large Room Code Token */}
           <div style={{
-            display: 'inline-flex',
+            background: '#F6F3EE',
+            border: '2px dashed rgba(28, 25, 23, 0.18)',
+            borderRadius: '14px',
+            padding: '12px',
+            display: 'flex',
             alignItems: 'center',
-            gap: '10px',
-            padding: '10px 18px',
-            background: 'var(--color-surface-subtle)',
-            border: '1px solid var(--color-hairline)',
-            borderRadius: 'var(--radius-pill)',
-            marginBottom: '20px',
-            maxWidth: '100%',
-            overflow: 'hidden'
+            justifyContent: 'center',
+            gap: '12px',
+            marginBottom: '14px'
           }}>
-            <span style={{ fontSize: '10px', fontWeight: '700', color: 'var(--color-muted)', letterSpacing: '0.08em', whiteSpace: 'nowrap' }}>ROOM CODE:</span>
             <span style={{
               fontFamily: 'monospace',
-              fontSize: 'clamp(20px, 6.2vw, 28px)',
-              fontWeight: '800',
+              fontSize: '28px',
+              fontWeight: '900',
               letterSpacing: '0.14em',
-              color: 'var(--color-ember)'
+              color: 'var(--color-ink)'
             }}>
               {roomCode}
             </span>
-          </div>
-
-          {/* Actions */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             <button
               onClick={handleCopyInviteLink}
-              className="btn-secondary"
-              style={{ width: '100%', padding: '13px', display: 'flex', justifyContent: 'center', gap: '8px' }}
+              className="card-label-sticker"
+              style={{ cursor: 'pointer', padding: '6px 12px', gap: '4px', fontSize: '11px' }}
             >
-              {copiedLink ? <Check size={18} strokeWidth={2.4} color="#387B6A" /> : <Copy size={18} strokeWidth={2.2} />}
-              <span>{copiedLink ? 'Link Copied to Clipboard!' : 'Copy 1-Click Invite Link'}</span>
+              {copiedLink ? <Check size={12} strokeWidth={2.6} color="#387B6A" /> : <Copy size={12} strokeWidth={2.2} />}
+              <span>{copiedLink ? 'Copied' : 'Copy'}</span>
             </button>
+          </div>
 
-            {/* Instant Camera QR Code */}
-            {roomCode && (
-              <div style={{
-                margin: '2px 0 4px',
-                padding: '10px 14px',
-                background: 'var(--color-surface-subtle)',
-                border: '1px solid var(--color-hairline)',
-                borderRadius: 'var(--radius-md)',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: '8px'
-              }}>
-                <button
-                  type="button"
-                  onClick={() => { playClickSound(); setShowQrCode(prev => !prev); }}
-                  style={{
-                    border: 'none',
-                    background: 'transparent',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    fontSize: '12px',
-                    fontWeight: '700',
-                    color: 'var(--color-ink)'
-                  }}
-                >
-                  <QrCode size={15} strokeWidth={2.4} color="var(--color-ember)" />
-                  <span>{showQrCode ? 'Hide Camera QR Code' : 'Show Camera QR Code to Connect'}</span>
-                </button>
+          {/* QR Code Toggle */}
+          {qrDataUrl && (
+            <div style={{ marginBottom: '14px' }}>
+              <button
+                type="button"
+                onClick={() => { playClickSound(); setShowQrCode(!showQrCode); }}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '12px',
+                  fontWeight: '700',
+                  color: 'var(--color-ember)',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '5px'
+                }}
+              >
+                <QrCode size={13} strokeWidth={2.4} />
+                <span>{showQrCode ? 'Hide QR Code' : 'Show Camera QR Code'}</span>
+              </button>
+              {showQrCode && (
+                <div style={{ marginTop: '8px', display: 'flex', justifyContent: 'center' }}>
+                  <img src={qrDataUrl} alt="Scan to join" style={{ width: '130px', height: '130px', borderRadius: '8px' }} />
+                </div>
+              )}
+            </div>
+          )}
 
-                {showQrCode && qrDataUrl && (
-                  <div style={{
-                    marginTop: '4px',
-                    padding: '12px',
-                    background: '#FFFFFF',
-                    borderRadius: '12px',
-                    boxShadow: 'var(--shadow-sm)',
-                    border: '1px solid rgba(0,0,0,0.06)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    gap: '6px',
-                    animation: 'fadeIn 0.2s ease-out'
-                  }}>
-                    <img 
-                      src={qrDataUrl} 
-                      alt={`Scan to join room ${roomCode}`} 
-                      style={{ width: '140px', height: '140px', display: 'block', borderRadius: '4px' }} 
-                    />
-                    <span style={{ fontSize: '11px', color: 'var(--color-muted)', fontWeight: '600' }}>
-                      Point phone camera to join in 1 second
-                    </span>
-                  </div>
-                )}
-              </div>
-            )}
-
+          {/* Primary Action Button */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             <button
               onClick={() => {
                 playClickSound();
                 onStartSession();
               }}
               className="btn-primary"
-              style={{ width: '100%', padding: '15px' }}
+              style={{ width: '100%', padding: '14px', minHeight: '46px', fontSize: '14px', fontWeight: '800' }}
             >
-              <span>{isConnected ? `Begin Intimate Ritual with ${peerName || 'Partner'}` : 'Start Session (Or Play Solo)'}</span>
-              <ArrowRight size={18} strokeWidth={2.4} />
+              <span>{isConnected ? `Deal Cards with ${peerName}` : 'Deal Deck & Start'}</span>
+              <ArrowRight size={16} strokeWidth={2.4} />
             </button>
-
             <button
-              type="button"
-              onClick={() => {
-                playClickSound();
-                onCancelRoom?.();
-              }}
+              onClick={() => onCancelRoom?.()}
               className="btn-secondary"
-              style={{ width: '100%', padding: '12px', display: 'flex', justifyContent: 'center', gap: '8px' }}
+              style={{ width: '100%', padding: '10px', minHeight: '44px', fontSize: '12.5px' }}
             >
-              <ChevronLeft size={17} strokeWidth={2.2} />
-              <span>Cancel Room & Return Home</span>
+              Cancel & Return Home
             </button>
           </div>
         </div>
       ) : (
-        <>
-          {/* Main Segmented Switcher: CREATE ROOM vs JOIN ROOM */}
+        /* 5. MAIN CLEAN MENU */
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+          {/* Segmented Mode Switcher */}
           <div style={{
             display: 'flex',
-            background: 'var(--color-surface-subtle)',
+            background: 'rgba(28, 25, 23, 0.06)',
             padding: '4px',
-            borderRadius: 'var(--radius-pill)'
+            borderRadius: 'var(--radius-pill)',
+            gap: '4px'
           }}>
             <button
               type="button"
-              onClick={() => { playClickSound(); setTab('CREATE'); }}
+              onClick={() => { playClickSound(); setMode('SOLO'); }}
               style={{
                 flex: 1,
-                padding: '10px 16px',
+                minHeight: '44px',
+                padding: '8px 12px',
                 borderRadius: 'var(--radius-pill)',
                 border: 'none',
-                background: tab === 'CREATE' ? 'var(--color-surface)' : 'transparent',
-                color: tab === 'CREATE' ? 'var(--color-ink)' : 'var(--color-muted)',
-                fontWeight: tab === 'CREATE' ? '700' : '500',
-                fontSize: '14px',
-                boxShadow: tab === 'CREATE' ? 'var(--shadow-sm)' : 'none',
+                background: mode === 'SOLO' ? '#FFFFFF' : 'transparent',
+                color: mode === 'SOLO' ? '#1C1917' : 'var(--color-muted)',
+                fontWeight: mode === 'SOLO' ? '800' : '600',
+                fontSize: '13px',
                 cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '6px',
+                boxShadow: mode === 'SOLO' ? 'var(--shadow-sm)' : 'none',
                 transition: 'all 0.18s'
               }}
             >
-              Create Room
+              <Smartphone size={14} strokeWidth={2.4} />
+              <span>Pass the Phone</span>
             </button>
 
             <button
               type="button"
-              onClick={() => { playClickSound(); setTab('JOIN'); }}
+              onClick={() => { playClickSound(); setMode('CREATE'); }}
               style={{
                 flex: 1,
-                padding: '10px 16px',
+                minHeight: '44px',
+                padding: '8px 12px',
                 borderRadius: 'var(--radius-pill)',
                 border: 'none',
-                background: tab === 'JOIN' ? 'var(--color-surface)' : 'transparent',
-                color: tab === 'JOIN' ? 'var(--color-ink)' : 'var(--color-muted)',
-                fontWeight: tab === 'JOIN' ? '700' : '500',
-                fontSize: '14px',
-                boxShadow: tab === 'JOIN' ? 'var(--shadow-sm)' : 'none',
+                background: mode === 'CREATE' ? '#FFFFFF' : 'transparent',
+                color: mode === 'CREATE' ? '#1C1917' : 'var(--color-muted)',
+                fontWeight: mode === 'CREATE' ? '800' : '600',
+                fontSize: '13px',
                 cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '6px',
+                boxShadow: mode === 'CREATE' ? 'var(--shadow-sm)' : 'none',
                 transition: 'all 0.18s'
               }}
             >
-              Join Room
+              <Users size={14} strokeWidth={2.4} />
+              <span>Create Room</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => { playClickSound(); setMode('JOIN'); }}
+              style={{
+                flex: 1,
+                minHeight: '44px',
+                padding: '8px 12px',
+                borderRadius: 'var(--radius-pill)',
+                border: 'none',
+                background: mode === 'JOIN' ? '#FFFFFF' : 'transparent',
+                color: mode === 'JOIN' ? '#1C1917' : 'var(--color-muted)',
+                fontWeight: mode === 'JOIN' ? '800' : '600',
+                fontSize: '13px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '6px',
+                boxShadow: mode === 'JOIN' ? 'var(--shadow-sm)' : 'none',
+                transition: 'all 0.18s'
+              }}
+            >
+              <Radio size={14} strokeWidth={2.4} />
+              <span>Join Room</span>
             </button>
           </div>
 
-          {/* TAB 1: CREATE ROOM */}
-          {tab === 'CREATE' && (
-            <div className="soft-card" style={{ padding: '24px' }}>
-              {/* Name Input */}
-              <div style={{ marginBottom: '20px' }}>
+          {/* Card Container for Configuration */}
+          <div className="tabletop-playing-card" style={{ padding: '20px 18px' }}>
+            {/* 1. Player Names */}
+            {mode === 'SOLO' ? (
+              <div style={{ marginBottom: '16px' }}>
                 <label style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
+                  display: 'block',
                   fontSize: '11px',
-                  fontWeight: '700',
-                  letterSpacing: '0.08em',
+                  fontWeight: '800',
+                  letterSpacing: '0.06em',
                   textTransform: 'uppercase',
                   color: 'var(--color-muted)',
                   marginBottom: '8px'
                 }}>
-                  <User size={13} strokeWidth={2.4} />
-                  <span>Your Name</span>
+                  Player Names
                 </label>
-                <input
-                  type="text"
-                  maxLength={24}
-                  value={hostNameInput}
-                  onChange={(e) => setHostNameInput(e.target.value)}
-                  placeholder="e.g. Sarah"
-                  style={{
-                    width: '100%',
-                    padding: '13px 16px',
-                    borderRadius: 'var(--radius-md)',
-                    border: '1.5px solid var(--color-hairline)',
-                    background: 'var(--color-surface-subtle)',
-                    fontSize: '15px',
-                    fontWeight: '600',
-                    color: 'var(--color-ink)',
-                    outline: 'none',
-                    transition: 'border-color 0.2s'
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = 'var(--color-ember)'}
-                  onBlur={(e) => e.target.style.borderColor = 'var(--color-hairline)'}
-                />
-              </div>
-
-              {/* Relationship Selector */}
-              <label style={{
-                display: 'block',
-                fontSize: '11px',
-                fontWeight: '700',
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase',
-                color: 'var(--color-muted)',
-                marginBottom: '10px'
-              }}>
-                Select Connection Type
-              </label>
-
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))',
-                gap: '8px',
-                marginBottom: '20px'
-              }}>
-                {Object.values(RELATIONSHIP_TYPES).map((rel) => {
-                  const isSelected = selectedRel === rel.id;
-                  const Icon = REL_ICONS[rel.id] || Heart;
-                  return (
-                    <button
-                      key={rel.id}
-                      type="button"
-                      onClick={() => { playClickSound(); setSelectedRel(rel.id); }}
-                      style={{
-                        padding: '12px 6px',
-                        minHeight: '84px',
-                        borderRadius: 'var(--radius-md)',
-                        border: isSelected ? '2px solid #1C1917' : '1px solid var(--color-hairline)',
-                        background: isSelected ? '#FFFFFF' : 'var(--color-surface-subtle)',
-                        boxShadow: isSelected 
-                          ? '0 6px 16px -4px rgba(28, 25, 23, 0.12), 0 1px 0 rgba(255,255,255,0.9) inset' 
-                          : 'none',
-                        cursor: 'pointer',
-                        textAlign: 'center',
-                        transition: 'all 0.2s',
-                        touchAction: 'manipulation',
-                        position: 'relative',
-                        transform: isSelected ? 'scale(1.02)' : 'scale(1)'
-                      }}
-                    >
-                      {isSelected && (
-                        <div style={{
-                          position: 'absolute',
-                          top: '6px',
-                          left: '6px',
-                          width: '16px',
-                          height: '16px',
-                          borderRadius: '50%',
-                          background: '#1C1917',
-                          color: '#FFFFFF',
-                          fontSize: '9px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          fontWeight: '900',
-                          lineHeight: 1
-                        }}>
-                          ★
-                        </div>
-                      )}
-                      <div style={{
-                        width: '32px',
-                        height: '32px',
-                        borderRadius: '50%',
-                        background: isSelected ? `${rel.color}22` : 'rgba(0,0,0,0.03)',
-                        border: isSelected ? `1.5px solid ${rel.color}` : '1px solid var(--color-hairline)',
-                        color: rel.color,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        margin: '0 auto 6px',
-                        transition: 'transform 0.2s'
-                      }}>
-                        <Icon size={16} strokeWidth={2.4} />
-                      </div>
-                      <div style={{
-                        fontSize: 'clamp(11px, 2.9vw, 12.5px)',
-                        fontWeight: isSelected ? '800' : '600',
-                        color: isSelected ? 'var(--color-ink)' : 'var(--color-body)',
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis'
-                      }}>
-                        {rel.label}
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Duration Selector */}
-              <label style={{
-                display: 'block',
-                fontSize: '11px',
-                fontWeight: '700',
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase',
-                color: 'var(--color-muted)',
-                marginBottom: '10px'
-              }}>
-                Ritual Length
-              </label>
-
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(4, 1fr)',
-                gap: '6px',
-                marginBottom: '20px'
-              }}>
-                {Object.values(SESSION_LENGTHS).map((len) => {
-                  const isSelected = selectedLength === len.id;
-                  return (
-                    <button
-                      key={len.id}
-                      type="button"
-                      onClick={() => { playClickSound(); setSelectedLength(len.id); }}
-                      style={{
-                        padding: '10px 2px',
-                        minHeight: '52px',
-                        borderRadius: 'var(--radius-md)',
-                        border: isSelected ? '2px solid var(--color-ink)' : '1px solid var(--color-hairline)',
-                        background: isSelected ? 'var(--color-surface)' : 'var(--color-surface-subtle)',
-                        boxShadow: isSelected ? 'var(--shadow-sm)' : 'none',
-                        cursor: 'pointer',
-                        textAlign: 'center',
-                        transition: 'all 0.15s',
-                        touchAction: 'manipulation'
-                      }}
-                    >
-                      <div style={{ fontSize: 'clamp(12px, 3.2vw, 14px)', fontWeight: '700', color: 'var(--color-ink)' }}>
-                        {len.tabLabel}
-                      </div>
-                      <div style={{ fontSize: 'clamp(9px, 2.4vw, 10px)', color: 'var(--color-muted)', marginTop: '2px', whiteSpace: 'nowrap' }}>
-                        {len.count} cards
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Random Room Code Preview */}
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '12px 14px',
-                background: 'rgba(217, 78, 52, 0.05)',
-                border: '1px dashed rgba(217, 78, 52, 0.25)',
-                borderRadius: 'var(--radius-md)',
-                marginBottom: '22px'
-              }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                  <span style={{ fontSize: '10px', fontWeight: '700', color: 'var(--color-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                    Random Room Code
-                  </span>
-                  <span style={{
-                    fontFamily: 'monospace',
-                    fontSize: '18px',
-                    fontWeight: '800',
-                    letterSpacing: '0.12em',
-                    color: 'var(--color-ember)'
-                  }}>
-                    {randomRoomCode}
-                  </span>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                  <input
+                    type="text"
+                    maxLength={20}
+                    value={soloP1Input}
+                    onChange={(e) => setSoloP1Input(e.target.value)}
+                    placeholder="Partner 1"
+                    style={{
+                      width: '100%',
+                      padding: '10px 12px',
+                      borderRadius: '10px',
+                      border: '1.5px solid rgba(0,0,0,0.1)',
+                      background: '#F9F7F4',
+                      fontSize: '14px',
+                      fontWeight: '700',
+                      color: 'var(--color-ink)',
+                      outline: 'none'
+                    }}
+                  />
+                  <input
+                    type="text"
+                    maxLength={20}
+                    value={soloP2Input}
+                    onChange={(e) => setSoloP2Input(e.target.value)}
+                    placeholder="Partner 2"
+                    style={{
+                      width: '100%',
+                      padding: '10px 12px',
+                      borderRadius: '10px',
+                      border: '1.5px solid rgba(0,0,0,0.1)',
+                      background: '#F9F7F4',
+                      fontSize: '14px',
+                      fontWeight: '700',
+                      color: 'var(--color-ink)',
+                      outline: 'none'
+                    }}
+                  />
                 </div>
-
-                <button
-                  type="button"
-                  onClick={handleRegenerateCode}
-                  className="pill-badge pill-badge-surface"
-                  style={{ cursor: 'pointer', gap: '5px', padding: '6px 12px', fontSize: '12px', border: '1px solid var(--color-hairline)' }}
-                  title="Generate a new random room code"
-                >
-                  <Shuffle size={12} strokeWidth={2.4} />
-                  <span>Randomize</span>
-                </button>
               </div>
-
-              {/* Action Buttons */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <button
-                  type="button"
-                  onClick={handleCreateSubmit}
-                  className="btn-primary"
-                  style={{ width: '100%', padding: '15px' }}
-                >
-                  <span>Open Space Together</span>
-                  <ArrowRight size={18} strokeWidth={2.4} />
-                </button>
-
-                {/* Offline Pass the Phone Button */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    playClickSound();
-                    setShowSoloConfig(prev => !prev);
-                  }}
-                  className="btn-secondary"
-                  style={{
-                    width: '100%',
-                    padding: '12px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '6px'
-                  }}
-                >
-                  <span>Play Solo / Pass the Phone (Offline)</span>
-                  {showSoloConfig ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-                </button>
-
-                {/* Expandable Player Names for Offline Mode */}
-                {showSoloConfig && (
-                  <div style={{
-                    padding: '16px',
-                    background: 'var(--color-surface-subtle)',
-                    border: '1px solid var(--color-hairline)',
-                    borderRadius: 'var(--radius-md)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '12px',
-                    animation: 'fadeIn 0.2s ease-out'
-                  }}>
-                    <div style={{ fontSize: '12px', fontWeight: '700', color: 'var(--color-ink)' }}>
-                      Enter Both Player Names:
-                    </div>
-
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                      <div>
-                        <label style={{ display: 'block', fontSize: '10px', fontWeight: '700', color: 'var(--color-muted)', marginBottom: '4px' }}>
-                          PLAYER 1 NAME
-                        </label>
-                        <input
-                          type="text"
-                          maxLength={20}
-                          value={soloP1Input}
-                          onChange={(e) => setSoloP1Input(e.target.value)}
-                          placeholder="e.g. Sarah"
-                          style={{
-                            width: '100%',
-                            padding: '10px 12px',
-                            borderRadius: 'var(--radius-sm)',
-                            border: '1px solid var(--color-hairline)',
-                            background: 'var(--color-surface)',
-                            color: 'var(--color-ink)',
-                            fontSize: '14px',
-                            fontWeight: '600'
-                          }}
-                        />
-                      </div>
-
-                      <div>
-                        <label style={{ display: 'block', fontSize: '10px', fontWeight: '700', color: 'var(--color-muted)', marginBottom: '4px' }}>
-                          PLAYER 2 NAME
-                        </label>
-                        <input
-                          type="text"
-                          maxLength={20}
-                          value={soloP2Input}
-                          onChange={(e) => setSoloP2Input(e.target.value)}
-                          placeholder="e.g. Alex"
-                          style={{
-                            width: '100%',
-                            padding: '10px 12px',
-                            borderRadius: 'var(--radius-sm)',
-                            border: '1px solid var(--color-hairline)',
-                            background: 'var(--color-surface)',
-                            color: 'var(--color-ink)',
-                            fontSize: '14px',
-                            fontWeight: '600'
-                          }}
-                        />
-                      </div>
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={handleSoloSubmit}
-                      className="btn-primary"
-                      style={{ width: '100%', padding: '12px', marginTop: '4px' }}
-                    >
-                      <span>Start Offline Ritual</span>
-                      <ArrowRight size={16} strokeWidth={2.4} />
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* TAB 2: JOIN ROOM */}
-          {tab === 'JOIN' && (
-            <form onSubmit={handleJoinSubmit} className="soft-card" style={{ padding: '32px 24px' }}>
-              <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-                <h3 style={{
-                  fontFamily: 'var(--font-serif)',
-                  fontSize: '22px',
-                  fontWeight: '600',
-                  marginBottom: '6px'
-                }}>
-                  Join Friend's Room
-                </h3>
-                <p style={{ fontSize: '13px', color: 'var(--color-body)' }}>
-                  Enter your name and the room code your friend or partner shared with you.
-                </p>
-              </div>
-
-              {/* Guest Name Input */}
+            ) : mode === 'CREATE' ? (
               <div style={{ marginBottom: '16px' }}>
-                <label style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  fontSize: '11px',
-                  fontWeight: '700',
-                  letterSpacing: '0.08em',
-                  textTransform: 'uppercase',
-                  color: 'var(--color-muted)',
-                  marginBottom: '6px'
-                }}>
-                  <User size={13} strokeWidth={2.4} />
-                  <span>Your Name</span>
-                </label>
-                <input
-                  type="text"
-                  maxLength={24}
-                  value={guestNameInput}
-                  onChange={(e) => setGuestNameInput(e.target.value)}
-                  placeholder="e.g. Alex"
-                  style={{
-                    width: '100%',
-                    padding: '13px 16px',
-                    borderRadius: 'var(--radius-md)',
-                    border: '1.5px solid var(--color-hairline)',
-                    background: 'var(--color-surface-subtle)',
-                    fontSize: '15px',
-                    fontWeight: '600',
-                    color: 'var(--color-ink)',
-                    outline: 'none',
-                    transition: 'border-color 0.2s'
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = 'var(--color-ember)'}
-                  onBlur={(e) => e.target.style.borderColor = 'var(--color-hairline)'}
-                />
-              </div>
-
-              {/* Room Code Input */}
-              <div style={{ marginBottom: '22px' }}>
                 <label style={{
                   display: 'block',
                   fontSize: '11px',
-                  fontWeight: '700',
-                  letterSpacing: '0.08em',
+                  fontWeight: '800',
+                  letterSpacing: '0.06em',
                   textTransform: 'uppercase',
                   color: 'var(--color-muted)',
-                  marginBottom: '6px'
+                  marginBottom: '8px'
                 }}>
-                  Room Code
+                  Your Name
                 </label>
                 <input
                   type="text"
-                  maxLength={120}
-                  value={joinCodeInput}
-                  onChange={(e) => {
-                    let val = e.target.value;
-                    if (val.includes('room=')) {
-                      const match = val.match(/room=([A-Za-z0-9]+)/i);
-                      if (match) val = match[1];
-                    }
-                    setJoinCodeInput(val.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 6));
-                  }}
-                  placeholder="e.g. K7M2W"
+                  maxLength={20}
+                  value={userNameInput}
+                  onChange={(e) => setUserNameInput(e.target.value)}
+                  placeholder="e.g. Alex"
                   style={{
                     width: '100%',
-                    padding: '14px',
-                    textAlign: 'center',
-                    fontFamily: 'monospace',
-                    fontSize: '28px',
-                    fontWeight: '800',
-                    letterSpacing: '0.24em',
-                    textTransform: 'uppercase',
+                    padding: '10px 12px',
+                    borderRadius: '10px',
+                    border: '1.5px solid rgba(0,0,0,0.1)',
+                    background: '#F9F7F4',
+                    fontSize: '14px',
+                    fontWeight: '700',
                     color: 'var(--color-ink)',
-                    background: 'var(--color-surface-subtle)',
-                    border: '1.5px solid var(--color-hairline)',
-                    borderRadius: 'var(--radius-md)',
-                    outline: 'none',
-                    boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.04)'
+                    outline: 'none'
                   }}
                 />
               </div>
+            ) : (
+              /* JOIN TAB INPUTS */
+              <div style={{ marginBottom: '16px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                  <div>
+                    <label style={{
+                      display: 'block',
+                      fontSize: '11px',
+                      fontWeight: '800',
+                      letterSpacing: '0.06em',
+                      textTransform: 'uppercase',
+                      color: 'var(--color-muted)',
+                      marginBottom: '8px'
+                    }}>
+                      Your Name
+                    </label>
+                    <input
+                      type="text"
+                      maxLength={20}
+                      value={userNameInput}
+                      onChange={(e) => setUserNameInput(e.target.value)}
+                      placeholder="e.g. Jordan"
+                      style={{
+                        width: '100%',
+                        padding: '10px 12px',
+                        borderRadius: '10px',
+                        border: '1.5px solid rgba(0,0,0,0.1)',
+                        background: '#F9F7F4',
+                        fontSize: '14px',
+                        fontWeight: '700',
+                        color: 'var(--color-ink)',
+                        outline: 'none'
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{
+                      display: 'block',
+                      fontSize: '11px',
+                      fontWeight: '800',
+                      letterSpacing: '0.06em',
+                      textTransform: 'uppercase',
+                      color: 'var(--color-muted)',
+                      marginBottom: '8px'
+                    }}>
+                      Room Code
+                    </label>
+                    <input
+                      type="text"
+                      maxLength={8}
+                      value={joinCodeInput}
+                      onChange={(e) => setJoinCodeInput(e.target.value.toUpperCase())}
+                      placeholder="5-LETTERS"
+                      style={{
+                        width: '100%',
+                        padding: '10px 12px',
+                        borderRadius: '10px',
+                        border: '1.5px solid rgba(0,0,0,0.1)',
+                        background: '#F9F7F4',
+                        fontSize: '14px',
+                        fontWeight: '800',
+                        fontFamily: 'monospace',
+                        letterSpacing: '0.08em',
+                        color: 'var(--color-ink)',
+                        outline: 'none'
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
 
+            {/* Connection Type Selection (Only for Solo and Create) */}
+            {mode !== 'JOIN' && (
+              <>
+                <label style={{
+                  display: 'block',
+                  fontSize: '11px',
+                  fontWeight: '800',
+                  letterSpacing: '0.06em',
+                  textTransform: 'uppercase',
+                  color: 'var(--color-muted)',
+                  marginBottom: '8px'
+                }}>
+                  Connection Type
+                </label>
+
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(3, 1fr)',
+                  gap: '8px',
+                  marginBottom: '16px'
+                }}>
+                  {Object.values(RELATIONSHIP_TYPES).map((rel) => {
+                    const isSelected = selectedRel === rel.id;
+                    const Icon = REL_ICONS[rel.id] || Heart;
+                    return (
+                      <button
+                        key={rel.id}
+                        type="button"
+                        onClick={() => { playClickSound(); setSelectedRel(rel.id); }}
+                        style={{
+                          padding: '12px 6px',
+                          minHeight: '82px',
+                          borderRadius: '12px',
+                          border: isSelected ? '2px solid #1C1917' : '1px solid rgba(0,0,0,0.08)',
+                          background: isSelected ? '#FFFFFF' : '#F9F7F4',
+                          boxShadow: isSelected ? '0 4px 12px rgba(0,0,0,0.1)' : 'none',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '6px',
+                          position: 'relative',
+                          transform: isSelected ? 'scale(1.02)' : 'scale(1)',
+                          transition: 'all 0.18s'
+                        }}
+                      >
+                        {isSelected && (
+                          <div style={{
+                            position: 'absolute',
+                            top: '5px',
+                            left: '5px',
+                            width: '14px',
+                            height: '14px',
+                            borderRadius: '50%',
+                            background: '#1C1917',
+                            color: '#FFFFFF',
+                            fontSize: '8px',
+                            fontWeight: '900',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}>
+                            ★
+                          </div>
+                        )}
+                        <div style={{
+                          width: '28px',
+                          height: '28px',
+                          borderRadius: '50%',
+                          background: `${rel.color}22`,
+                          color: rel.color,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}>
+                          <Icon size={14} strokeWidth={2.4} />
+                        </div>
+                        <span style={{
+                          fontSize: '12px',
+                          fontWeight: isSelected ? '800' : '600',
+                          color: '#1C1917'
+                        }}>
+                          {rel.label}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Session Length */}
+                <label style={{
+                  display: 'block',
+                  fontSize: '11px',
+                  fontWeight: '800',
+                  letterSpacing: '0.06em',
+                  textTransform: 'uppercase',
+                  color: 'var(--color-muted)',
+                  marginBottom: '8px'
+                }}>
+                  Deck Length
+                </label>
+
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(4, 1fr)',
+                  gap: '6px',
+                  marginBottom: '18px'
+                }}>
+                  {Object.values(SESSION_LENGTHS).map((len) => {
+                    const isSelected = selectedLength === len.id;
+                    return (
+                      <button
+                        key={len.id}
+                        type="button"
+                        onClick={() => { playClickSound(); setSelectedLength(len.id); }}
+                        style={{
+                          padding: '8px 4px',
+                          minHeight: '48px',
+                          borderRadius: '10px',
+                          border: isSelected ? '2px solid #1C1917' : '1px solid rgba(0,0,0,0.08)',
+                          background: isSelected ? '#FFFFFF' : '#F9F7F4',
+                          boxShadow: isSelected ? 'var(--shadow-sm)' : 'none',
+                          cursor: 'pointer',
+                          textAlign: 'center',
+                          transition: 'all 0.15s'
+                        }}
+                      >
+                        <div style={{ fontSize: '13px', fontWeight: '800', color: '#1C1917' }}>
+                          {len.tabLabel}
+                        </div>
+                        <div style={{ fontSize: '10px', color: 'var(--color-muted)', fontWeight: '600' }}>
+                          {len.count} cards
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </>
+            )}
+
+            {/* Primary Action Button */}
+            {mode === 'SOLO' ? (
               <button
-                type="submit"
-                disabled={joinCodeInput.trim().length < 3}
+                onClick={handlePlaySolo}
+                className="btn-primary"
+                style={{ width: '100%', padding: '14px', minHeight: '48px', fontSize: '14.5px', fontWeight: '800' }}
+              >
+                <span>Deal the Deck & Play</span>
+                <ArrowRight size={17} strokeWidth={2.4} />
+              </button>
+            ) : mode === 'CREATE' ? (
+              <button
+                onClick={handleCreateRoomSubmit}
+                className="btn-primary"
+                style={{ width: '100%', padding: '14px', minHeight: '48px', fontSize: '14.5px', fontWeight: '800' }}
+              >
+                <span>Create Online Room</span>
+                <ArrowRight size={17} strokeWidth={2.4} />
+              </button>
+            ) : (
+              <button
+                onClick={handleJoinRoomSubmit}
+                disabled={!joinCodeInput.trim()}
                 className="btn-primary"
                 style={{
                   width: '100%',
-                  padding: '15px',
-                  opacity: joinCodeInput.trim().length >= 3 ? 1 : 0.5,
-                  cursor: joinCodeInput.trim().length >= 3 ? 'pointer' : 'not-allowed'
+                  padding: '14px',
+                  minHeight: '48px',
+                  fontSize: '14.5px',
+                  fontWeight: '800',
+                  opacity: joinCodeInput.trim() ? 1 : 0.45
                 }}
               >
-                <span>Connect to Room</span>
-                <ArrowRight size={18} strokeWidth={2.4} />
+                <span>Connect & Join Deck</span>
+                <ArrowRight size={17} strokeWidth={2.4} />
               </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  playClickSound();
-                  setTab('CREATE');
-                }}
-                className="btn-secondary"
-                style={{
-                  width: '100%',
-                  marginTop: '10px',
-                  padding: '12px',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  gap: '6px'
-                }}
-              >
-                <ChevronLeft size={16} strokeWidth={2.4} />
-                <span>Back to Create Room</span>
-              </button>
-            </form>
-          )}
-        </>
+            )}
+          </div>
+        </div>
       )}
 
-      {/* Reassurance Footer */}
-      <div style={{
-        textAlign: 'center',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: '8px',
-        paddingTop: '6px'
-      }}>
-        <div style={{
-          fontSize: '12px',
-          color: 'var(--color-muted)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '6px'
-        }}>
-          <ShieldCheck size={14} strokeWidth={2.2} />
-          <span>Peer-to-peer encrypted · Zero accounts required · Private & open source</span>
-        </div>
-
-        <div style={{
-          fontSize: '11px',
-          color: 'var(--color-muted)',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px'
-        }}>
-          <span>© 2026 Between</span>
-          <span>·</span>
-          <button
-            type="button"
-            onClick={() => {
-              playClickSound();
-              onOpenLegal?.();
-            }}
-            style={{
-              background: 'none',
-              border: 'none',
-              color: 'var(--color-muted)',
-              textDecoration: 'underline',
-              cursor: 'pointer',
-              fontSize: '11px',
-              padding: '2px 4px'
-            }}
-          >
-            Privacy Policy & Terms
-          </button>
-        </div>
+      {/* Footer Legal & Privacy */}
+      <div style={{ textAlign: 'center', marginTop: '6px' }}>
+        <button
+          onClick={() => { playClickSound(); onOpenLegal?.(); }}
+          style={{
+            background: 'none',
+            border: 'none',
+            fontSize: '11px',
+            color: 'var(--color-muted)',
+            cursor: 'pointer',
+            textDecoration: 'underline'
+          }}
+        >
+          Privacy Policy & Terms
+        </button>
       </div>
     </div>
   );
