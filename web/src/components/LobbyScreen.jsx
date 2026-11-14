@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Heart, Users, Compass, QrCode, Sparkles, ShieldCheck, Copy, Check, ArrowRight, Radio, Shuffle, User, Smartphone, Home, ChevronLeft } from 'lucide-react';
+import { Heart, Users, Compass, QrCode, Sparkles, ShieldCheck, Copy, Check, ArrowRight, Radio, Shuffle, User, Home, ChevronLeft } from 'lucide-react';
 import QRCode from 'qrcode';
 import { RELATIONSHIP_TYPES, SESSION_LENGTHS } from '../utils/engine';
 import { playClickSound } from '../utils/audio';
@@ -14,7 +14,6 @@ const REL_ICONS = {
 export default function LobbyScreen({
   onCreateRoom,
   onJoinRoom,
-  onStartSolo,
   initialRoomCode = '',
   isWaitingForGuest = false,
   connectionStatus = 'IDLE',
@@ -28,16 +27,14 @@ export default function LobbyScreen({
   myName = 'Partner 1',
   onOpenLegal
 }) {
-  // Mode: 'SOLO' | 'CREATE' | 'JOIN'
-  const [mode, setMode] = useState(initialRoomCode ? 'JOIN' : 'SOLO');
+  // Mode: 'CREATE' | 'JOIN'
+  const [mode, setMode] = useState(initialRoomCode ? 'JOIN' : 'CREATE');
   const [selectedRel, setSelectedRel] = useState('COUPLE');
   const [selectedLength, setSelectedLength] = useState('FIFTEEN_MIN');
   const [joinCodeInput, setJoinCodeInput] = useState(initialRoomCode);
   const [copiedLink, setCopiedLink] = useState(false);
 
-  // Player Names
-  const [soloP1Input, setSoloP1Input] = useState(() => localStorage.getItem('between_p1_name') || localStorage.getItem('between_user_name') || 'Partner 1');
-  const [soloP2Input, setSoloP2Input] = useState(() => localStorage.getItem('between_p2_name') || 'Partner 2');
+  // Player Name
   const [userNameInput, setUserNameInput] = useState(() => localStorage.getItem('between_user_name') || '');
 
   // QR Code
@@ -76,21 +73,6 @@ export default function LobbyScreen({
       setCopiedLink(true);
       setTimeout(() => setCopiedLink(false), 2400);
     }).catch(() => prompt('Copy invite link:', url));
-  };
-
-  const handlePlaySolo = (e) => {
-    if (e) e.preventDefault();
-    playClickSound();
-    const p1 = soloP1Input.trim() || 'Partner 1';
-    const p2 = soloP2Input.trim() || 'Partner 2';
-    localStorage.setItem('between_p1_name', p1);
-    localStorage.setItem('between_p2_name', p2);
-    onStartSolo({
-      relationshipType: selectedRel,
-      sessionLength: selectedLength,
-      p1Name: p1,
-      p2Name: p2
-    });
   };
 
   const handleCreateRoomSubmit = (e) => {
@@ -357,7 +339,7 @@ export default function LobbyScreen({
       ) : (
         /* 5. MAIN CLEAN MENU */
         <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-          {/* Segmented Mode Switcher */}
+          {/* Segmented Mode Switcher: 2 Clear Options */}
           <div style={{
             display: 'flex',
             background: 'rgba(28, 25, 23, 0.06)',
@@ -367,43 +349,17 @@ export default function LobbyScreen({
           }}>
             <button
               type="button"
-              onClick={() => { playClickSound(); setMode('SOLO'); }}
-              style={{
-                flex: 1,
-                minHeight: '44px',
-                padding: '8px 12px',
-                borderRadius: 'var(--radius-pill)',
-                border: 'none',
-                background: mode === 'SOLO' ? '#FFFFFF' : 'transparent',
-                color: mode === 'SOLO' ? '#1C1917' : 'var(--color-muted)',
-                fontWeight: mode === 'SOLO' ? '800' : '600',
-                fontSize: '13px',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '6px',
-                boxShadow: mode === 'SOLO' ? 'var(--shadow-sm)' : 'none',
-                transition: 'all 0.18s'
-              }}
-            >
-              <Smartphone size={14} strokeWidth={2.4} />
-              <span>Pass the Phone</span>
-            </button>
-
-            <button
-              type="button"
               onClick={() => { playClickSound(); setMode('CREATE'); }}
               style={{
                 flex: 1,
                 minHeight: '44px',
-                padding: '8px 12px',
+                padding: '8px 16px',
                 borderRadius: 'var(--radius-pill)',
                 border: 'none',
                 background: mode === 'CREATE' ? '#FFFFFF' : 'transparent',
                 color: mode === 'CREATE' ? '#1C1917' : 'var(--color-muted)',
                 fontWeight: mode === 'CREATE' ? '800' : '600',
-                fontSize: '13px',
+                fontSize: '13.5px',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
@@ -413,7 +369,7 @@ export default function LobbyScreen({
                 transition: 'all 0.18s'
               }}
             >
-              <Users size={14} strokeWidth={2.4} />
+              <Users size={15} strokeWidth={2.4} />
               <span>Create Room</span>
             </button>
 
@@ -423,13 +379,13 @@ export default function LobbyScreen({
               style={{
                 flex: 1,
                 minHeight: '44px',
-                padding: '8px 12px',
+                padding: '8px 16px',
                 borderRadius: 'var(--radius-pill)',
                 border: 'none',
                 background: mode === 'JOIN' ? '#FFFFFF' : 'transparent',
                 color: mode === 'JOIN' ? '#1C1917' : 'var(--color-muted)',
                 fontWeight: mode === 'JOIN' ? '800' : '600',
-                fontSize: '13px',
+                fontSize: '13.5px',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
@@ -439,7 +395,7 @@ export default function LobbyScreen({
                 transition: 'all 0.18s'
               }}
             >
-              <Radio size={14} strokeWidth={2.4} />
+              <Radio size={15} strokeWidth={2.4} />
               <span>Join Room</span>
             </button>
           </div>
@@ -447,59 +403,7 @@ export default function LobbyScreen({
           {/* Card Container for Configuration */}
           <div className="tabletop-playing-card" style={{ padding: '20px 18px' }}>
             {/* 1. Player Names */}
-            {mode === 'SOLO' ? (
-              <div style={{ marginBottom: '16px' }}>
-                <label style={{
-                  display: 'block',
-                  fontSize: '11px',
-                  fontWeight: '800',
-                  letterSpacing: '0.06em',
-                  textTransform: 'uppercase',
-                  color: 'var(--color-muted)',
-                  marginBottom: '8px'
-                }}>
-                  Player Names
-                </label>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-                  <input
-                    type="text"
-                    maxLength={20}
-                    value={soloP1Input}
-                    onChange={(e) => setSoloP1Input(e.target.value)}
-                    placeholder="Partner 1"
-                    style={{
-                      width: '100%',
-                      padding: '10px 12px',
-                      borderRadius: '10px',
-                      border: '1.5px solid rgba(0,0,0,0.1)',
-                      background: '#F9F7F4',
-                      fontSize: '14px',
-                      fontWeight: '700',
-                      color: 'var(--color-ink)',
-                      outline: 'none'
-                    }}
-                  />
-                  <input
-                    type="text"
-                    maxLength={20}
-                    value={soloP2Input}
-                    onChange={(e) => setSoloP2Input(e.target.value)}
-                    placeholder="Partner 2"
-                    style={{
-                      width: '100%',
-                      padding: '10px 12px',
-                      borderRadius: '10px',
-                      border: '1.5px solid rgba(0,0,0,0.1)',
-                      background: '#F9F7F4',
-                      fontSize: '14px',
-                      fontWeight: '700',
-                      color: 'var(--color-ink)',
-                      outline: 'none'
-                    }}
-                  />
-                </div>
-              </div>
-            ) : mode === 'CREATE' ? (
+            {mode === 'CREATE' ? (
               <div style={{ marginBottom: '16px' }}>
                 <label style={{
                   display: 'block',
@@ -603,8 +507,8 @@ export default function LobbyScreen({
               </div>
             )}
 
-            {/* Connection Type Selection (Only for Solo and Create) */}
-            {mode !== 'JOIN' && (
+            {/* Connection Type & Session Length Selection (Only for Create Room) */}
+            {mode === 'CREATE' && (
               <>
                 <label style={{
                   display: 'block',
@@ -745,16 +649,7 @@ export default function LobbyScreen({
             )}
 
             {/* Primary Action Button */}
-            {mode === 'SOLO' ? (
-              <button
-                onClick={handlePlaySolo}
-                className="btn-primary"
-                style={{ width: '100%', padding: '14px', minHeight: '48px', fontSize: '14.5px', fontWeight: '800' }}
-              >
-                <span>Deal the Deck & Play</span>
-                <ArrowRight size={17} strokeWidth={2.4} />
-              </button>
-            ) : mode === 'CREATE' ? (
+            {mode === 'CREATE' ? (
               <button
                 onClick={handleCreateRoomSubmit}
                 className="btn-primary"

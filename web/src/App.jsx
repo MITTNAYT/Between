@@ -15,7 +15,6 @@ export default function App() {
   const [screen, setScreen] = useState('LOBBY'); // 'LOBBY' | 'SESSION' | 'CLOSING'
   const [roomCode, setRoomCode] = useState('');
   const [isHost, setIsHost] = useState(false);
-  const [isSolo, setIsSolo] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState('IDLE');
   const [errorMessage, setErrorMessage] = useState('');
   
@@ -46,14 +45,6 @@ export default function App() {
   const [myAppreciationNote, setMyAppreciationNote] = useState('');
   const [peerAppreciationNote, setPeerAppreciationNote] = useState('');
 
-  // Blind Reveal state
-  const [blindState, setBlindState] = useState({
-    myAnswer: '',
-    peerAnswer: '',
-    mySubmitted: false,
-    peerSubmitted: false
-  });
-
   // Toast message
   const [toastMessage, setToastMessage] = useState(null);
 
@@ -75,7 +66,6 @@ export default function App() {
     screen,
     roomCode,
     isHost,
-    isSolo,
     hostName,
     guestName,
     connectionStatus,
@@ -84,8 +74,7 @@ export default function App() {
     questions,
     currentIndex,
     currentTurn,
-    bookmarkedMoments,
-    blindState
+    bookmarkedMoments
   });
 
   useEffect(() => {
@@ -93,7 +82,6 @@ export default function App() {
       screen,
       roomCode,
       isHost,
-      isSolo,
       hostName,
       guestName,
       connectionStatus,
@@ -102,10 +90,9 @@ export default function App() {
       questions,
       currentIndex,
       currentTurn,
-      bookmarkedMoments,
-      blindState
+      bookmarkedMoments
     };
-  }, [screen, roomCode, isHost, isSolo, hostName, guestName, connectionStatus, relationshipType, sessionLength, questions, currentIndex, currentTurn, bookmarkedMoments, blindState]);
+  }, [screen, roomCode, isHost, hostName, guestName, connectionStatus, relationshipType, sessionLength, questions, currentIndex, currentTurn, bookmarkedMoments]);
 
   // Floating reaction spawner
   const spawnReaction = useCallback((emoji, sender) => {
@@ -174,7 +161,6 @@ export default function App() {
       playCardSlideSound();
       triggerHaptic('light');
       setCurrentIndex(incoming.currentIndex);
-      setBlindState({ myAnswer: '', peerAnswer: '', mySubmitted: false, peerSubmitted: false });
     }
 
     if (incoming.wildcardPrompt !== undefined) {
@@ -194,18 +180,6 @@ export default function App() {
     if (incoming.bookmarkedMoments) {
       setBookmarkedMoments(incoming.bookmarkedMoments);
     }
-
-    // Blind Reveal sync
-    if (incoming.blindAction === 'SUBMIT') {
-      setBlindState(prev => {
-        const next = {
-          ...prev,
-          peerSubmitted: true,
-          peerAnswer: incoming.answer || ''
-        };
-        return next;
-      });
-    }
   }, []);
 
   const handleReactionReceived = useCallback((emoji) => {
@@ -216,7 +190,6 @@ export default function App() {
   // HOST: Create Room
   const handleCreateRoom = ({ relationshipType: rel, sessionLength: len, roomCode: customCode, userName }) => {
     setIsHost(true);
-    setIsSolo(false);
     setErrorMessage('');
     setRelationshipType(rel);
     setSessionLength(len);
@@ -258,7 +231,6 @@ export default function App() {
   // GUEST: Join Room
   const handleJoinRoom = (paramsOrCode) => {
     setIsHost(false);
-    setIsSolo(false);
     setErrorMessage('');
     let code = typeof paramsOrCode === 'string' ? paramsOrCode : (paramsOrCode.roomCode || '');
     let userName = typeof paramsOrCode === 'object' && paramsOrCode.userName ? paramsOrCode.userName : (localStorage.getItem('between_user_name') || 'Partner 2');
@@ -293,43 +265,20 @@ export default function App() {
     }
   }, []);
 
-  // SOLO / PASS THE PHONE
-  const handleStartSolo = ({ relationshipType: rel, sessionLength: len, p1Name, p2Name }) => {
-    setIsHost(true);
-    setIsSolo(true);
-    setRelationshipType(rel);
-    setSessionLength(len);
-    const p1 = p1Name || 'Partner 1';
-    const p2 = p2Name || 'Partner 2';
-    setHostName(p1);
-    setGuestName(p2);
-    localStorage.setItem('between_p1_name', p1);
-    localStorage.setItem('between_p2_name', p2);
-
-    const initialDeck = buildSession(rel, len, []);
-    setQuestions(initialDeck);
-    setCurrentIndex(0);
-    setCurrentTurn('host');
-    setConnectionStatus('CONNECTED');
-    setScreen('SESSION');
-  };
-
   // Start Session (From Host Lobby waiting room)
   const handleStartSession = () => {
     setScreen('SESSION');
-    if (!isSolo) {
-      multiplayerSync.syncState({
-        screen: 'SESSION',
-        relationshipType,
-        sessionLength,
-        questions,
-        currentIndex: 0,
-        currentTurn: 'host',
-        bookmarkedMoments: [],
-        hostName,
-        guestName
-      });
-    }
+    multiplayerSync.syncState({
+      screen: 'SESSION',
+      relationshipType,
+      sessionLength,
+      questions,
+      currentIndex: 0,
+      currentTurn: 'host',
+      bookmarkedMoments: [],
+      hostName,
+      guestName
+    });
   };
 
   // Pass Turn
@@ -338,9 +287,7 @@ export default function App() {
     triggerHaptic('light');
     const nextTurn = currentTurn === 'host' ? 'guest' : 'host';
     setCurrentTurn(nextTurn);
-    if (!isSolo) {
-      multiplayerSync.syncState({ currentTurn: nextTurn });
-    }
+    multiplayerSync.syncState({ currentTurn: nextTurn });
   };
 
   // Advance to Next Card
@@ -354,22 +301,17 @@ export default function App() {
 
       setCurrentIndex(nextIndex);
       setCurrentTurn(nextTurn);
-      setBlindState({ myAnswer: '', peerAnswer: '', mySubmitted: false, peerSubmitted: false });
       setActiveWildcardPrompt(null);
 
-      if (!isSolo) {
-        multiplayerSync.syncState({
-          currentIndex: nextIndex,
-          currentTurn: nextTurn,
-          wildcardPrompt: null
-        });
-      }
+      multiplayerSync.syncState({
+        currentIndex: nextIndex,
+        currentTurn: nextTurn,
+        wildcardPrompt: null
+      });
     } else {
       // Reached End of Session
       setScreen('CLOSING');
-      if (!isSolo) {
-        multiplayerSync.syncState({ screen: 'CLOSING' });
-      }
+      multiplayerSync.syncState({ screen: 'CLOSING' });
     }
   };
 
@@ -381,15 +323,12 @@ export default function App() {
       triggerHaptic('light');
 
       setCurrentIndex(prevIndex);
-      setBlindState({ myAnswer: '', peerAnswer: '', mySubmitted: false, peerSubmitted: false });
       setActiveWildcardPrompt(null);
 
-      if (!isSolo) {
-        multiplayerSync.syncState({
-          currentIndex: prevIndex,
-          wildcardPrompt: null
-        });
-      }
+      multiplayerSync.syncState({
+        currentIndex: prevIndex,
+        wildcardPrompt: null
+      });
     }
   };
 
@@ -408,36 +347,13 @@ export default function App() {
     }
 
     setBookmarkedMoments(updatedBookmarks);
-    if (!isSolo) {
-      multiplayerSync.syncState({ bookmarkedMoments: updatedBookmarks });
-    }
+    multiplayerSync.syncState({ bookmarkedMoments: updatedBookmarks });
   };
 
   // Reactions
   const handleSendReaction = (emoji) => {
     spawnReaction(emoji, isHost ? 'host' : 'guest');
-    if (!isSolo) {
-      multiplayerSync.sendReaction(emoji);
-    }
-  };
-
-  // Blind Reveal Handlers
-  const handleUpdateBlindAnswer = (val) => {
-    setBlindState(prev => ({ ...prev, myAnswer: val }));
-  };
-
-  const handleSubmitBlindAnswer = () => {
-    setBlindState(prev => {
-      const next = { ...prev, mySubmitted: true };
-      return next;
-    });
-
-    if (!isSolo) {
-      multiplayerSync.syncState({
-        blindAction: 'SUBMIT',
-        answer: blindState.myAnswer
-      });
-    }
+    multiplayerSync.sendReaction(emoji);
   };
 
   // Return to Lobby
@@ -458,12 +374,10 @@ export default function App() {
   // Send Appreciation Note
   const handleSendAppreciationNote = (note) => {
     setMyAppreciationNote(note);
-    if (!isSolo) {
-      multiplayerSync.syncState({
-        appreciationNote: note,
-        appreciationSender: isHost ? 'host' : 'guest'
-      });
-    }
+    multiplayerSync.syncState({
+      appreciationNote: note,
+      appreciationSender: isHost ? 'host' : 'guest'
+    });
   };
 
   const currentQuestion = questions[currentIndex] || {
@@ -475,9 +389,9 @@ export default function App() {
 
   const isCurrentBookmarked = bookmarkedMoments.some(b => b.id === currentQuestion.id);
   const activeSpeakerName = currentTurn === 'host' ? (hostName || 'Partner 1') : (guestName || 'Partner 2');
-  const turnString = isSolo 
-    ? `${activeSpeakerName}'s Turn` 
-    : ((isHost && currentTurn === 'host') || (!isHost && currentTurn === 'guest') ? `Your Turn (${activeSpeakerName})` : `${activeSpeakerName}'s Turn`);
+  const turnString = ((isHost && currentTurn === 'host') || (!isHost && currentTurn === 'guest'))
+    ? `Your Turn (${activeSpeakerName})`
+    : `${activeSpeakerName}'s Turn`;
 
   return (
     <div className="wellness-canvas">
@@ -523,7 +437,6 @@ export default function App() {
         {/* Top Header */}
         <Header
           roomCode={roomCode}
-          isSolo={isSolo}
           connectionStatus={connectionStatus}
           isHost={isHost}
           phaseName={currentQuestion?.phase || 'WARMUP'}
@@ -542,7 +455,6 @@ export default function App() {
           <LobbyScreen
             onCreateRoom={handleCreateRoom}
             onJoinRoom={handleJoinRoom}
-            onStartSolo={handleStartSolo}
             initialRoomCode={new URLSearchParams(window.location.search).get('room') || ''}
             connectionStatus={connectionStatus}
             isHost={isHost}
@@ -639,7 +551,7 @@ export default function App() {
                 playCardSlideSound();
                 triggerHaptic('light');
                 setCurrentIndex(idx);
-                if (!isSolo) multiplayerSync.syncState({ currentIndex: idx });
+                multiplayerSync.syncState({ currentIndex: idx });
               }}
               onAdvanceCard={handleAdvance}
               onPreviousCard={handlePrevious}
@@ -649,18 +561,12 @@ export default function App() {
               onPassTurn={handlePassTurn}
               isBookmarked={isCurrentBookmarked}
               onToggleBookmark={handleToggleBookmark}
-              blindState={blindState}
-              onUpdateBlindAnswer={handleUpdateBlindAnswer}
-              onSubmitBlindAnswer={handleSubmitBlindAnswer}
               myName={isHost ? hostName : guestName}
               peerName={isHost ? guestName : hostName}
-              isSolo={isSolo}
-              hostName={hostName}
-              guestName={guestName}
               wildcardPrompt={activeWildcardPrompt}
               onSelectWildcardPrompt={(prompt) => {
                 setActiveWildcardPrompt(prompt);
-                if (!isSolo) multiplayerSync.syncState({ wildcardPrompt: prompt });
+                multiplayerSync.syncState({ wildcardPrompt: prompt });
               }}
               onSkipQuestion={() => handleAdvance()}
             />
@@ -746,7 +652,6 @@ export default function App() {
             peerName={isHost ? guestName : hostName}
             myName={isHost ? hostName : guestName}
             isHost={isHost}
-            isSolo={isSolo}
             myAppreciationNote={myAppreciationNote}
             peerAppreciationNote={peerAppreciationNote}
             onSendAppreciationNote={handleSendAppreciationNote}
@@ -756,24 +661,21 @@ export default function App() {
               setCurrentIndex(0);
               setCurrentTurn('host');
               setBookmarkedMoments([]);
-              setBlindState({ myAnswer: '', peerAnswer: '', mySubmitted: false, peerSubmitted: false });
               setActiveWildcardPrompt(null);
               setMyAppreciationNote('');
               setPeerAppreciationNote('');
               setScreen('SESSION');
-              if (!isSolo) {
-                multiplayerSync.syncState({
-                  screen: 'SESSION',
-                  questions: newDeck,
-                  currentIndex: 0,
-                  currentTurn: 'host',
-                  bookmarkedMoments: [],
-                  hostName,
-                  guestName,
-                  wildcardPrompt: null,
-                  appreciationNote: ''
-                });
-              }
+              multiplayerSync.syncState({
+                screen: 'SESSION',
+                questions: newDeck,
+                currentIndex: 0,
+                currentTurn: 'host',
+                bookmarkedMoments: [],
+                hostName,
+                guestName,
+                wildcardPrompt: null,
+                appreciationNote: ''
+              });
             }}
           />
         )}

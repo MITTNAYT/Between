@@ -23,14 +23,8 @@ export default function CardDeckCarousel({
   onPassTurn,
   isBookmarked,
   onToggleBookmark,
-  blindState,
-  onUpdateBlindAnswer,
-  onSubmitBlindAnswer,
   myName,
   peerName,
-  isSolo,
-  hostName,
-  guestName,
   wildcardPrompt,
   onSelectWildcardPrompt,
   onSkipQuestion,
@@ -250,14 +244,8 @@ export default function CardDeckCarousel({
             onPassTurn={onPassTurn}
             isBookmarked={isBookmarked}
             onToggleBookmark={onToggleBookmark}
-            blindState={blindState}
-            onUpdateBlindAnswer={onUpdateBlindAnswer}
-            onSubmitBlindAnswer={onSubmitBlindAnswer}
             myName={myName}
             peerName={peerName}
-            isSolo={isSolo}
-            hostName={hostName}
-            guestName={guestName}
             wildcardPrompt={wildcardPrompt}
             onSelectWildcardPrompt={onSelectWildcardPrompt}
             onSkipQuestion={onSkipQuestion}

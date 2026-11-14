@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { Volume2, VolumeX, Copy, Check, LogOut, Flame, Sun, Sparkles, Smartphone, Users } from 'lucide-react';
+import { Volume2, VolumeX, Copy, Check, LogOut, Flame, Sun, Sparkles, Users } from 'lucide-react';
 import BetweenLogo from './BetweenLogo';
 import { toggleAmbientSoundscape, playClickSound } from '../utils/audio';
 
 export default function Header({ 
   roomCode = '', 
-  isSolo = false,
   connectionStatus = 'IDLE', 
   isHost = false, 
   phaseName = '', 
@@ -120,45 +119,26 @@ export default function Header({
         )}
       </div>
 
-      {/* Center: Session Mode & Room Badge */}
+      {/* Center: Session Room Badge */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', minWidth: 0, justifyContent: 'center' }}>
-        {isSessionActive && (
-          isSolo ? (
-            <div
-              className="card-label-sticker"
-              style={{
-                fontSize: '10.5px',
-                padding: '4px 10px',
-                background: '#FFFFFF',
-                color: '#1C1917',
-                gap: '4px'
-              }}
-              title="Playing together on one phone"
-            >
-              <Smartphone size={12} strokeWidth={2.4} />
-              <span>Pass the Phone</span>
-            </div>
-          ) : (
-            roomCode && (
-              <button
-                onClick={handleCopyLink}
-                className="card-label-sticker"
-                style={{
-                  fontSize: '11px',
-                  padding: '4px 10px',
-                  background: '#FFFFFF',
-                  color: '#1C1917',
-                  cursor: 'pointer',
-                  gap: '5px'
-                }}
-                title="Click to copy room code & invite link"
-              >
-                <Users size={12} strokeWidth={2.4} color="#387B6A" />
-                <span style={{ fontFamily: 'monospace', letterSpacing: '0.08em' }}>{roomCode}</span>
-                {copied ? <Check size={11} strokeWidth={2.6} color="#387B6A" /> : <Copy size={11} strokeWidth={2} />}
-              </button>
-            )
-          )
+        {isSessionActive && roomCode && (
+          <button
+            onClick={handleCopyLink}
+            className="card-label-sticker"
+            style={{
+              fontSize: '11px',
+              padding: '4px 10px',
+              background: '#FFFFFF',
+              color: '#1C1917',
+              cursor: 'pointer',
+              gap: '5px'
+            }}
+            title="Click to copy room code & invite link"
+          >
+            <Users size={12} strokeWidth={2.4} color="#387B6A" />
+            <span style={{ fontFamily: 'monospace', letterSpacing: '0.08em' }}>{roomCode}</span>
+            {copied ? <Check size={11} strokeWidth={2.6} color="#387B6A" /> : <Copy size={11} strokeWidth={2} />}
+          </button>
         )}
       </div>
 

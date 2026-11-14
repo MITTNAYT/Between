@@ -356,13 +356,13 @@ export const TAILORED_CHALLENGES_CATALOG = {
         tag: 'OPEN SPACE · CAMERA LOCK'
       },
       {
-        id: 'vuln_os_exhale',
-        title: 'Shared Exhale Over Call',
-        instruction: 'Both inhale for 4 seconds and exhale slowly together into your microphones for 10 seconds before speaking.',
+        id: 'vuln_os_uninterrupted',
+        title: 'Uninterrupted Story',
+        instruction: 'Answer this fully for 45 seconds without your partner interrupting or qualifying. Just hold active, attentive space.',
         hasTimer: true,
-        timerSeconds: 10,
-        timerLabel: 'Shared Breath',
-        tag: 'OPEN SPACE · SHARED EXHALE'
+        timerSeconds: 45,
+        timerLabel: 'Uninterrupted Space',
+        tag: 'OPEN SPACE · ACTIVE LISTENING'
       },
       {
         id: 'vuln_os_no_laugh',

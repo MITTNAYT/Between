@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRightLeft, Bookmark, Sparkles, Shuffle, ChevronDown, ChevronUp, RotateCw, Eye, EyeOff, Send, Check, Flame, Clock, Play, RotateCcw, Download } from 'lucide-react';
+import { ArrowRightLeft, Bookmark, Sparkles, Shuffle, ChevronDown, ChevronUp, RotateCw, Check, Flame, Clock, Play } from 'lucide-react';
 import InteractiveCard3D from './InteractiveCard3D';
 import { getCardMascot, getCardThemeColor } from './CardMascots';
-import { WILDCARD_INSPIRATIONS, getDigDeeperData, DIG_DEEPER_CHALLENGES } from '../utils/engine';
+import { WILDCARD_INSPIRATIONS, getDigDeeperData } from '../utils/engine';
 import { playClickSound, playChimeSound, playHandshakeSound, playCardFlipSound, playCardShuffleSound } from '../utils/audio';
 import { triggerHaptic } from '../utils/haptics';
-import { downloadCardAsPng } from '../utils/cardExporter';
 
 export default function QuestionCard({
   question,
@@ -17,45 +16,21 @@ export default function QuestionCard({
   swipeClass = '',
   onSwipeLeft,
   onSwipeRight,
-  blindState = { myAnswer: '', peerAnswer: '', mySubmitted: false, peerSubmitted: false },
-  onUpdateBlindAnswer,
-  onSubmitBlindAnswer,
   myName = 'You',
   peerName = 'Partner',
-  isSolo = false,
-  hostName = 'Partner 1',
-  guestName = 'Partner 2',
   wildcardPrompt = null,
   onSelectWildcardPrompt = null,
   onSkipQuestion = null,
   isPartnerSpeaking = false
 }) {
   const [isFlipped, setIsFlipped] = useState(false);
-  const [backTab, setBackTab] = useState('DIG_DEEPER'); // 'DIG_DEEPER' | 'BLIND'
   const [hintExpanded, setHintExpanded] = useState(false);
   const [selectedWildcardPrompt, setSelectedWildcardPrompt] = useState(wildcardPrompt || null);
   const [customWildcardInput, setCustomWildcardInput] = useState('');
   const [showCustomInput, setShowCustomInput] = useState(false);
-  const [isExportingCard, setIsExportingCard] = useState(false);
-  const [exportedSuccess, setExportedSuccess] = useState(false);
 
-  const handleExportCard = async () => {
-    try {
-      playClickSound();
-      triggerHaptic('medium');
-      setIsExportingCard(true);
-      await downloadCardAsPng(question);
-      setExportedSuccess(true);
-      setTimeout(() => setExportedSuccess(false), 2200);
-    } catch (e) {
-      console.warn('Export mini card error:', e);
-    } finally {
-      setIsExportingCard(false);
-    }
-  };
-
-  // Dig Deeper & Micro-Challenge State (Tailored to question & mode: Offline vs Open Space)
-  const digDeeperData = getDigDeeperData(question, isSolo);
+  // Dig Deeper & Micro-Challenge State (Tailored to question & Open Space / online play)
+  const digDeeperData = getDigDeeperData(question, false);
   const [challengeOffset, setChallengeOffset] = useState(0);
   const challengeList = digDeeperData.challenges || [digDeeperData.challenge];
   const currentChallenge = challengeList[challengeOffset % challengeList.length] || challengeList[0];
@@ -64,10 +39,10 @@ export default function QuestionCard({
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [timerCompleted, setTimerCompleted] = useState(false);
 
-  // Reset challenge offset when card or mode changes
+  // Reset challenge offset when card changes
   useEffect(() => {
     setChallengeOffset(0);
-  }, [question?.id, isSolo]);
+  }, [question?.id]);
 
   // Reset timer if question or challenge changes
   useEffect(() => {
@@ -150,7 +125,6 @@ export default function QuestionCard({
     ? (wildcardPrompt || selectedWildcardPrompt || question.text)
     : question.text;
 
-  const isBothRevealed = blindState.mySubmitted && blindState.peerSubmitted;
   const themeColor = getCardThemeColor(question);
   const Mascot = getCardMascot(question?.category, question?.id, question?.depth);
 
@@ -549,54 +523,14 @@ export default function QuestionCard({
         gap: '8px',
         marginBottom: '4px'
       }}>
-        {/* Left: Tabletop Star Circle Badge + Sub Tabs */}
+        {/* Left: Tabletop Star Circle Badge + Sticker Title */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <div className="tabletop-star-badge" title="Between Tabletop Deck (Reverse)" aria-hidden="true">
             ★
           </div>
-
-          {/* Sub Tabs */}
-          <div style={{ display: 'flex', gap: '3px', background: 'rgba(255, 255, 255, 0.85)', padding: '3px', borderRadius: 'var(--radius-pill)', boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)' }}>
-            <button
-              onClick={() => { playClickSound(); triggerHaptic('light'); setBackTab('DIG_DEEPER'); }}
-              style={{
-                border: 'none',
-                padding: '5px 12px',
-                borderRadius: 'var(--radius-pill)',
-                fontSize: '11px',
-                fontWeight: backTab === 'DIG_DEEPER' ? '800' : '600',
-                background: backTab === 'DIG_DEEPER' ? '#1C1917' : 'transparent',
-                color: backTab === 'DIG_DEEPER' ? '#FFFFFF' : '#1C1917',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px',
-                transition: 'all 0.15s'
-              }}
-            >
-              <Sparkles size={11} color={backTab === 'DIG_DEEPER' ? '#FFF' : '#C6882C'} />
-              <span>Dig Deeper</span>
-            </button>
-            <button
-              onClick={() => { playClickSound(); triggerHaptic('light'); setBackTab('BLIND'); }}
-              style={{
-                border: 'none',
-                padding: '5px 12px',
-                borderRadius: 'var(--radius-pill)',
-                fontSize: '11px',
-                fontWeight: backTab === 'BLIND' ? '800' : '600',
-                background: backTab === 'BLIND' ? '#1C1917' : 'transparent',
-                color: backTab === 'BLIND' ? '#FFFFFF' : '#1C1917',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px',
-                transition: 'all 0.15s'
-              }}
-            >
-              <Eye size={11} />
-              <span>Secret Reveal</span>
-            </button>
+          <div className="card-label-sticker" style={{ fontSize: '11px', padding: '4px 10px', gap: '4px' }}>
+            <Sparkles size={11} color="#C6882C" />
+            <span>THE UNSPOKEN LAYER</span>
           </div>
         </div>
 
@@ -621,320 +555,215 @@ export default function QuestionCard({
         </button>
       </div>
 
-      {/* TAB 1: DIG DEEPER (Tailored Follow-up & Connection Challenge) */}
-      {backTab === 'DIG_DEEPER' && (
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '10px', animation: 'fadeIn 0.25s ease-out' }}>
-          {/* Section 1: The Tailored Follow-up Questions */}
+      {/* Main Back Content: Tailored Follow-up & Connection Challenge */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '10px', animation: 'fadeIn 0.25s ease-out' }}>
+        {/* Section 1: The Tailored Follow-up Questions */}
+        <div style={{
+          padding: '12px 14px',
+          borderRadius: '12px',
+          background: '#FFFFFF',
+          border: '1px solid rgba(28, 25, 23, 0.1)',
+          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '6px'
+        }}>
           <div style={{
-            padding: '12px 14px',
-            borderRadius: '12px',
-            background: '#FFFFFF',
-            border: '1px solid rgba(28, 25, 23, 0.1)',
-            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
             display: 'flex',
-            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'space-between',
             gap: '6px'
           }}>
             <div style={{
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: '6px'
+              gap: '5px',
+              fontSize: '10px',
+              fontWeight: '800',
+              color: '#1C1917',
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase'
             }}>
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '5px',
-                fontSize: '10px',
-                fontWeight: '800',
-                color: '#1C1917',
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase'
-              }}>
-                <Flame size={12} strokeWidth={2.4} color="#D94E34" />
-                <span>The Unspoken Layer · Follow-Up</span>
-              </div>
-              {digDeeperData.followUps && digDeeperData.followUps.length > 1 && (
-                <span style={{ fontSize: '10px', color: '#8C8278', fontWeight: '700' }}>
-                  {digDeeperData.followUps.length} Prompts
-                </span>
-              )}
+              <Flame size={12} strokeWidth={2.4} color="#D94E34" />
+              <span>Follow-Up · The Unspoken Layer</span>
             </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              {(digDeeperData.followUps || [digDeeperData.followUp]).map((fu, idx) => (
-                <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '6px' }}>
-                  {digDeeperData.followUps && digDeeperData.followUps.length > 1 && (
-                    <span style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: '18px',
-                      height: '18px',
-                      borderRadius: '50%',
-                      background: '#1C1917',
-                      color: '#FFFFFF',
-                      fontSize: '10px',
-                      fontWeight: '800',
-                      flexShrink: 0,
-                      marginTop: '2px'
-                    }}>
-                      {idx + 1}
-                    </span>
-                  )}
-                  <p style={{
-                    fontFamily: 'var(--font-sans)',
-                    fontSize: 'clamp(13px, 3.4vw, 15px)',
-                    fontWeight: '600',
-                    lineHeight: '1.4',
-                    color: '#1C1917',
-                    margin: 0
-                  }}>
-                    “{fu}”
-                  </p>
-                </div>
-              ))}
-            </div>
+            {digDeeperData.followUps && digDeeperData.followUps.length > 1 && (
+              <span style={{ fontSize: '10px', color: '#8C8278', fontWeight: '700' }}>
+                {digDeeperData.followUps.length} Prompts
+              </span>
+            )}
           </div>
 
-          {/* Section 2: Connection Micro-Challenge */}
-          <div style={{
-            padding: '12px 14px',
-            borderRadius: '12px',
-            background: '#FFFFFF',
-            border: '1px solid rgba(28, 25, 23, 0.1)',
-            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '6px'
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <div style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '5px',
-                fontSize: '10px',
-                fontWeight: '800',
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase',
-                color: '#1C1917'
-              }}>
-                <Sparkles size={11} color="#C6882C" />
-                <span>CHALLENGE · {currentChallenge.tag}</span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            {(digDeeperData.followUps || [digDeeperData.followUp]).map((fu, idx) => (
+              <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '6px' }}>
+                {digDeeperData.followUps && digDeeperData.followUps.length > 1 && (
+                  <span style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '18px',
+                    height: '18px',
+                    borderRadius: '50%',
+                    background: '#1C1917',
+                    color: '#FFFFFF',
+                    fontSize: '10px',
+                    fontWeight: '800',
+                    flexShrink: 0,
+                    marginTop: '2px'
+                  }}>
+                    {idx + 1}
+                  </span>
+                )}
+                <p style={{
+                  fontFamily: 'var(--font-sans)',
+                  fontSize: 'clamp(13px, 3.4vw, 15px)',
+                  fontWeight: '600',
+                  lineHeight: '1.4',
+                  color: '#1C1917',
+                  margin: 0
+                }}>
+                  “{fu}”
+                </p>
               </div>
+            ))}
+          </div>
+        </div>
 
-              <button
-                type="button"
-                onClick={() => {
-                  playCardShuffleSound();
-                  triggerHaptic('light');
-                  setChallengeOffset(prev => prev + 1);
-                }}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: '#8C8278',
-                  fontSize: '11px',
-                  fontWeight: '700',
-                  cursor: 'pointer',
+        {/* Section 2: Connection Micro-Challenge */}
+        <div style={{
+          padding: '12px 14px',
+          borderRadius: '12px',
+          background: '#FFFFFF',
+          border: '1px solid rgba(28, 25, 23, 0.1)',
+          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '6px'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '5px',
+              fontSize: '10px',
+              fontWeight: '800',
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              color: '#1C1917'
+            }}>
+              <Sparkles size={11} color="#C6882C" />
+              <span>CHALLENGE · {currentChallenge.tag}</span>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                playCardShuffleSound();
+                triggerHaptic('light');
+                setChallengeOffset(prev => prev + 1);
+              }}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#8C8278',
+                fontSize: '11px',
+                fontWeight: '700',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px'
+              }}
+              title="Roll another connection challenge"
+            >
+              <Shuffle size={11} strokeWidth={2.2} />
+              <span>Roll Next</span>
+            </button>
+          </div>
+
+          <div style={{ fontSize: '13.5px', fontWeight: '800', color: '#1C1917' }}>
+            {currentChallenge.title}
+          </div>
+
+          <p style={{ fontSize: '12.5px', color: '#4A443E', lineHeight: '1.4', margin: 0 }}>
+            {currentChallenge.instruction}
+          </p>
+
+          {/* Optional Countdown Timer Widget */}
+          {currentChallenge.hasTimer && (
+            <div style={{ marginTop: '4px' }}>
+              {timerCompleted ? (
+                <div style={{
+                  padding: '6px 12px',
+                  borderRadius: 'var(--radius-pill)',
+                  background: 'rgba(56, 123, 106, 0.12)',
+                  border: '1px solid rgba(56, 123, 106, 0.3)',
+                  color: 'var(--color-sage)',
+                  fontSize: '11.5px',
+                  fontWeight: '800',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '4px'
-                }}
-                title="Roll another connection challenge"
-              >
-                <Shuffle size={11} strokeWidth={2.2} />
-                <span>Roll Next</span>
-              </button>
-            </div>
-
-            <div style={{ fontSize: '13.5px', fontWeight: '800', color: '#1C1917' }}>
-              {currentChallenge.title}
-            </div>
-
-            <p style={{ fontSize: '12.5px', color: '#4A443E', lineHeight: '1.4', margin: 0 }}>
-              {currentChallenge.instruction}
-            </p>
-
-            {/* Optional Countdown Timer Widget */}
-            {currentChallenge.hasTimer && (
-              <div style={{ marginTop: '4px' }}>
-                {timerCompleted ? (
-                  <div style={{
-                    padding: '6px 12px',
-                    borderRadius: 'var(--radius-pill)',
-                    background: 'rgba(56, 123, 106, 0.12)',
-                    border: '1px solid rgba(56, 123, 106, 0.3)',
-                    color: 'var(--color-sage)',
-                    fontSize: '11.5px',
-                    fontWeight: '800',
+                  justifyContent: 'center',
+                  gap: '6px'
+                }}>
+                  <Check size={13} strokeWidth={2.6} />
+                  <span>{currentChallenge.title} Completed ✨</span>
+                </div>
+              ) : isTimerRunning ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    playClickSound();
+                    setIsTimerRunning(false);
+                  }}
+                  className="btn-primary"
+                  style={{
+                    width: '100%',
+                    padding: '8px 14px',
+                    fontSize: '12px',
+                    background: '#1C1917',
+                    color: '#FFFFFF',
+                    animation: 'pulse 1.2s infinite',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: '6px'
-                  }}>
-                    <Check size={13} strokeWidth={2.6} />
-                    <span>{currentChallenge.title} Completed ✨</span>
-                  </div>
-                ) : isTimerRunning ? (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      playClickSound();
-                      setIsTimerRunning(false);
-                    }}
-                    className="btn-primary"
-                    style={{
-                      width: '100%',
-                      padding: '8px 14px',
-                      fontSize: '12px',
-                      background: '#1C1917',
-                      color: '#FFFFFF',
-                      animation: 'pulse 1.2s infinite',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '8px'
-                    }}
-                  >
-                    <Clock size={14} strokeWidth={2.4} />
-                    <span>00:{String(timerSecondsLeft).padStart(2, '0')} · {currentChallenge.timerLabel || 'Timer'} (Tap to Stop)</span>
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      playClickSound();
-                      triggerHaptic('medium');
-                      setIsTimerRunning(true);
-                    }}
-                    className="btn-secondary"
-                    style={{
-                      width: '100%',
-                      padding: '7px 12px',
-                      fontSize: '12px',
-                      fontWeight: '700',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '6px',
-                      borderColor: 'rgba(28, 25, 23, 0.15)',
-                      color: '#1C1917',
-                      background: '#FFFFFF'
-                    }}
-                  >
-                    <Play size={12} fill="currentColor" strokeWidth={0} />
-                    <span>Start {currentChallenge.timerSeconds}s {currentChallenge.timerLabel || 'Timer'}</span>
-                  </button>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* TAB 2: SECRET DOUBLE-BLIND REVEAL */}
-      {backTab === 'BLIND' && (
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '10px', animation: 'fadeIn 0.25s ease-out' }}>
-          <div style={{ background: '#FFFFFF', padding: '12px 14px', borderRadius: '12px', border: '1px solid rgba(28, 25, 23, 0.1)', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)' }}>
-            <div style={{ fontSize: '10.5px', fontWeight: '800', color: '#1C1917', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-              Secret Double-Blind Answer
-            </div>
-            <p style={{ fontSize: '12.5px', color: '#4A443E', margin: '4px 0 8px' }}>
-              Both write your honest answer in secret. Neither sees until both press submit!
-            </p>
-
-            {!isBothRevealed ? (
-              <>
-                <textarea
-                  rows={3}
-                  value={blindState.myAnswer}
-                  onChange={(e) => onUpdateBlindAnswer?.(e.target.value)}
-                  disabled={blindState.mySubmitted}
-                  placeholder="Type your private answer here..."
+                    gap: '8px'
+                  }}
+                >
+                  <Clock size={14} strokeWidth={2.4} />
+                  <span>00:{String(timerSecondsLeft).padStart(2, '0')} · {currentChallenge.timerLabel || 'Timer'} (Tap to Stop)</span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => {
+                    playClickSound();
+                    triggerHaptic('medium');
+                    setIsTimerRunning(true);
+                  }}
+                  className="btn-secondary"
                   style={{
                     width: '100%',
-                    padding: '10px 12px',
-                    borderRadius: '8px',
-                    border: '1px solid rgba(28, 25, 23, 0.15)',
-                    background: '#F9F7F4',
-                    fontSize: '13px',
-                    outline: 'none',
-                    resize: 'none',
-                    fontFamily: 'inherit',
+                    padding: '7px 12px',
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px',
+                    borderColor: 'rgba(28, 25, 23, 0.15)',
                     color: '#1C1917',
-                    boxSizing: 'border-box'
+                    background: '#FFFFFF'
                   }}
-                />
-
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '8px' }}>
-                  <div style={{ fontSize: '11.5px', color: '#8C8278' }}>
-                    {blindState.peerSubmitted ? (
-                      <span style={{ color: 'var(--color-sage)', fontWeight: '700' }}>✓ {peerName} has written!</span>
-                    ) : (
-                      <span>Waiting for {peerName} to write...</span>
-                    )}
-                  </div>
-
-                  <button
-                    onClick={() => {
-                      playHandshakeSound();
-                      triggerHaptic('success');
-                      onSubmitBlindAnswer?.();
-                    }}
-                    disabled={!blindState.myAnswer.trim() || blindState.mySubmitted}
-                    className="btn-primary"
-                    style={{
-                      padding: '6px 14px',
-                      fontSize: '12px',
-                      fontWeight: '700',
-                      background: '#1C1917',
-                      color: '#FFFFFF',
-                      width: 'auto',
-                      minHeight: '34px',
-                      opacity: blindState.myAnswer.trim() && !blindState.mySubmitted ? 1 : 0.6
-                    }}
-                  >
-                    <Send size={12} strokeWidth={2.4} />
-                    <span>{blindState.mySubmitted ? 'Submitted!' : 'Submit Answer'}</span>
-                  </button>
-                </div>
-              </>
-            ) : (
-              // Both have submitted: Simultaneous Reveal!
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '4px', animation: 'fadeIn 0.3s ease-out' }}>
-                <div style={{
-                  padding: '10px 12px',
-                  borderRadius: '8px',
-                  background: 'rgba(217, 78, 52, 0.08)',
-                  border: '1px solid rgba(217, 78, 52, 0.25)'
-                }}>
-                  <div style={{ fontSize: '10px', fontWeight: '800', color: 'var(--color-ember)', textTransform: 'uppercase' }}>
-                    {isSolo ? `${hostName}'s Answer` : `${myName}'s Answer`}
-                  </div>
-                  <div style={{ fontSize: '13px', color: '#1C1917', marginTop: '3px', fontStyle: 'italic', fontWeight: '600' }}>
-                    “{blindState.myAnswer}”
-                  </div>
-                </div>
-
-                <div style={{
-                  padding: '10px 12px',
-                  borderRadius: '8px',
-                  background: 'rgba(56, 123, 106, 0.08)',
-                  border: '1px solid rgba(56, 123, 106, 0.25)'
-                }}>
-                  <div style={{ fontSize: '10px', fontWeight: '800', color: 'var(--color-sage)', textTransform: 'uppercase' }}>
-                    {isSolo ? `${guestName}'s Answer` : `${peerName}'s Answer`}
-                  </div>
-                  <div style={{ fontSize: '13px', color: '#1C1917', marginTop: '3px', fontStyle: 'italic', fontWeight: '600' }}>
-                    “{blindState.peerAnswer || 'Both answers unlocked!'}”
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
+                >
+                  <Play size={12} fill="currentColor" strokeWidth={0} />
+                  <span>Start {currentChallenge.timerSeconds}s {currentChallenge.timerLabel || 'Timer'}</span>
+                </button>
+              )}
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 
