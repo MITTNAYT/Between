@@ -13,7 +13,7 @@ import CustomQuestionModal from './components/CustomQuestionModal';
 import IncomingCallModal from './components/IncomingCallModal';
 import HoldTouchIndicator from './components/HoldTouchIndicator';
 import LegalModal from './components/LegalModal';
-import { buildSession, swapQuestion, RELATIONSHIP_TYPES, DECK_PACKS } from './utils/engine';
+import { buildSession, swapQuestion, RELATIONSHIP_TYPES } from './utils/engine';
 import { multiplayerSync } from './utils/peer';
 import { playClickSound, playChimeSound, playReactionSound, playHandshakeSound, playHeartbeatPulse } from './utils/audio';
 import { triggerHaptic, stopHaptic } from './utils/haptics';
@@ -42,7 +42,6 @@ export default function App() {
 
   const [relationshipType, setRelationshipType] = useState('COUPLE');
   const [sessionLength, setSessionLength] = useState('FIFTEEN_MIN');
-  const [deckPack, setDeckPack] = useState('CLASSIC');
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentTurn, setCurrentTurn] = useState('host'); // 'host' | 'guest'
@@ -117,7 +116,6 @@ export default function App() {
     connectionStatus,
     relationshipType,
     sessionLength,
-    deckPack,
     questions,
     currentIndex,
     currentTurn,
@@ -136,14 +134,13 @@ export default function App() {
       connectionStatus,
       relationshipType,
       sessionLength,
-      deckPack,
       questions,
       currentIndex,
       currentTurn,
       bookmarkedMoments,
       blindState
     };
-  }, [screen, roomCode, isHost, isSolo, hostName, guestName, connectionStatus, relationshipType, sessionLength, deckPack, questions, currentIndex, currentTurn, bookmarkedMoments, blindState]);
+  }, [screen, roomCode, isHost, isSolo, hostName, guestName, connectionStatus, relationshipType, sessionLength, questions, currentIndex, currentTurn, bookmarkedMoments, blindState]);
 
   // Floating reaction spawner
   const spawnReaction = useCallback((emoji, sender) => {
@@ -244,10 +241,6 @@ export default function App() {
 
     if (incoming.currentTurn !== undefined) {
       setCurrentTurn(incoming.currentTurn);
-    }
-
-    if (incoming.deckPack) {
-      setDeckPack(incoming.deckPack);
     }
 
     if (incoming.bookmarkedMoments) {
@@ -487,19 +480,18 @@ export default function App() {
   }, []);
 
   // HOST: Create Room
-  const handleCreateRoom = ({ relationshipType: rel, sessionLength: len, deckPack: pack = 'CLASSIC', roomCode: customCode, userName }) => {
+  const handleCreateRoom = ({ relationshipType: rel, sessionLength: len, roomCode: customCode, userName }) => {
     setIsHost(true);
     setIsSolo(false);
     setErrorMessage('');
     setRelationshipType(rel);
     setSessionLength(len);
-    setDeckPack(pack);
     const myName = userName || 'Partner 1';
     setHostName(myName);
     localStorage.setItem('between_host_name', myName);
     localStorage.setItem('between_user_name', myName);
 
-    const initialDeck = buildSession(rel, len, [], pack);
+    const initialDeck = buildSession(rel, len, []);
     setQuestions(initialDeck);
     setCurrentIndex(0);
     setCurrentTurn('host');
@@ -522,7 +514,6 @@ export default function App() {
           screen: cur.screen,
           relationshipType: cur.relationshipType,
           sessionLength: cur.sessionLength,
-          deckPack: cur.deckPack,
           questions: cur.questions,
           currentIndex: cur.currentIndex,
           currentTurn: cur.currentTurn,
@@ -566,12 +557,11 @@ export default function App() {
   };
 
   // SOLO / PASS THE PHONE
-  const handleStartSolo = ({ relationshipType: rel, sessionLength: len, deckPack: pack = 'CLASSIC', p1Name, p2Name }) => {
+  const handleStartSolo = ({ relationshipType: rel, sessionLength: len, p1Name, p2Name }) => {
     setIsHost(true);
     setIsSolo(true);
     setRelationshipType(rel);
     setSessionLength(len);
-    setDeckPack(pack);
     const p1 = p1Name || 'Partner 1';
     const p2 = p2Name || 'Partner 2';
     setHostName(p1);
@@ -579,7 +569,7 @@ export default function App() {
     localStorage.setItem('between_p1_name', p1);
     localStorage.setItem('between_p2_name', p2);
 
-    const initialDeck = buildSession(rel, len, [], pack);
+    const initialDeck = buildSession(rel, len, []);
     setQuestions(initialDeck);
     setCurrentIndex(0);
     setCurrentTurn('host');
@@ -596,7 +586,6 @@ export default function App() {
         screen: 'SESSION',
         relationshipType,
         sessionLength,
-        deckPack,
         questions,
         currentIndex: 0,
         currentTurn: 'host',
@@ -1087,18 +1076,6 @@ export default function App() {
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <span style={{
-                    fontSize: '10px',
-                    fontWeight: '800',
-                    letterSpacing: '0.06em',
-                    textTransform: 'uppercase',
-                    padding: '2px 8px',
-                    borderRadius: 'var(--radius-pill)',
-                    background: 'rgba(28, 25, 23, 0.06)',
-                    color: 'var(--color-ink)'
-                  }}>
-                    {DECK_PACKS[deckPack]?.symbol} {DECK_PACKS[deckPack]?.label.replace('Between', '').trim()}
-                  </span>
                   <span style={{
                     fontSize: '10.5px',
                     fontWeight: '700',

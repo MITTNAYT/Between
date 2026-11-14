@@ -270,14 +270,10 @@ export function getCardThemeColor(question) {
   const cat = (question.category || '').toUpperCase();
   const id = (question.id || '').toUpperCase();
   const depth = question.depth || 1;
-  const pack = question.deckPack || '';
 
-  if (pack === 'MIDNIGHT' || id.includes('MIDNIGHT')) return '#C8BEE8'; // Soft Lavender
-  if (pack === 'PLAY_SPARKS') return cat.includes('PLAY') ? '#F5E1A4' : '#B6DDD0'; // Butter Cream / Mint Sage
-  if (pack === 'DEEP_INTIMACY') return '#F4BEB0'; // Pale Coral
-  if (pack === 'RAW_WILDCARD' || id.includes('WILDCARD')) return '#F5D0A8'; // Soft Peach Gold
-
+  if (id.includes('MIDNIGHT')) return '#C8BEE8'; // Soft Lavender
   if (id.includes('LONG_DISTANCE')) return '#9BC4E2'; // Light Sky Blue
+  if (id.includes('WILDCARD')) return '#F5D0A8'; // Soft Peach Gold
 
   if (cat.includes('MEMOR') || cat.includes('ORIGIN')) return '#B6DDD0'; // Mint Sage
   if (cat.includes('FEAR') || cat.includes('VULNER') || cat.includes('CONFLICT') || depth >= 4) return '#F4BEB0'; // Pale Coral
