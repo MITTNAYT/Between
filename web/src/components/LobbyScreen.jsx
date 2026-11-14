@@ -4,6 +4,7 @@ import QRCode from 'qrcode';
 import { RELATIONSHIP_TYPES, SESSION_LENGTHS } from '../utils/engine';
 import { playClickSound } from '../utils/audio';
 import { generateRandomCode } from '../utils/peer';
+import { NeedleMascot, GhostMascot, PizzaMascot } from './CardMascots';
 
 const REL_ICONS = {
   COUPLE: Heart,
@@ -132,10 +133,106 @@ export default function LobbyScreen({
           color: 'var(--color-body)',
           lineHeight: '1.45',
           maxWidth: '380px',
-          margin: '0 auto'
+          margin: '0 auto 12px'
         }}>
           Thought-provoking questions, tailored follow-ups, and interactive challenges.
         </p>
+
+        {/* Visual Tabletop Card Preview Fan matching the German reference photo */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '10px',
+          margin: '0 auto 4px',
+          padding: '6px 0',
+          userSelect: 'none'
+        }}>
+          {/* Card 1: Nähcafe */}
+          <div style={{
+            width: '74px',
+            height: '104px',
+            background: '#FFFFFF',
+            borderRadius: '10px',
+            padding: '4px',
+            boxShadow: '0 8px 18px rgba(28, 25, 23, 0.12)',
+            transform: 'rotate(-9deg) translateY(4px)',
+            display: 'flex',
+            flexDirection: 'column'
+          }}>
+            <div style={{
+              background: '#A8CEEB',
+              borderRadius: '6px',
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '4px 2px'
+            }}>
+              <div style={{ alignSelf: 'flex-start', width: '12px', height: '12px', borderRadius: '50%', background: '#1C1917', color: '#FFF', fontSize: '7px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>★</div>
+              <NeedleMascot size={34} />
+              <div style={{ background: '#FFF', color: '#1C1917', fontSize: '6px', fontWeight: '800', padding: '1px 3px', borderRadius: '2px', textTransform: 'uppercase' }}>NÄHCAFE</div>
+            </div>
+          </div>
+
+          {/* Card 2: Downcycling (Ghost) */}
+          <div style={{
+            width: '84px',
+            height: '118px',
+            background: '#FFFFFF',
+            borderRadius: '12px',
+            padding: '5px',
+            boxShadow: '0 12px 24px rgba(28, 25, 23, 0.16)',
+            transform: 'translateY(-4px)',
+            zIndex: 2,
+            display: 'flex',
+            flexDirection: 'column'
+          }}>
+            <div style={{
+              background: '#A8CEEB',
+              borderRadius: '7px',
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '5px 3px'
+            }}>
+              <div style={{ alignSelf: 'flex-start', width: '14px', height: '14px', borderRadius: '50%', background: '#1C1917', color: '#FFF', fontSize: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>★</div>
+              <GhostMascot size={44} />
+              <div style={{ background: '#FFF', color: '#1C1917', fontSize: '7px', fontWeight: '800', padding: '1px 4px', borderRadius: '2px', textTransform: 'uppercase' }}>DOWNCYCLING</div>
+            </div>
+          </div>
+
+          {/* Card 3: Speckgürtel (Pizza) */}
+          <div style={{
+            width: '74px',
+            height: '104px',
+            background: '#FFFFFF',
+            borderRadius: '10px',
+            padding: '4px',
+            boxShadow: '0 8px 18px rgba(28, 25, 23, 0.12)',
+            transform: 'rotate(9deg) translateY(4px)',
+            display: 'flex',
+            flexDirection: 'column'
+          }}>
+            <div style={{
+              background: '#A8CEEB',
+              borderRadius: '6px',
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '4px 2px'
+            }}>
+              <div style={{ alignSelf: 'flex-start', width: '12px', height: '12px', borderRadius: '50%', background: '#1C1917', color: '#FFF', fontSize: '7px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>★</div>
+              <PizzaMascot size={34} />
+              <div style={{ background: '#FFF', color: '#1C1917', fontSize: '6px', fontWeight: '800', padding: '1px 3px', borderRadius: '2px', textTransform: 'uppercase' }}>SPECKGÜRTEL</div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* 1. ERROR STATE */}
@@ -655,7 +752,7 @@ export default function LobbyScreen({
                 className="btn-primary"
                 style={{ width: '100%', padding: '14px', minHeight: '48px', fontSize: '14.5px', fontWeight: '800' }}
               >
-                <span>Create Online Room</span>
+                <span>Deal Tabletop Deck</span>
                 <ArrowRight size={17} strokeWidth={2.4} />
               </button>
             ) : (
