@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { ChevronLeft, ChevronRight, Phone, PhoneCall } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Phone, PhoneCall, Users, Copy, Check, X, Sparkles, Radio } from 'lucide-react';
 import Header from './components/Header';
 import LobbyScreen from './components/LobbyScreen';
 import CardDeckCarousel from './components/CardDeckCarousel';
@@ -7,14 +7,14 @@ import ReactionBar from './components/ReactionBar';
 import ClosingScreen from './components/ClosingScreen';
 import LegalModal from './components/LegalModal';
 import { buildSession } from './utils/engine';
-import { multiplayerSync } from './utils/peer';
+import { multiplayerSync, generateRandomCode } from './utils/peer';
 import { playClickSound, playReactionSound, playCardSlideSound, playChimeSound } from './utils/audio';
 import { triggerHaptic } from './utils/haptics';
 
 export default function App() {
-  const [screen, setScreen] = useState('LOBBY'); // 'LOBBY' | 'SESSION' | 'CLOSING'
+  const [screen, setScreen] = useState('SESSION'); // Default directly to physical Tabletop Card Game
   const [roomCode, setRoomCode] = useState('');
-  const [isHost, setIsHost] = useState(false);
+  const [isHost, setIsHost] = useState(true);
   const [connectionStatus, setConnectionStatus] = useState('IDLE');
   const [errorMessage, setErrorMessage] = useState('');
   
@@ -34,11 +34,16 @@ export default function App() {
 
   const [relationshipType, setRelationshipType] = useState('COUPLE');
   const [sessionLength, setSessionLength] = useState('FIFTEEN_MIN');
-  const [questions, setQuestions] = useState([]);
+  const [questions, setQuestions] = useState(() => buildSession('COUPLE', 'FIFTEEN_MIN', []));
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentTurn, setCurrentTurn] = useState('host'); // 'host' | 'guest'
   const [bookmarkedMoments, setBookmarkedMoments] = useState([]);
   const [floatingReactions, setFloatingReactions] = useState([]);
+
+  // Modal for Room Multiplayer
+  const [showRoomModal, setShowRoomModal] = useState(false);
+  const [joinModalCode, setJoinModalCode] = useState('');
+  const [copiedLink, setCopiedLink] = useState(false);
 
   // Wildcard and Appreciation States
   const [activeWildcardPrompt, setActiveWildcardPrompt] = useState(null);
@@ -293,6 +298,81 @@ export default function App() {
     triggerHaptic('light');
   };
 
+  // Switch Tabletop Deck (Couples, Friends, Deep Dive)
+  const handleSwitchRelationship = (newRel) => {
+    playCardSlideSound();
+    triggerHaptic('medium');
+    setRelationshipType(newRel);
+    const newDeck = buildSession(newRel, sessionLength, []);
+    setQuestions(newDeck);
+    setCurrentIndex(0);
+    setActiveWildcardPrompt(null);
+    if (connectionStatus === 'CONNECTED') {
+      multiplayerSync.syncState({
+        relationshipType: newRel,
+        questions: newDeck,
+        currentIndex: 0
+      });
+    }
+  };
+
+  // Open Room Modal & ensure host room exists
+  const handleOpenRoomModal = () => {
+    setShowRoomModal(true);
+    if (!roomCode || connectionStatus === 'IDLE') {
+      const code = multiplayerSync.initHost({
+        userName: hostName || 'Partner 1',
+        onStatusChange: handleStatusChange,
+        onStateChange: handleStateChange,
+        onReaction: handleReactionReceived,
+        onCallStream: handleCallStream,
+        onCallState: handleCallState,
+        onIncomingCall: handleIncomingCall,
+        onRequestState: () => {
+          const cur = stateRef.current;
+          multiplayerSync.syncState({
+            screen: cur.screen,
+            relationshipType: cur.relationshipType,
+            sessionLength: cur.sessionLength,
+            questions: cur.questions,
+            currentIndex: cur.currentIndex,
+            currentTurn: cur.currentTurn,
+            bookmarkedMoments: cur.bookmarkedMoments,
+            hostName: cur.hostName,
+            guestName: cur.guestName
+          });
+        }
+      });
+      setRoomCode(code);
+      setIsHost(true);
+      setConnectionStatus('WAITING_FOR_GUEST');
+    }
+  };
+
+  const handleCopyRoomInvite = () => {
+    playClickSound();
+    const url = `${window.location.origin}${window.location.pathname}?room=${roomCode}`;
+    navigator.clipboard.writeText(url).then(() => {
+      setCopiedLink(true);
+      setTimeout(() => setCopiedLink(false), 2400);
+      setToastMessage('Invite link copied! Send it to your partner 💌');
+      setTimeout(() => setToastMessage(null), 3000);
+    }).catch(() => {
+      prompt('Copy invite link:', url);
+    });
+  };
+
+  const handleJoinFromModal = (e) => {
+    if (e) e.preventDefault();
+    if (!joinModalCode.trim()) return;
+    playClickSound();
+    handleJoinRoom({
+      roomCode: joinModalCode.trim().toUpperCase(),
+      userName: guestName || 'Partner 2'
+    });
+    setShowRoomModal(false);
+  };
+
   // HOST: Create Room
   const handleCreateRoom = ({ relationshipType: rel, sessionLength: len, roomCode: customCode, userName }) => {
     setIsHost(true);
@@ -468,7 +548,7 @@ export default function App() {
     multiplayerSync.sendReaction(emoji);
   };
 
-  // Return to Lobby
+  // Return to Lobby / Reset Tabletop Deck
   const handleExitToLobby = () => {
     playClickSound();
     multiplayerSync.endVoiceCall();
@@ -479,15 +559,16 @@ export default function App() {
     if (remoteAudioRef.current) {
       remoteAudioRef.current.srcObject = null;
     }
-    setScreen('LOBBY');
     setConnectionStatus('IDLE');
     setRoomCode('');
-    setQuestions([]);
     setCurrentIndex(0);
     setCurrentTurn('host');
-    setBookmarkedMoments([]);
     setErrorMessage('');
+    const freshDeck = buildSession(relationshipType, sessionLength, []);
+    setQuestions(freshDeck);
     window.history.replaceState({}, document.title, window.location.pathname);
+    setToastMessage('Tabletop deck reset 🃏');
+    setTimeout(() => setToastMessage(null), 2500);
   };
 
   // Send Appreciation Note
@@ -606,6 +687,167 @@ export default function App() {
         </div>
       )}
 
+      {/* PLAY TOGETHER / MULTIPLAYER MODAL */}
+      {showRoomModal && (
+        <div 
+          className="modal-overlay" 
+          onClick={() => setShowRoomModal(false)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0, 0, 0, 0.6)',
+            backdropFilter: 'blur(5px)',
+            WebkitBackdropFilter: 'blur(5px)',
+            zIndex: 100000,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '16px',
+            animation: 'fadeIn 0.2s ease-out'
+          }}
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            className="tabletop-playing-card"
+            style={{
+              width: '100%',
+              maxWidth: '380px',
+              padding: '24px 20px',
+              textAlign: 'center',
+              position: 'relative'
+            }}
+          >
+            {/* Close Button */}
+            <button
+              onClick={() => setShowRoomModal(false)}
+              style={{
+                position: 'absolute',
+                top: '14px',
+                right: '14px',
+                background: 'rgba(0, 0, 0, 0.05)',
+                border: 'none',
+                borderRadius: '50%',
+                width: '28px',
+                height: '28px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                color: '#1C1917'
+              }}
+              title="Close modal"
+            >
+              <X size={15} strokeWidth={2.5} />
+            </button>
+
+            <div className="card-label-sticker" style={{ margin: '0 auto 10px', gap: '6px' }}>
+              <Users size={12} color="#387B6A" />
+              <span>Tabletop Room</span>
+            </div>
+
+            <h3 style={{ fontSize: '18px', fontWeight: '800', color: '#1C1917', margin: '0 0 4px' }}>
+              Play Together in Real-Time
+            </h3>
+            <p style={{ fontSize: '12.5px', color: '#666', lineHeight: 1.4, margin: '0 0 16px' }}>
+              Synchronize card deals, turns, reactions, and voice calls with your partner.
+            </p>
+
+            {/* Room Code Display */}
+            <div style={{
+              background: '#F5F0EB',
+              borderRadius: '12px',
+              padding: '14px',
+              marginBottom: '14px',
+              border: '1px solid rgba(0, 0, 0, 0.06)'
+            }}>
+              <div style={{ fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.06em', color: '#888', marginBottom: '4px' }}>
+                Your Room Code
+              </div>
+              <div style={{
+                fontFamily: 'monospace',
+                fontSize: '28px',
+                fontWeight: '900',
+                letterSpacing: '0.12em',
+                color: '#1C1917',
+                marginBottom: '10px'
+              }}>
+                {roomCode || '...'}
+              </div>
+
+              <button
+                onClick={handleCopyRoomInvite}
+                className="btn-primary"
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  borderRadius: 'var(--radius-pill)',
+                  fontSize: '13px',
+                  fontWeight: '800',
+                  gap: '6px'
+                }}
+              >
+                {copiedLink ? <Check size={14} strokeWidth={2.6} /> : <Copy size={14} strokeWidth={2.4} />}
+                <span>{copiedLink ? 'Invite Link Copied!' : 'Copy Invite Link 💌'}</span>
+              </button>
+            </div>
+
+            {/* Divider */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              margin: '14px 0',
+              color: '#999',
+              fontSize: '11px',
+              fontWeight: '700',
+              textTransform: 'uppercase'
+            }}>
+              <div style={{ flex: 1, height: '1px', background: 'rgba(0,0,0,0.1)' }} />
+              <span>Or Join a Room</span>
+              <div style={{ flex: 1, height: '1px', background: 'rgba(0,0,0,0.1)' }} />
+            </div>
+
+            {/* Join Room Form */}
+            <form onSubmit={handleJoinFromModal} style={{ display: 'flex', gap: '8px' }}>
+              <input
+                type="text"
+                maxLength={8}
+                value={joinModalCode}
+                onChange={(e) => setJoinModalCode(e.target.value.toUpperCase())}
+                placeholder="5-LETTERS"
+                style={{
+                  flex: 1,
+                  padding: '10px 12px',
+                  borderRadius: '10px',
+                  border: '1.5px solid rgba(0,0,0,0.12)',
+                  background: '#FFFFFF',
+                  fontFamily: 'monospace',
+                  fontSize: '14px',
+                  fontWeight: '800',
+                  letterSpacing: '0.08em',
+                  textAlign: 'center',
+                  textTransform: 'uppercase'
+                }}
+              />
+              <button
+                type="submit"
+                className="btn-secondary"
+                disabled={!joinModalCode.trim()}
+                style={{
+                  padding: '10px 16px',
+                  borderRadius: '10px',
+                  fontSize: '13px',
+                  fontWeight: '800',
+                  opacity: joinModalCode.trim() ? 1 : 0.4
+                }}
+              >
+                Join
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
       {/* Floating live reactions */}
       <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 9999 }}>
         {floatingReactions.map(r => (
@@ -634,6 +876,7 @@ export default function App() {
             setToastMessage(msg);
             setTimeout(() => setToastMessage(null), 3000);
           }}
+          onOpenRoomModal={handleOpenRoomModal}
           callState={callState}
           isMuted={isMuted}
           callDuration={callDuration}
@@ -672,6 +915,44 @@ export default function App() {
             gap: '12px',
             animation: 'fadeIn 0.3s ease-out'
           }}>
+            {/* Tabletop Deck Switcher Bar */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px',
+              margin: '2px 0 2px',
+              userSelect: 'none'
+            }}>
+              {[
+                { id: 'COUPLE', label: '♥ Couples' },
+                { id: 'FRIEND', label: '👥 Friends' },
+                { id: 'JUST_MET', label: '✦ Deep Dive' }
+              ].map(deck => {
+                const isSelected = relationshipType === deck.id;
+                return (
+                  <button
+                    key={deck.id}
+                    onClick={() => handleSwitchRelationship(deck.id)}
+                    style={{
+                      padding: '5px 14px',
+                      borderRadius: 'var(--radius-pill)',
+                      fontSize: '12px',
+                      fontWeight: isSelected ? '800' : '600',
+                      border: isSelected ? '1.5px solid #1C1917' : '1px solid rgba(0, 0, 0, 0.08)',
+                      background: isSelected ? '#FFFFFF' : 'rgba(255, 255, 255, 0.55)',
+                      color: isSelected ? '#1C1917' : 'var(--color-muted)',
+                      cursor: 'pointer',
+                      boxShadow: isSelected ? 'var(--shadow-sm)' : 'none',
+                      transition: 'all 0.15s ease'
+                    }}
+                  >
+                    {deck.label}
+                  </button>
+                );
+              })}
+            </div>
+
             {/* Tabletop Session Breadcrumb Header */}
             <div style={{
               width: '100%',

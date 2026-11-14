@@ -13,6 +13,7 @@ export default function Header({
   theme = 'tabletop',
   onToggleTheme,
   onShowToast,
+  onOpenRoomModal,
   callState = 'IDLE',
   isMuted = false,
   callDuration = 0,
@@ -133,7 +134,7 @@ export default function Header({
 
       {/* Center: Session Room Badge & Optional Voice Call Controls */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0, justifyContent: 'center', flexWrap: 'wrap' }}>
-        {isSessionActive && roomCode && (
+        {roomCode && connectionStatus === 'CONNECTED' ? (
           <button
             onClick={handleCopyLink}
             className="card-label-sticker"
@@ -147,9 +148,31 @@ export default function Header({
             }}
             title="Click to copy room code & invite link"
           >
-            <Users size={12} strokeWidth={2.4} color="#387B6A" />
+            <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#387B6A', display: 'inline-block' }} />
             <span style={{ fontFamily: 'monospace', letterSpacing: '0.08em' }}>{roomCode}</span>
             {copied ? <Check size={11} strokeWidth={2.6} color="#387B6A" /> : <Copy size={11} strokeWidth={2} />}
+          </button>
+        ) : (
+          <button
+            onClick={() => {
+              playClickSound();
+              onOpenRoomModal?.();
+            }}
+            className="card-label-sticker"
+            style={{
+              fontSize: '11px',
+              padding: '5px 12px',
+              background: '#FFFFFF',
+              color: '#1C1917',
+              cursor: 'pointer',
+              gap: '6px',
+              border: '1.2px solid rgba(56, 123, 106, 0.4)',
+              boxShadow: 'var(--shadow-sm)'
+            }}
+            title="Play in real-time with your partner"
+          >
+            <Users size={12} strokeWidth={2.4} color="#387B6A" />
+            <span style={{ fontWeight: '700', color: '#387B6A' }}>Play Together</span>
           </button>
         )}
 
