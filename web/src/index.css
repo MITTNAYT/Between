@@ -702,7 +702,29 @@ input, textarea, select {
     0 0 32px rgba(224, 86, 56, 0.22);
 }
 
-/* Hand-drawn Doodles & Mascots Container */
+/* Authentic Hand-Drawn Card Illustrations & Mascots */
+.card-illustration-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.1));
+}
+
+.card-illustration-img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  filter: contrast(1.1) brightness(1.02);
+  user-select: none;
+  pointer-events: none;
+  display: block;
+}
+
+/* Fallback & Legacy Containers */
 .doodle-container {
   max-width: 100%;
   max-height: 100%;
