@@ -952,5 +952,92 @@ input, textarea, select {
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 30px rgba(229, 169, 60, 0.08);
 }
 
+/* ==========================================================================
+   TABLETOP CARD MASCOT & CALL MICRO-ANIMATIONS
+   ========================================================================== */
+
+@keyframes steamRise {
+  0% {
+    transform: translateY(0) scaleY(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: translateY(-4px) scaleY(1.08) scaleX(0.95);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(-8px) scaleY(1.15) scaleX(1.05);
+    opacity: 0;
+  }
+}
+
+.steam-line-1 {
+  animation: steamRise 2.4s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+.steam-line-2 {
+  animation: steamRise 2.4s ease-in-out infinite 1.2s;
+  transform-origin: bottom center;
+}
+
+@keyframes pulseFlame {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.08) rotate(2deg);
+  }
+}
+
+@keyframes subtleFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes pulseDot {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(0.85);
+  }
+}
+
+@keyframes pulseCall {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.04);
+    opacity: 0.88;
+  }
+}
+
+@keyframes slideDownBanner {
+  0% {
+    transform: translate(-50%, -100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+  -webkit-font-feature-settings: "tnum";
+  font-feature-settings: "tnum";
+}
+
+
 
 

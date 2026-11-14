@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Phone, PhoneCall } from 'lucide-react';
 import Header from './components/Header';
 import LobbyScreen from './components/LobbyScreen';
 import CardDeckCarousel from './components/CardDeckCarousel';
@@ -8,7 +8,7 @@ import ClosingScreen from './components/ClosingScreen';
 import LegalModal from './components/LegalModal';
 import { buildSession } from './utils/engine';
 import { multiplayerSync } from './utils/peer';
-import { playClickSound, playReactionSound, playCardSlideSound } from './utils/audio';
+import { playClickSound, playReactionSound, playCardSlideSound, playChimeSound } from './utils/audio';
 import { triggerHaptic } from './utils/haptics';
 
 export default function App() {
@@ -50,6 +50,28 @@ export default function App() {
 
   // Legal / Privacy Policy Modal State
   const [showLegalModal, setShowLegalModal] = useState(false);
+
+  // Optional Voice Call State
+  const [callState, setCallState] = useState('IDLE'); // 'IDLE' | 'CALLING' | 'INCOMING' | 'CONNECTED'
+  const [incomingCallerName, setIncomingCallerName] = useState('Partner');
+  const [isMuted, setIsMuted] = useState(false);
+  const [callDuration, setCallDuration] = useState(0);
+  const remoteAudioRef = useRef(null);
+
+  // Voice call duration timer
+  useEffect(() => {
+    let timer = null;
+    if (callState === 'CONNECTED') {
+      timer = setInterval(() => {
+        setCallDuration(prev => prev + 1);
+      }, 1000);
+    } else {
+      setCallDuration(0);
+    }
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [callState]);
 
   // Synchronize document theme
   useEffect(() => {
@@ -187,6 +209,90 @@ export default function App() {
     playReactionSound();
   }, [spawnReaction]);
 
+  // WebRTC Voice Call Handlers
+  const handleCallStream = useCallback((stream) => {
+    if (remoteAudioRef.current) {
+      remoteAudioRef.current.srcObject = stream;
+      remoteAudioRef.current.play().catch(e => console.warn('Audio auto-play notice:', e));
+    }
+  }, []);
+
+  const handleCallState = useCallback((state) => {
+    setCallState(state);
+    if (state === 'CONNECTED') {
+      setToastMessage('Voice call connected 🎙️');
+      setTimeout(() => setToastMessage(null), 3000);
+      playChimeSound();
+      triggerHaptic('success');
+    } else if (state === 'IDLE') {
+      setIsMuted(false);
+      setCallDuration(0);
+      if (remoteAudioRef.current) {
+        remoteAudioRef.current.srcObject = null;
+      }
+    } else if (state === 'PERMISSION_DENIED') {
+      setToastMessage('Microphone access denied. Check browser permissions.');
+      setTimeout(() => setToastMessage(null), 4000);
+      setCallState('IDLE');
+    } else if (state === 'UNSUPPORTED') {
+      setToastMessage('Voice calling is not supported on this browser.');
+      setTimeout(() => setToastMessage(null), 3000);
+      setCallState('IDLE');
+    } else if (state === 'REJECTED') {
+      setToastMessage('Call was declined');
+      setTimeout(() => setToastMessage(null), 2500);
+      setCallState('IDLE');
+    }
+  }, []);
+
+  const handleIncomingCall = useCallback((info) => {
+    const caller = typeof info === 'object' ? (info.callerName || info.name) : info;
+    setIncomingCallerName(caller || 'Partner');
+    setCallState('INCOMING');
+    playChimeSound();
+    triggerHaptic('medium');
+  }, []);
+
+  const handleStartCall = async () => {
+    playClickSound();
+    const ok = await multiplayerSync.startVoiceCall();
+    if (ok) {
+      setCallState('CALLING');
+    }
+  };
+
+  const handleAcceptCall = async () => {
+    playClickSound();
+    const ok = await multiplayerSync.acceptVoiceCall();
+    if (ok) {
+      setCallState('CONNECTED');
+    }
+  };
+
+  const handleDeclineCall = () => {
+    playClickSound();
+    multiplayerSync.declineVoiceCall();
+    setCallState('IDLE');
+  };
+
+  const handleEndCall = () => {
+    playClickSound();
+    multiplayerSync.endVoiceCall();
+    setCallState('IDLE');
+    setCallDuration(0);
+    setIsMuted(false);
+    if (remoteAudioRef.current) {
+      remoteAudioRef.current.srcObject = null;
+    }
+  };
+
+  const handleToggleMute = () => {
+    playClickSound();
+    const muted = multiplayerSync.toggleMute();
+    setIsMuted(muted);
+    triggerHaptic('light');
+  };
+
   // HOST: Create Room
   const handleCreateRoom = ({ relationshipType: rel, sessionLength: len, roomCode: customCode, userName }) => {
     setIsHost(true);
@@ -209,6 +315,9 @@ export default function App() {
       onStatusChange: handleStatusChange,
       onStateChange: handleStateChange,
       onReaction: handleReactionReceived,
+      onCallStream: handleCallStream,
+      onCallState: handleCallState,
+      onIncomingCall: handleIncomingCall,
       onRequestState: () => {
         const cur = stateRef.current;
         multiplayerSync.syncState({
@@ -246,7 +355,10 @@ export default function App() {
       userName: userName,
       onStatusChange: handleStatusChange,
       onStateChange: handleStateChange,
-      onReaction: handleReactionReceived
+      onReaction: handleReactionReceived,
+      onCallStream: handleCallStream,
+      onCallState: handleCallState,
+      onIncomingCall: handleIncomingCall
     });
   };
 
@@ -359,7 +471,14 @@ export default function App() {
   // Return to Lobby
   const handleExitToLobby = () => {
     playClickSound();
+    multiplayerSync.endVoiceCall();
     multiplayerSync.leaveRoom();
+    setCallState('IDLE');
+    setCallDuration(0);
+    setIsMuted(false);
+    if (remoteAudioRef.current) {
+      remoteAudioRef.current.srcObject = null;
+    }
     setScreen('LOBBY');
     setConnectionStatus('IDLE');
     setRoomCode('');
@@ -420,6 +539,73 @@ export default function App() {
         </div>
       )}
 
+      {/* Optional Voice Call: Hidden Remote Audio Stream Player */}
+      <audio ref={remoteAudioRef} autoPlay playsInline style={{ display: 'none' }} />
+
+      {/* Optional Voice Call: Incoming Non-Blocking Floating Banner */}
+      {callState === 'INCOMING' && (
+        <div style={{
+          position: 'fixed',
+          top: 'max(14px, env(safe-area-inset-top))',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 100000,
+          background: '#FFFFFF',
+          border: '1.5px solid #1C1917',
+          borderRadius: 'var(--radius-pill)',
+          padding: '8px 16px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px',
+          boxShadow: '0 8px 24px rgba(28, 25, 23, 0.18)',
+          animation: 'slideDownBanner 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <PhoneCall size={16} strokeWidth={2.4} color="#387B6A" style={{ animation: 'pulseCall 1.2s infinite' }} />
+            <span style={{ fontSize: '13px', fontWeight: '700', color: '#1C1917' }}>
+              {incomingCallerName || 'Partner'} is calling...
+            </span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <button
+              onClick={handleAcceptCall}
+              style={{
+                background: '#387B6A',
+                color: '#FFFFFF',
+                border: 'none',
+                borderRadius: '9999px',
+                padding: '6px 14px',
+                fontSize: '12px',
+                fontWeight: '800',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px',
+                boxShadow: '0 2px 6px rgba(56, 123, 106, 0.3)'
+              }}
+            >
+              <Phone size={12} strokeWidth={2.6} />
+              <span>Accept</span>
+            </button>
+            <button
+              onClick={handleDeclineCall}
+              style={{
+                background: '#F5EFEB',
+                color: '#4A443E',
+                border: '1px solid rgba(0, 0, 0, 0.1)',
+                borderRadius: '9999px',
+                padding: '6px 12px',
+                fontSize: '12px',
+                fontWeight: '700',
+                cursor: 'pointer'
+              }}
+            >
+              Decline
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Floating live reactions */}
       <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 9999 }}>
         {floatingReactions.map(r => (
@@ -448,6 +634,12 @@ export default function App() {
             setToastMessage(msg);
             setTimeout(() => setToastMessage(null), 3000);
           }}
+          callState={callState}
+          isMuted={isMuted}
+          callDuration={callDuration}
+          onStartCall={handleStartCall}
+          onEndCall={handleEndCall}
+          onToggleMute={handleToggleMute}
         />
 
         {/* SCREEN 1: LOBBY */}

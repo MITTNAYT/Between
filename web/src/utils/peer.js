@@ -533,7 +533,8 @@ class MultiplayerSync {
 
     // 5. Native WebRTC Voice Call Signaling
     if (data.type === 'VOICE_CALL_REQUEST') {
-      this.onIncomingCallCallback?.({ callerName: data.senderName || this.peerName });
+      const caller = data.callerName || data.senderName || this.peerName || 'Partner';
+      this.onIncomingCallCallback?.({ callerName: caller });
       this.onCallStateCallback?.('INCOMING');
       return;
     }
