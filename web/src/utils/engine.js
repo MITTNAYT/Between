@@ -59,6 +59,53 @@ export const SESSION_LENGTHS = {
   }
 };
 
+export const DECK_PACKS = {
+  CLASSIC: {
+    id: 'CLASSIC',
+    label: 'Classic Between',
+    badge: 'Foundational',
+    tagline: 'Balanced emotional progression from playful warm-ups to quiet closeness.',
+    color: '#A8CEEB',
+    symbol: '★'
+  },
+  MIDNIGHT: {
+    id: 'MIDNIGHT',
+    label: 'Midnight Secrets',
+    badge: 'Late Night',
+    tagline: 'Vulnerabilities, unspoken thoughts, fears, and bedside intimacy.',
+    color: '#C8BEE8',
+    symbol: '☾',
+    preferredCategories: ['VULNERABILITY', 'FEARS', 'CONFLICT', 'CONNECTION']
+  },
+  PLAY_SPARKS: {
+    id: 'PLAY_SPARKS',
+    label: 'Play & Sparks',
+    badge: 'Lighthearted',
+    tagline: 'Nostalgic memories, hilarious quirks, and hypothetical sparks.',
+    color: '#B6DDD0',
+    symbol: '⚡',
+    preferredCategories: ['PLAY', 'PLAYFUL', 'MEMORIES', 'HABITS', 'IDENTITY']
+  },
+  DEEP_INTIMACY: {
+    id: 'DEEP_INTIMACY',
+    label: 'Deep Intimacy',
+    badge: 'Vulnerable',
+    tagline: 'Raw connection, future visions, and heartfelt mutual gratitude.',
+    color: '#F4BEB0',
+    symbol: '🫀',
+    preferredCategories: ['US', 'GRATITUDE', 'DREAMS', 'FUTURE', 'VULNERABILITY']
+  },
+  RAW_WILDCARD: {
+    id: 'RAW_WILDCARD',
+    label: 'Wild & Unfiltered',
+    badge: 'Spontaneous',
+    tagline: 'Wildcard-heavy edition where anything can be asked without filter.',
+    color: '#F5D0A8',
+    symbol: '✦',
+    wildcardFrequency: 'HIGH'
+  }
+};
+
 export const WILDCARD_INSPIRATIONS = {
   COUPLE: [
     "What is a small thing I do that always makes you feel loved?",
@@ -190,14 +237,22 @@ function getSlotsForLength(lengthId, relType) {
 }
 
 /**
- * Builds a curated session list from the question pool
+ * Builds a curated session list from the question pool with Deck Pack thematic support
  */
-export function buildSession(relationshipType = 'COUPLE', sessionLength = 'FIFTEEN_MIN', recentlySeen = []) {
+export function buildSession(relationshipType = 'COUPLE', sessionLength = 'FIFTEEN_MIN', recentlySeen = [], deckPack = 'CLASSIC') {
+  const pack = DECK_PACKS[deckPack] || DECK_PACKS.CLASSIC;
   const pool = questionsData.filter(q => 
     q.relationshipTypes.includes(relationshipType) && q.status === 'APPROVED'
   );
 
   const slots = getSlotsForLength(sessionLength, relationshipType);
+
+  // If RAW_WILDCARD, sprinkle extra wildcards into the session
+  if (deckPack === 'RAW_WILDCARD') {
+    if (slots.length >= 5) slots[1] = { ...slots[1], isWildcard: true, phase: 'WILDCARD' };
+    if (slots.length >= 10) slots[slots.length - 3] = { ...slots[slots.length - 3], isWildcard: true, phase: 'WILDCARD' };
+  }
+
   const session = [];
   const usedIds = new Set(recentlySeen);
 
@@ -210,6 +265,7 @@ export function buildSession(relationshipType = 'COUPLE', sessionLength = 'FIFTE
         depth: 3,
         relationshipTypes: [relationshipType],
         isWildcard: true,
+        deckPack: deckPack,
         hint: "Choose from the inspiration cards below, or ask your own question from the heart."
       });
       return;
@@ -221,6 +277,14 @@ export function buildSession(relationshipType = 'COUPLE', sessionLength = 'FIFTE
       (slot.targetDepth ? q.depth === slot.targetDepth : true) &&
       (slot.allowedCategories ? slot.allowedCategories.includes(q.category) : true)
     );
+
+    // If deck pack has preferred categories, try to pick from them first!
+    if (pack.preferredCategories && pack.preferredCategories.length > 0) {
+      const preferred = candidates.filter(q => pack.preferredCategories.includes(q.category));
+      if (preferred.length > 0 && Math.random() < 0.75) {
+        candidates = preferred;
+      }
+    }
 
     // Fallback if specific depth or category has no unused items
     if (candidates.length === 0) {
@@ -235,7 +299,7 @@ export function buildSession(relationshipType = 'COUPLE', sessionLength = 'FIFTE
 
     const picked = candidates[Math.floor(Math.random() * candidates.length)];
     usedIds.add(picked.id);
-    session.push({ ...picked, phase: slot.phase });
+    session.push({ ...picked, phase: slot.phase, deckPack: deckPack });
   });
 
   return session;

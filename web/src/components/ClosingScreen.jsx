@@ -3,6 +3,7 @@ import { Sparkles, Bookmark, Copy, Check, Heart, ArrowRight, Home, Download, Ima
 import confetti from 'canvas-confetti';
 import { playClickSound, playHandshakeSound } from '../utils/audio';
 import { RELATIONSHIP_TYPES } from '../utils/engine';
+import { downloadCardAsPng } from '../utils/cardExporter';
 
 export default function ClosingScreen({
   bookmarkedMoments = [],
@@ -58,6 +59,15 @@ export default function ClosingScreen({
     }).catch(() => {
       prompt('Copy your saved moments:', text);
     });
+  };
+
+  const handleDownloadAllMiniCards = async () => {
+    playClickSound();
+    for (let i = 0; i < bookmarkedMoments.length; i++) {
+      await downloadCardAsPng(bookmarkedMoments[i]);
+      // Small pause between downloads to prevent browser throttling
+      await new Promise(r => setTimeout(r, 250));
+    }
   };
 
   const handleSendNote = () => {
@@ -344,14 +354,25 @@ export default function ClosingScreen({
           </div>
 
           {bookmarkedMoments.length > 0 && (
-            <button
-              onClick={handleCopyMoments}
-              className="btn-secondary"
-              style={{ padding: '6px 12px', fontSize: '12px', gap: '4px' }}
-            >
-              {copiedMoments ? <Check size={13} strokeWidth={2.4} color="#387B6A" /> : <Copy size={13} strokeWidth={2.2} />}
-              <span>{copiedMoments ? 'Copied' : 'Copy All'}</span>
-            </button>
+            <div style={{ display: 'flex', gap: '6px' }}>
+              <button
+                onClick={handleDownloadAllMiniCards}
+                className="btn-secondary"
+                style={{ padding: '6px 11px', fontSize: '11.5px', gap: '4px' }}
+                title="Download all starred moments as physical mini cards PNG"
+              >
+                <Download size={12} strokeWidth={2.4} />
+                <span>Mini Cards</span>
+              </button>
+              <button
+                onClick={handleCopyMoments}
+                className="btn-secondary"
+                style={{ padding: '6px 11px', fontSize: '11.5px', gap: '4px' }}
+              >
+                {copiedMoments ? <Check size={12} strokeWidth={2.4} color="#387B6A" /> : <Copy size={12} strokeWidth={2.2} />}
+                <span>{copiedMoments ? 'Copied' : 'Copy All'}</span>
+              </button>
+            </div>
           )}
         </div>
 
@@ -374,13 +395,41 @@ export default function ClosingScreen({
                   padding: '12px 14px',
                   background: 'var(--color-surface-subtle)',
                   borderRadius: 'var(--radius-sm)',
-                  fontSize: '14px',
-                  lineHeight: '1.45',
-                  color: 'var(--color-ink)',
-                  fontFamily: 'var(--font-serif)'
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: '12px'
                 }}
               >
-                “{item.text}”
+                <p style={{
+                  fontSize: '13.5px',
+                  lineHeight: '1.45',
+                  color: 'var(--color-ink)',
+                  fontFamily: 'var(--font-serif)',
+                  margin: 0,
+                  flex: 1
+                }}>
+                  “{item.text}”
+                </p>
+                <button
+                  onClick={() => {
+                    playClickSound();
+                    downloadCardAsPng(item);
+                  }}
+                  className="pill-badge pill-badge-surface"
+                  style={{
+                    cursor: 'pointer',
+                    gap: '4px',
+                    fontSize: '11px',
+                    fontWeight: '700',
+                    padding: '4px 10px',
+                    flexShrink: 0
+                  }}
+                  title="Download this moment as a physical mini card PNG"
+                >
+                  <Download size={11} strokeWidth={2.4} />
+                  <span>Mini Card</span>
+                </button>
               </div>
             ))}
           </div>

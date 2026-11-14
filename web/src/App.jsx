@@ -3,6 +3,7 @@ import { Feather, Flame, ChevronLeft, ChevronRight, ArrowRight, SkipForward, Pen
 import Header from './components/Header';
 import LobbyScreen from './components/LobbyScreen';
 import QuestionCard from './components/QuestionCard';
+import CardDeckCarousel from './components/CardDeckCarousel';
 import ReactionBar from './components/ReactionBar';
 import HandshakeModal from './components/HandshakeModal';
 import ArrivalPauseModal from './components/ArrivalPauseModal';
@@ -12,7 +13,7 @@ import CustomQuestionModal from './components/CustomQuestionModal';
 import IncomingCallModal from './components/IncomingCallModal';
 import HoldTouchIndicator from './components/HoldTouchIndicator';
 import LegalModal from './components/LegalModal';
-import { buildSession, swapQuestion, RELATIONSHIP_TYPES } from './utils/engine';
+import { buildSession, swapQuestion, RELATIONSHIP_TYPES, DECK_PACKS } from './utils/engine';
 import { multiplayerSync } from './utils/peer';
 import { playClickSound, playChimeSound, playReactionSound, playHandshakeSound, playHeartbeatPulse } from './utils/audio';
 import { triggerHaptic, stopHaptic } from './utils/haptics';
@@ -41,6 +42,7 @@ export default function App() {
 
   const [relationshipType, setRelationshipType] = useState('COUPLE');
   const [sessionLength, setSessionLength] = useState('FIFTEEN_MIN');
+  const [deckPack, setDeckPack] = useState('CLASSIC');
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentTurn, setCurrentTurn] = useState('host'); // 'host' | 'guest'
@@ -115,6 +117,7 @@ export default function App() {
     connectionStatus,
     relationshipType,
     sessionLength,
+    deckPack,
     questions,
     currentIndex,
     currentTurn,
@@ -133,13 +136,14 @@ export default function App() {
       connectionStatus,
       relationshipType,
       sessionLength,
+      deckPack,
       questions,
       currentIndex,
       currentTurn,
       bookmarkedMoments,
       blindState
     };
-  }, [screen, roomCode, isHost, isSolo, hostName, guestName, connectionStatus, relationshipType, sessionLength, questions, currentIndex, currentTurn, bookmarkedMoments, blindState]);
+  }, [screen, roomCode, isHost, isSolo, hostName, guestName, connectionStatus, relationshipType, sessionLength, deckPack, questions, currentIndex, currentTurn, bookmarkedMoments, blindState]);
 
   // Floating reaction spawner
   const spawnReaction = useCallback((emoji, sender) => {
@@ -240,6 +244,10 @@ export default function App() {
 
     if (incoming.currentTurn !== undefined) {
       setCurrentTurn(incoming.currentTurn);
+    }
+
+    if (incoming.deckPack) {
+      setDeckPack(incoming.deckPack);
     }
 
     if (incoming.bookmarkedMoments) {
@@ -479,18 +487,19 @@ export default function App() {
   }, []);
 
   // HOST: Create Room
-  const handleCreateRoom = ({ relationshipType: rel, sessionLength: len, roomCode: customCode, userName }) => {
+  const handleCreateRoom = ({ relationshipType: rel, sessionLength: len, deckPack: pack = 'CLASSIC', roomCode: customCode, userName }) => {
     setIsHost(true);
     setIsSolo(false);
     setErrorMessage('');
     setRelationshipType(rel);
     setSessionLength(len);
+    setDeckPack(pack);
     const myName = userName || 'Partner 1';
     setHostName(myName);
     localStorage.setItem('between_host_name', myName);
     localStorage.setItem('between_user_name', myName);
 
-    const initialDeck = buildSession(rel, len);
+    const initialDeck = buildSession(rel, len, [], pack);
     setQuestions(initialDeck);
     setCurrentIndex(0);
     setCurrentTurn('host');
@@ -513,6 +522,7 @@ export default function App() {
           screen: cur.screen,
           relationshipType: cur.relationshipType,
           sessionLength: cur.sessionLength,
+          deckPack: cur.deckPack,
           questions: cur.questions,
           currentIndex: cur.currentIndex,
           currentTurn: cur.currentTurn,
@@ -556,11 +566,12 @@ export default function App() {
   };
 
   // SOLO / PASS THE PHONE
-  const handleStartSolo = ({ relationshipType: rel, sessionLength: len, p1Name, p2Name }) => {
+  const handleStartSolo = ({ relationshipType: rel, sessionLength: len, deckPack: pack = 'CLASSIC', p1Name, p2Name }) => {
     setIsHost(true);
     setIsSolo(true);
     setRelationshipType(rel);
     setSessionLength(len);
+    setDeckPack(pack);
     const p1 = p1Name || 'Partner 1';
     const p2 = p2Name || 'Partner 2';
     setHostName(p1);
@@ -568,7 +579,7 @@ export default function App() {
     localStorage.setItem('between_p1_name', p1);
     localStorage.setItem('between_p2_name', p2);
 
-    const initialDeck = buildSession(rel, len);
+    const initialDeck = buildSession(rel, len, [], pack);
     setQuestions(initialDeck);
     setCurrentIndex(0);
     setCurrentTurn('host');
@@ -585,6 +596,7 @@ export default function App() {
         screen: 'SESSION',
         relationshipType,
         sessionLength,
+        deckPack,
         questions,
         currentIndex: 0,
         currentTurn: 'host',
@@ -1074,7 +1086,19 @@ export default function App() {
                   </span>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{
+                    fontSize: '10px',
+                    fontWeight: '800',
+                    letterSpacing: '0.06em',
+                    textTransform: 'uppercase',
+                    padding: '2px 8px',
+                    borderRadius: 'var(--radius-pill)',
+                    background: 'rgba(28, 25, 23, 0.06)',
+                    color: 'var(--color-ink)'
+                  }}>
+                    {DECK_PACKS[deckPack]?.symbol} {DECK_PACKS[deckPack]?.label.replace('Between', '').trim()}
+                  </span>
                   <span style={{
                     fontSize: '10.5px',
                     fontWeight: '700',
@@ -1110,18 +1134,23 @@ export default function App() {
               </div>
             </div>
 
-            {/* Central 3D Question Card with Physical Swipe, 3D Double Flip, and Blind Reveal */}
-            <div style={{ width: '100%', margin: '4px 0' }}>
-              <QuestionCard
-                question={currentQuestion}
+            {/* Tabletop Card Deck Carousel with 3D Tilt, Peek Cards, and Swipe/Scroll Animation */}
+            <div style={{ width: '100%', margin: '4px 0', position: 'relative' }}>
+              <CardDeckCarousel
+                questions={questions}
+                currentIndex={currentIndex}
+                onSelectIndex={(idx) => {
+                  setCurrentIndex(idx);
+                  if (!isSolo) multiplayerSync.syncState({ currentIndex: idx });
+                }}
+                onAdvanceCard={handleAdvanceCard}
+                onPreviousCard={handlePreviousCard}
                 turnIndicator={turnString}
                 relationshipType={relationshipType}
                 onPassTurn={handlePassTurn}
                 isBookmarked={isCurrentBookmarked}
                 onToggleBookmark={handleToggleBookmark}
                 swipeClass={swipeClass}
-                onSwipeLeft={handleAdvanceCard}
-                onSwipeRight={handlePreviousCard}
                 blindState={blindState}
                 onUpdateBlindAnswer={handleUpdateBlindAnswer}
                 onSubmitBlindAnswer={handleSubmitBlindAnswer}
@@ -1142,13 +1171,13 @@ export default function App() {
               />
             </div>
 
-            {/* Navigation & Question Modifier Controls - Responsive Two-Tier Layout */}
+            {/* Navigation & Question Modifier Controls - Tactile Board Game Chips */}
             <div style={{
               display: 'flex',
               flexDirection: 'column',
-              gap: '10px',
+              gap: '8px',
               width: '100%',
-              marginTop: '4px'
+              marginTop: '6px'
             }}>
               {/* Row 1: Swappers / Modifiers (Lighter, Deeper, Secret Card) */}
               <div style={{
@@ -1159,11 +1188,10 @@ export default function App() {
               }}>
                 <button
                   onClick={() => handleSwap('LIGHTER')}
-                  className="btn-secondary"
+                  className="game-token-chip"
                   style={{
                     padding: '8px 6px',
-                    fontSize: 'clamp(11px, 3vw, 13px)',
-                    gap: '4px',
+                    fontSize: 'clamp(11.5px, 3vw, 13px)',
                     minHeight: '44px',
                     width: '100%'
                   }}
@@ -1175,11 +1203,10 @@ export default function App() {
 
                 <button
                   onClick={() => handleSwap('DEEPER')}
-                  className="btn-secondary"
+                  className="game-token-chip"
                   style={{
                     padding: '8px 6px',
-                    fontSize: 'clamp(11px, 3vw, 13px)',
-                    gap: '4px',
+                    fontSize: 'clamp(11.5px, 3vw, 13px)',
                     minHeight: '44px',
                     width: '100%'
                   }}
@@ -1194,11 +1221,10 @@ export default function App() {
                     playClickSound();
                     setShowCustomQuestionModal(true);
                   }}
-                  className="btn-secondary"
+                  className="game-token-chip"
                   style={{
                     padding: '8px 6px',
-                    fontSize: 'clamp(11px, 3vw, 13px)',
-                    gap: '4px',
+                    fontSize: 'clamp(11.5px, 3vw, 13px)',
                     minHeight: '44px',
                     width: '100%',
                     borderColor: 'rgba(198, 136, 44, 0.45)',
@@ -1222,10 +1248,15 @@ export default function App() {
                 <button
                   onClick={handlePreviousCard}
                   disabled={currentIndex === 0}
-                  className="btn-icon"
+                  className="game-token-chip"
                   style={{
+                    width: '46px',
+                    height: '46px',
+                    borderRadius: '50%',
+                    padding: 0,
                     opacity: currentIndex === 0 ? 0.35 : 1,
-                    cursor: currentIndex === 0 ? 'not-allowed' : 'pointer'
+                    cursor: currentIndex === 0 ? 'not-allowed' : 'pointer',
+                    flexShrink: 0
                   }}
                   title="Previous card"
                   aria-label="Previous card"
@@ -1236,12 +1267,11 @@ export default function App() {
                 {/* Skip button */}
                 <button
                   onClick={handleSkipQuestion}
-                  className="btn-secondary"
+                  className="game-token-chip"
                   style={{
-                    padding: '10px 14px',
+                    padding: '10px 16px',
                     fontSize: '13px',
-                    gap: '5px',
-                    minHeight: '44px',
+                    minHeight: '46px',
                     color: 'var(--color-muted)',
                     flexShrink: 0
                   }}
@@ -1258,13 +1288,18 @@ export default function App() {
                   className="btn-primary"
                   style={{
                     flex: 1,
-                    minHeight: '44px',
+                    minHeight: '46px',
                     padding: '10px 18px',
-                    fontSize: '14px',
-                    gap: '6px'
+                    fontSize: '14.5px',
+                    fontWeight: '800',
+                    gap: '6px',
+                    borderRadius: 'var(--radius-pill)',
+                    background: '#1C1917',
+                    color: '#FFFFFF',
+                    boxShadow: '0 4px 14px rgba(28, 25, 23, 0.22)'
                   }}
                 >
-                  <span>{currentIndex === questions.length - 1 ? 'Complete' : 'Next'}</span>
+                  <span>{currentIndex === questions.length - 1 ? 'Complete Deck' : 'Next'}</span>
                   <ChevronRight size={18} strokeWidth={2.4} />
                 </button>
               </div>

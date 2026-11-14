@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Heart, Users, Compass, QrCode, Sparkles, ShieldCheck, Copy, Check, ArrowRight, Radio, Shuffle, User, ChevronDown, ChevronUp, Home, ChevronLeft } from 'lucide-react';
 import QRCode from 'qrcode';
-import { RELATIONSHIP_TYPES, SESSION_LENGTHS } from '../utils/engine';
+import { RELATIONSHIP_TYPES, SESSION_LENGTHS, DECK_PACKS } from '../utils/engine';
 import { playClickSound } from '../utils/audio';
 import { generateRandomCode } from '../utils/peer';
 
@@ -30,6 +30,7 @@ export default function LobbyScreen({
   const [tab, setTab] = useState(initialRoomCode ? 'JOIN' : 'CREATE');
   const [selectedRel, setSelectedRel] = useState('COUPLE');
   const [selectedLength, setSelectedLength] = useState('FIFTEEN_MIN');
+  const [selectedPack, setSelectedPack] = useState('CLASSIC');
   const [joinCodeInput, setJoinCodeInput] = useState(initialRoomCode);
   const [copiedLink, setCopiedLink] = useState(false);
 
@@ -95,6 +96,7 @@ export default function LobbyScreen({
     onCreateRoom({
       relationshipType: selectedRel,
       sessionLength: selectedLength,
+      deckPack: selectedPack,
       roomCode: randomRoomCode,
       userName: myName
     });
@@ -121,6 +123,7 @@ export default function LobbyScreen({
     onStartSolo({
       relationshipType: selectedRel,
       sessionLength: selectedLength,
+      deckPack: selectedPack,
       p1Name: p1,
       p2Name: p2
     });
@@ -792,6 +795,90 @@ export default function LobbyScreen({
                     </button>
                   );
                 })}
+              </div>
+
+              {/* Deck Edition Selector */}
+              <div style={{ marginBottom: '20px' }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  marginBottom: '10px'
+                }}>
+                  <label style={{
+                    fontSize: '11px',
+                    fontWeight: '700',
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                    color: 'var(--color-muted)'
+                  }}>
+                    Card Deck Edition
+                  </label>
+                  <span style={{ fontSize: '10.5px', fontWeight: '800', color: 'var(--color-ink)' }}>
+                    {DECK_PACKS[selectedPack]?.badge}
+                  </span>
+                </div>
+
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(78px, 1fr))',
+                  gap: '6px'
+                }}>
+                  {Object.values(DECK_PACKS).map((pack) => {
+                    const isSelected = selectedPack === pack.id;
+                    return (
+                      <button
+                        key={pack.id}
+                        type="button"
+                        onClick={() => { playClickSound(); setSelectedPack(pack.id); }}
+                        style={{
+                          padding: '10px 4px',
+                          minHeight: '74px',
+                          borderRadius: 'var(--radius-md)',
+                          border: isSelected ? '2px solid #1C1917' : '1px solid var(--color-hairline)',
+                          background: isSelected ? '#FFFFFF' : 'var(--color-surface-subtle)',
+                          boxShadow: isSelected ? '0 4px 12px rgba(28, 25, 23, 0.12)' : 'none',
+                          cursor: 'pointer',
+                          textAlign: 'center',
+                          transition: 'all 0.18s cubic-bezier(0.16, 1, 0.3, 1)',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}
+                        title={pack.tagline}
+                      >
+                        <div style={{
+                          width: '26px',
+                          height: '26px',
+                          borderRadius: '50%',
+                          background: isSelected ? '#1C1917' : pack.color,
+                          color: isSelected ? '#FFFFFF' : '#1C1917',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '12px',
+                          fontWeight: '900',
+                          marginBottom: '4px',
+                          boxShadow: '0 1px 3px rgba(0,0,0,0.08)'
+                        }}>
+                          {pack.symbol}
+                        </div>
+                        <div style={{
+                          fontSize: '10.5px',
+                          fontWeight: isSelected ? '800' : '600',
+                          color: '#1C1917',
+                          lineHeight: 1.2
+                        }}>
+                          {pack.label.replace('Between', '').trim()}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+                <p style={{ fontSize: '11.5px', color: 'var(--color-muted)', marginTop: '8px', lineHeight: 1.35 }}>
+                  {DECK_PACKS[selectedPack]?.tagline}
+                </p>
               </div>
 
               {/* Random Room Code Preview */}

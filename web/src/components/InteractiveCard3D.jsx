@@ -135,7 +135,7 @@ export default function InteractiveCard3D({
           <>
             {/* FRONT FACE */}
             <div
-              className={`editorial-card ${isWildcard ? 'wildcard-card' : ''}`}
+              className={`tabletop-playing-card ${isWildcard ? 'wildcard-card' : ''}`}
               style={{
                 width: '100%',
                 position: isFlipped ? 'absolute' : 'relative',
@@ -145,24 +145,18 @@ export default function InteractiveCard3D({
                 WebkitBackfaceVisibility: 'hidden',
                 transform: 'rotateY(0deg) translateZ(1px)',
                 zIndex: isFlipped ? 1 : 2,
-                pointerEvents: isFlipped ? 'none' : 'auto',
-                boxShadow: isDragging
-                  ? '0 32px 72px -12px rgba(28, 25, 23, 0.2), 0 20px 32px -8px rgba(28, 25, 23, 0.12)'
-                  : (tilt.isHovered
-                      ? '0 28px 64px -12px rgba(28, 25, 23, 0.14), 0 16px 24px -8px rgba(28, 25, 23, 0.08)'
-                      : undefined)
+                pointerEvents: isFlipped ? 'none' : 'auto'
               }}
             >
               {renderSpecularSheen()}
-              {renderCornerMarks()}
-              <div style={{ position: 'relative', zIndex: 5 }}>
+              <div style={{ position: 'relative', zIndex: 5, width: '100%' }}>
                 {frontContent}
               </div>
             </div>
 
             {/* BACK FACE */}
             <div
-              className={`editorial-card ${isWildcard ? 'wildcard-card' : ''}`}
+              className={`tabletop-playing-card ${isWildcard ? 'wildcard-card' : ''}`}
               style={{
                 width: '100%',
                 position: isFlipped ? 'relative' : 'absolute',
@@ -172,24 +166,18 @@ export default function InteractiveCard3D({
                 WebkitBackfaceVisibility: 'hidden',
                 transform: 'rotateY(180deg) translateZ(1px)',
                 zIndex: isFlipped ? 2 : 1,
-                pointerEvents: isFlipped ? 'auto' : 'none',
-                boxShadow: isDragging
-                  ? '0 32px 72px -12px rgba(28, 25, 23, 0.2), 0 20px 32px -8px rgba(28, 25, 23, 0.12)'
-                  : (tilt.isHovered
-                      ? '0 28px 64px -12px rgba(28, 25, 23, 0.14), 0 16px 24px -8px rgba(28, 25, 23, 0.08)'
-                      : undefined)
+                pointerEvents: isFlipped ? 'auto' : 'none'
               }}
             >
               {renderSpecularSheen()}
-              {renderCornerMarks()}
-              <div style={{ position: 'relative', zIndex: 5 }}>
+              <div style={{ position: 'relative', zIndex: 5, width: '100%' }}>
                 {backContent}
               </div>
             </div>
           </>
         ) : (
           <div
-            className={`editorial-card ${isWildcard ? 'wildcard-card' : ''}`}
+            className={`tabletop-playing-card ${isWildcard ? 'wildcard-card' : ''}`}
             style={{
               position: 'relative',
               width: '100%',
@@ -198,8 +186,7 @@ export default function InteractiveCard3D({
             }}
           >
             {renderSpecularSheen()}
-            {renderCornerMarks()}
-            <div style={{ position: 'relative', zIndex: 5 }}>
+            <div style={{ position: 'relative', zIndex: 5, width: '100%' }}>
               {children}
             </div>
           </div>
