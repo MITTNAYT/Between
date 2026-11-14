@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { ArrowRightLeft } from 'lucide-react';
 import QuestionCard from './QuestionCard';
 import { getCardMascot, getCardThemeColor } from './CardMascots';
 import { playClickSound, playCardSlideSound } from '../utils/audio';
@@ -256,6 +257,27 @@ export default function CardDeckCarousel({
         {/* Right Peek Card (Next) */}
         {renderPeekCard(nextQuestion, 'right')}
       </div>
+
+      {/* Tabletop Wooden/Ivory Turn Token resting on the table below the deck */}
+      {onPassTurn && (
+        <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginTop: '2px', marginBottom: '6px' }}>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              playClickSound();
+              triggerHaptic('light');
+              onPassTurn?.();
+            }}
+            className="tabletop-turn-coin"
+            title="Click to pass turn to your partner"
+          >
+            <ArrowRightLeft size={13} strokeWidth={2.4} />
+            <span style={{ fontWeight: '800' }}>{turnIndicator}</span>
+            <span className="turn-coin-hint">· Tap to pass</span>
+          </button>
+        </div>
+      )}
     </div>
   );
 }

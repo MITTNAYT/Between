@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowRightLeft, Bookmark, Sparkles, Shuffle, RotateCw, Check, Flame, Clock, Play, X, Edit3 } from 'lucide-react';
 import InteractiveCard3D from './InteractiveCard3D';
-import { getCardMascot, getCardThemeColor } from './CardMascots';
+import { getCardMascot, getCardThemeColor, getCardStickerLabel } from './CardMascots';
 import { WILDCARD_INSPIRATIONS, getDigDeeperData } from '../utils/engine';
 import { playClickSound, playChimeSound, playHandshakeSound, playCardFlipSound, playCardShuffleSound } from '../utils/audio';
 import { triggerHaptic } from '../utils/haptics';
@@ -150,7 +150,7 @@ export default function QuestionCard({
         boxShadow: 'inset 0 0 0 1px rgba(255, 255, 255, 0.4)'
       }}
     >
-      {/* Top Header Row */}
+      {/* Top Header Row: Pure Tabletop Aesthetic matching reference photo */}
       <div style={{
         width: '100%',
         display: 'flex',
@@ -164,65 +164,39 @@ export default function QuestionCard({
           ★
         </div>
 
-        {/* Right: Turn Switcher Pill & Bookmark */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              playClickSound();
-              triggerHaptic('light');
-              onPassTurn?.();
-            }}
-            className="pill-badge pill-badge-surface"
-            style={{
-              cursor: 'pointer',
-              gap: '5px',
-              fontSize: '11.5px',
-              fontWeight: '700',
-              padding: '6px 12px',
-              background: '#FFFFFF',
-              color: '#1C1917',
-              border: '1px solid rgba(0, 0, 0, 0.08)',
-              boxShadow: '0 2px 5px rgba(0, 0, 0, 0.06)'
-            }}
-            title="Click to pass turn to your partner"
-          >
-            <ArrowRightLeft size={12} strokeWidth={2.4} />
-            <span>{turnIndicator}</span>
-          </button>
-
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              playClickSound();
-              onToggleBookmark?.();
-            }}
-            style={{
-              background: '#FFFFFF',
-              border: '1px solid rgba(28, 25, 23, 0.12)',
-              borderRadius: '50%',
-              cursor: 'pointer',
-              width: '32px',
-              height: '32px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: isBookmarked ? 'var(--color-ember)' : '#1C1917',
-              boxShadow: '0 2px 5px rgba(0, 0, 0, 0.06)',
-              transition: 'transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1)'
-            }}
-            onMouseDown={(e) => e.currentTarget.style.transform = 'scale(1.15)'}
-            onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
-            title={isBookmarked ? 'Moment saved to your hand' : 'Save this moment'}
-          >
-            <Bookmark
-              size={15}
-              strokeWidth={2.2}
-              fill={isBookmarked ? 'currentColor' : 'none'}
-              color={isBookmarked ? 'var(--color-ember)' : 'inherit'}
-            />
-          </button>
-        </div>
+        {/* Right: Tactile White Bookmark Coin Button */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            playClickSound();
+            onToggleBookmark?.();
+          }}
+          style={{
+            background: '#FFFFFF',
+            border: '1px solid rgba(28, 25, 23, 0.12)',
+            borderRadius: '50%',
+            cursor: 'pointer',
+            width: '32px',
+            height: '32px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: isBookmarked ? 'var(--color-ember)' : '#1C1917',
+            boxShadow: '0 2px 5px rgba(0, 0, 0, 0.06)',
+            transition: 'transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1)'
+          }}
+          onMouseDown={(e) => e.currentTarget.style.transform = 'scale(1.15)'}
+          onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
+          title={isBookmarked ? 'Moment saved to your hand' : 'Save this moment'}
+          aria-label={isBookmarked ? 'Remove bookmark' : 'Bookmark this card'}
+        >
+          <Bookmark
+            size={15}
+            strokeWidth={2.4}
+            fill={isBookmarked ? 'currentColor' : 'none'}
+            color={isBookmarked ? 'var(--color-ember)' : '#1C1917'}
+          />
+        </button>
       </div>
 
       {/* Center Hero Area: Handcrafted Ink Mascot directly matching reference card */}
@@ -230,25 +204,17 @@ export default function QuestionCard({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        margin: '4px 0 2px',
-        filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.08))',
+        margin: '6px 0 4px',
+        filter: 'drop-shadow(0 4px 10px rgba(0, 0, 0, 0.1))',
         userSelect: 'none'
       }}>
-        <Mascot size={104} />
+        <Mascot size={118} />
       </div>
 
       {/* White Sticker/Label Badge directly matching photo (e.g. DOWNCYCLING, NÄHCAFE, SPECKGÜRTEL) */}
-      <div style={{ margin: '2px 0 6px', userSelect: 'none' }}>
+      <div style={{ margin: '4px 0 6px', userSelect: 'none' }}>
         <div className="card-label-sticker">
-          <span>
-            {isWildcard
-              ? '★ WILDCARD · ASK ANYTHING ★'
-              : (isMystery
-                ? `SECRET · FROM ${question.author ? question.author.toUpperCase() : 'PARTNER'}`
-                : (question.category || 'BETWEEN')
-              )
-            }
-          </span>
+          <span>{getCardStickerLabel(question)}</span>
         </div>
       </div>
 

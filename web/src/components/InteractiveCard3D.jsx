@@ -69,12 +69,15 @@ export default function InteractiveCard3D({
     setTilt(prev => ({ ...prev, rotateX: 0, rotateY: 0, isHovered: false }));
   };
 
-  const dragRotation = dragOffset * 0.05;
+  const dragRotation = dragOffset * 0.045;
   const baseFlipAngle = isFlipped ? 180 : 0;
   
+  // Real Z-Axis Card Elevation & Tactile Physics
   const currentTransform = isDragging
-    ? `translateX(${dragOffset}px) rotateZ(${dragRotation}deg) rotateX(${tilt.rotateX * 0.5}deg) rotateY(${baseFlipAngle + tilt.rotateY * 0.5}deg) scale(0.985)`
-    : `rotateX(${tilt.rotateX}deg) rotateY(${baseFlipAngle + tilt.rotateY}deg) ${tilt.isHovered ? 'scale3d(1.015, 1.015, 1.015)' : 'scale3d(1, 1, 1)'}`;
+    ? `translateX(${dragOffset}px) translateZ(38px) rotateZ(${dragRotation}deg) rotateX(${tilt.rotateX * 0.45}deg) rotateY(${baseFlipAngle + tilt.rotateY * 0.45}deg) scale(0.99)`
+    : (tilt.isHovered
+        ? `translateZ(24px) rotateX(${tilt.rotateX}deg) rotateY(${baseFlipAngle + tilt.rotateY}deg) scale3d(1.012, 1.012, 1.012)`
+        : `translateZ(0px) rotateX(0deg) rotateY(${baseFlipAngle}deg) scale3d(1, 1, 1)`);
 
   const renderSpecularSheen = () => (
     <div
@@ -82,7 +85,7 @@ export default function InteractiveCard3D({
         position: 'absolute',
         inset: 0,
         pointerEvents: 'none',
-        background: `radial-gradient(circle 380px at ${tilt.glareX}% ${tilt.glareY}%, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0.12) 45%, rgba(255, 255, 255, 0) 75%)`,
+        background: `radial-gradient(circle 420px at ${tilt.glareX}% ${tilt.glareY}%, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.1) 45%, rgba(255, 255, 255, 0) 75%)`,
         opacity: tilt.isHovered || isDragging ? 1 : 0,
         transition: 'opacity 0.25s ease-out',
         zIndex: 1,
@@ -127,7 +130,7 @@ export default function InteractiveCard3D({
           transform: currentTransform,
           transition: isDragging 
             ? 'none' 
-            : 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease-out',
+            : 'transform 0.58s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
           cursor: isDragging ? 'grabbing' : 'grab'
         }}
       >
