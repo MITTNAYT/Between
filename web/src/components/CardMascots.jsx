@@ -1,26 +1,22 @@
 import React from 'react';
+import {
+  LovingDoodle,
+  CoffeeDoodle,
+  ReadingDoodle,
+  MeditatingDoodle,
+  DancingDoodle,
+  ChillingDoodle,
+  PettingDoodle,
+  PlantDoodle,
+  FloatDoodle,
+  GroovyDoodle,
+  ZombieingDoodle
+} from 'react-open-doodles';
 
 /**
  * Handcrafted black & white ink mascots faithfully complementing
- * German indie tabletop card aesthetics (stark organic ink strokes, bold silhouettes, comic linework).
- * Directly matches the reference cards from the photograph:
- * 1. Ghost ("Downcycling" - Vulnerability, Fears, Inner World)
- * 2. Pizza / Melting ("Speckgürtel" - Playful, Food, Quirks)
- * 3. Needle & Thread ("Nähcafe" - Origins, Crafting, Memory)
- * 4. Twin Ski Masks ("Upcycling" - Whispers, Unspoken, Intimacy)
- * 5. Bleichmonster ("Bleichmonster" - Secrets, Emerging Truths)
- * 6. Mitten ("Mottenfresser" - Habits, Comfort, Shared Home)
- * 7. Teacup ("Teestunde" - Deep Conversations, Presence, Warmth)
- * 8. Matchstick ("Zündholz" - Sparks, Chemistry, Passion, Wildcard)
- * 9. Origami Crane ("Papiervogel" - Dreams, Longing, Hopes)
- * 10. Hourglass ("Sanduhr" - Time, Memory, Growing Old Together)
- * 11. Cat Paw ("Samtpfote" - Playfulness, Curiosity, Softness)
- * 12. Vintage Lantern ("Laterne" - Truth, Guidance, Vulnerability)
- * 13. Love Letter ("Liebesbrief" - Written Thoughts, Confessions)
- * 14. Skeleton Key ("Schlüssel" - Unlocking Hearts, Mystery)
- * 15. Midnight Candle ("Kerzenschein" - Nighttime Whispers)
- * 16. Star Spark ("Sternfunke" - Future, Wonder, Connection)
- * 17. Mirrored Faces ("Spiegelbild" - Reflection, Self-Truth)
+ * German indie tabletop card aesthetics (stark organic ink strokes, bold silhouettes, comic linework)
+ * blended with authentic open-source hand-drawn doodles from Pablo Stanley (Open Doodles - CC0).
  */
 
 // 1. Ghost Mascot ("Downcycling" - Exact match to reference photo)
@@ -565,6 +561,100 @@ export function MirrorMascot({ size = 96, className = '' }) {
   );
 }
 
+// ============================================================================
+// AUTHENTIC HAND-DRAWN OPEN DOODLES (By Pablo Stanley - CC0 Public Domain)
+// ============================================================================
+
+// 18. Loving Doodle (Two figures embracing - Closeness, Love, Hugs)
+export function LovingDoodleMascot({ size = 96, className = '' }) {
+  return (
+    <div className={`mascot-animated doodle-container ${className}`} style={{ width: size, height: size, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <LovingDoodle ink="#1C1917" accent="#FFFFFF" />
+    </div>
+  );
+}
+
+// 19. Coffee Doodle (Holding a warm cup of coffee/tea - Presence, Warmup)
+export function CoffeeDoodleMascot({ size = 96, className = '' }) {
+  return (
+    <div className={`mascot-animated doodle-container ${className}`} style={{ width: size, height: size, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <CoffeeDoodle ink="#1C1917" accent="#FFFFFF" />
+    </div>
+  );
+}
+
+// 20. Reading Doodle (Reading a book/letter - Deep Thoughts, Reflection)
+export function ReadingDoodleMascot({ size = 96, className = '' }) {
+  return (
+    <div className={`mascot-animated doodle-container ${className}`} style={{ width: size, height: size, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <ReadingDoodle ink="#1C1917" accent="#FFFFFF" />
+    </div>
+  );
+}
+
+// 21. Meditating Doodle (Peaceful lotus meditation - Mindfulness, Fears, Solitude)
+export function MeditatingDoodleMascot({ size = 96, className = '' }) {
+  return (
+    <div className={`mascot-animated doodle-container ${className}`} style={{ width: size, height: size, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <MeditatingDoodle ink="#1C1917" accent="#FFFFFF" />
+    </div>
+  );
+}
+
+// 22. Dancing Doodle (Joyful dancing figure - Fun, Energy, Sparks)
+export function DancingDoodleMascot({ size = 96, className = '' }) {
+  return (
+    <div className={`mascot-animated doodle-container ${className}`} style={{ width: size, height: size, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <DancingDoodle ink="#1C1917" accent="#FFFFFF" />
+    </div>
+  );
+}
+
+// 23. Chilling Doodle (Relaxed lounge pose - Comfort, Habits, Home)
+export function ChillingDoodleMascot({ size = 96, className = '' }) {
+  return (
+    <div className={`mascot-animated doodle-container ${className}`} style={{ width: size, height: size, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <ChillingDoodle ink="#1C1917" accent="#FFFFFF" />
+    </div>
+  );
+}
+
+// 24. Petting Doodle (Petting a companion animal - Softness, Pets, Gentle touch)
+export function PettingDoodleMascot({ size = 96, className = '' }) {
+  return (
+    <div className={`mascot-animated doodle-container ${className}`} style={{ width: size, height: size, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <PettingDoodle ink="#1C1917" accent="#FFFFFF" />
+    </div>
+  );
+}
+
+// 25. Plant Doodle (Holding a houseplant - Growth, Shared Roots, Growing Old)
+export function PlantDoodleMascot({ size = 96, className = '' }) {
+  return (
+    <div className={`mascot-animated doodle-container ${className}`} style={{ width: size, height: size, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <PlantDoodle ink="#1C1917" accent="#FFFFFF" />
+    </div>
+  );
+}
+
+// 26. Float Doodle (Floating dreamily in the air - Dreams, Flight, Longing)
+export function FloatDoodleMascot({ size = 96, className = '' }) {
+  return (
+    <div className={`mascot-animated doodle-container ${className}`} style={{ width: size, height: size, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <FloatDoodle ink="#1C1917" accent="#FFFFFF" />
+    </div>
+  );
+}
+
+// 27. Groovy Doodle (Fun quirky dance pose - Chemistry, Quirks)
+export function GroovyDoodleMascot({ size = 96, className = '' }) {
+  return (
+    <div className={`mascot-animated doodle-container ${className}`} style={{ width: size, height: size, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <GroovyDoodle ink="#1C1917" accent="#FFFFFF" />
+    </div>
+  );
+}
+
 // Aliases for backwards compatibility
 export const HoodsMascot = SkiMasksMascot;
 export const MeltingMascot = PizzaMascot;
@@ -584,8 +674,8 @@ export function getCardThemeColor(question) {
 }
 
 /**
- * Intelligent mascot selector matching question category, phase, text keywords & depth
- * Spreads all 17 handcrafted ink drawings beautifully across the cards!
+ * Intelligent mascot selector matching question category, phase, text keywords & depth.
+ * Blends authentic German tabletop ink cards with Pablo Stanley's Open Doodles from the web!
  */
 export function getCardMascot(category = '', questionId = '', depth = 1) {
   const cat = (category || '').toUpperCase();
@@ -596,31 +686,31 @@ export function getCardMascot(category = '', questionId = '', depth = 1) {
   if (id.includes('MIDNIGHT')) return CandleMascot;
 
   // Thematic mappings
-  if (cat.includes('TEA') || cat.includes('CONVERS') || cat.includes('WARM')) return TeacupMascot;
-  if (cat.includes('SPARK') || cat.includes('CHEM') || cat.includes('PASSION')) return MatchstickMascot;
-  if (cat.includes('DREAM') || cat.includes('FLY') || cat.includes('HOPE')) return OrigamiCraneMascot;
-  if (cat.includes('TIME') || cat.includes('YEAR') || cat.includes('AGE') || cat.includes('GROW')) return HourglassMascot;
-  if (cat.includes('LETTER') || cat.includes('WRITE') || cat.includes('WORDS') || cat.includes('CONFESS')) return LoveLetterMascot;
+  if (cat.includes('TEA') || cat.includes('CONVERS') || cat.includes('WARM')) return CoffeeDoodleMascot;
+  if (cat.includes('SPARK') || cat.includes('CHEM') || cat.includes('PASSION')) return DancingDoodleMascot;
+  if (cat.includes('DREAM') || cat.includes('FLY') || cat.includes('HOPE')) return FloatDoodleMascot;
+  if (cat.includes('TIME') || cat.includes('YEAR') || cat.includes('AGE') || cat.includes('GROW')) return PlantDoodleMascot;
+  if (cat.includes('LETTER') || cat.includes('WRITE') || cat.includes('WORDS') || cat.includes('CONFESS')) return ReadingDoodleMascot;
   if (cat.includes('KEY') || cat.includes('LOCK') || cat.includes('DOOR') || cat.includes('SAFE')) return SkeletonKeyMascot;
-  if (cat.includes('CAT') || cat.includes('PET') || cat.includes('SOFT') || cat.includes('TOUCH')) return CatPawMascot;
+  if (cat.includes('CAT') || cat.includes('PET') || cat.includes('SOFT') || cat.includes('TOUCH')) return PettingDoodleMascot;
   if (cat.includes('LIGHT') || cat.includes('LANTERN') || cat.includes('NIGHT')) return VintageLanternMascot;
 
   if (cat.includes('FEAR') || cat.includes('VULNER') || cat.includes('CONFLICT')) return GhostMascot;
-  if (cat.includes('INTIM') || cat.includes('TALK') || cat.includes('UNSPOKEN')) return SkiMasksMascot;
+  if (cat.includes('INTIM') || cat.includes('TALK') || cat.includes('UNSPOKEN')) return LovingDoodleMascot;
   if (cat.includes('MEMOR') || cat.includes('ORIGIN') || cat.includes('ROOTS') || cat.includes('PAST')) return NeedleMascot;
   if (cat.includes('PLAY') || cat.includes('HABIT') || cat.includes('QUIRK') || cat.includes('FOOD')) return PizzaMascot;
   if (cat.includes('SECRET') || cat.includes('MYSTERY')) return BleichmonsterMascot;
-  if (cat.includes('COMFORT') || cat.includes('HOME') || cat.includes('US')) return MittenMascot;
+  if (cat.includes('COMFORT') || cat.includes('HOME') || cat.includes('US')) return ChillingDoodleMascot;
   if (cat.includes('FUTURE') || cat.includes('GOAL')) return SparkMascot;
-  if (cat.includes('IDENT') || cat.includes('TRUTH') || cat.includes('SELF')) return MirrorMascot;
+  if (cat.includes('IDENT') || cat.includes('TRUTH') || cat.includes('SELF')) return MeditatingDoodleMascot;
 
   // Depth-based distribution if no direct keyword match
   const depthMascots = [
-    [TeacupMascot, PizzaMascot, CatPawMascot, LoveLetterMascot],     // Depth 1 (Warmup & Playful)
-    [NeedleMascot, MittenMascot, HourglassMascot, SparkMascot],      // Depth 2 (Connection & Origins)
-    [SkiMasksMascot, MatchstickMascot, OrigamiCraneMascot],         // Depth 3 (Intimacy & Chemistry)
-    [GhostMascot, VintageLanternMascot, SkeletonKeyMascot],         // Depth 4 (Vulnerability & Truth)
-    [BleichmonsterMascot, CandleMascot, MirrorMascot]               // Depth 5 (Midnight & Secrets)
+    [CoffeeDoodleMascot, PizzaMascot, PettingDoodleMascot, TeacupMascot],      // Depth 1 (Warmup & Playful)
+    [NeedleMascot, ChillingDoodleMascot, PlantDoodleMascot, MittenMascot],     // Depth 2 (Connection & Origins)
+    [LovingDoodleMascot, DancingDoodleMascot, SkiMasksMascot, MatchstickMascot], // Depth 3 (Intimacy & Chemistry)
+    [GhostMascot, MeditatingDoodleMascot, ReadingDoodleMascot, SkeletonKeyMascot], // Depth 4 (Vulnerability & Truth)
+    [BleichmonsterMascot, CandleMascot, FloatDoodleMascot, MirrorMascot]       // Depth 5 (Midnight & Secrets)
   ];
 
   const pool = depthMascots[Math.min(4, Math.max(0, depth - 1))] || depthMascots[0];

@@ -654,6 +654,22 @@ input, textarea, select {
     0 0 32px rgba(224, 86, 56, 0.2);
 }
 
+/* Hand-drawn Doodles & Mascots Container */
+.doodle-container {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.doodle-container svg {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.08));
+}
+
 /* Crisp White Sticker/Label Badge directly matching the German card photo (e.g. DOWNCYCLING, NÄHCAFE) */
 .card-label-sticker {
   background: #FFFFFF;
