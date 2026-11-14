@@ -700,26 +700,47 @@ export default function LobbyScreen({
                       onClick={() => { playClickSound(); setSelectedRel(rel.id); }}
                       style={{
                         padding: '12px 6px',
-                        minHeight: '78px',
+                        minHeight: '84px',
                         borderRadius: 'var(--radius-md)',
-                        border: isSelected ? `1.5px solid ${rel.color}` : '1px solid var(--color-hairline)',
-                        background: isSelected ? 'var(--color-surface)' : 'var(--color-surface-subtle)',
+                        border: isSelected ? '2px solid #1C1917' : '1px solid var(--color-hairline)',
+                        background: isSelected ? '#FFFFFF' : 'var(--color-surface-subtle)',
                         boxShadow: isSelected 
-                          ? `0 0 16px ${rel.color}25, 0 1px 0 rgba(255,255,255,0.7) inset, var(--shadow-sm)` 
+                          ? '0 6px 16px -4px rgba(28, 25, 23, 0.12), 0 1px 0 rgba(255,255,255,0.9) inset' 
                           : 'none',
                         cursor: 'pointer',
                         textAlign: 'center',
                         transition: 'all 0.2s',
-                        touchAction: 'manipulation'
+                        touchAction: 'manipulation',
+                        position: 'relative',
+                        transform: isSelected ? 'scale(1.02)' : 'scale(1)'
                       }}
                     >
+                      {isSelected && (
+                        <div style={{
+                          position: 'absolute',
+                          top: '6px',
+                          left: '6px',
+                          width: '16px',
+                          height: '16px',
+                          borderRadius: '50%',
+                          background: '#1C1917',
+                          color: '#FFFFFF',
+                          fontSize: '9px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontWeight: '900',
+                          lineHeight: 1
+                        }}>
+                          ★
+                        </div>
+                      )}
                       <div style={{
                         width: '32px',
                         height: '32px',
                         borderRadius: '50%',
                         background: isSelected ? `${rel.color}22` : 'rgba(0,0,0,0.03)',
                         border: isSelected ? `1.5px solid ${rel.color}` : '1px solid var(--color-hairline)',
-                        boxShadow: isSelected ? `0 0 10px ${rel.color}35` : 'none',
                         color: rel.color,
                         display: 'flex',
                         alignItems: 'center',
@@ -731,7 +752,7 @@ export default function LobbyScreen({
                       </div>
                       <div style={{
                         fontSize: 'clamp(11px, 2.9vw, 12.5px)',
-                        fontWeight: isSelected ? '700' : '600',
+                        fontWeight: isSelected ? '800' : '600',
                         color: isSelected ? 'var(--color-ink)' : 'var(--color-body)',
                         whiteSpace: 'nowrap',
                         overflow: 'hidden',

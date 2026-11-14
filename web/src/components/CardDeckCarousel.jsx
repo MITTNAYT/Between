@@ -182,18 +182,8 @@ export default function CardDeckCarousel({
               <Mascot size={76} />
             </div>
 
-            {/* Pill Tag */}
-            <div style={{
-              background: '#FFFFFF',
-              color: '#1C1917',
-              padding: '4px 12px',
-              borderRadius: '9999px',
-              fontSize: '10px',
-              fontWeight: '800',
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              boxShadow: '0 2px 4px rgba(0,0,0,0.06)'
-            }}>
+            {/* Sticker Label */}
+            <div className="card-label-sticker" style={{ fontSize: '9.5px', padding: '3px 10px' }}>
               {isWildcard ? 'WILDCARD' : (q.category || 'BETWEEN')}
             </div>
 

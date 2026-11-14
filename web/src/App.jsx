@@ -30,12 +30,12 @@ export default function App() {
   const [hostName, setHostName] = useState(() => localStorage.getItem('between_host_name') || localStorage.getItem('between_user_name') || 'Partner 1');
   const [guestName, setGuestName] = useState(() => localStorage.getItem('between_guest_name') || 'Partner 2');
 
-  // Theme: 'candlelight' | 'sandstone'
+  // Theme: 'tabletop' (default clean linen & powder blue tabletop) | 'candlelight' (warm night ambiance)
   const [theme, setTheme] = useState(() => {
     const saved = localStorage.getItem('between_theme');
-    if (!saved || saved === 'sandstone') {
-      localStorage.setItem('between_theme', 'candlelight');
-      return 'candlelight';
+    if (!saved || saved === 'sandstone' || saved === 'candlelight') {
+      localStorage.setItem('between_theme', 'tabletop');
+      return 'tabletop';
     }
     return saved;
   });
@@ -102,7 +102,7 @@ export default function App() {
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme(prev => prev === 'candlelight' ? 'sandstone' : 'candlelight');
+    setTheme(prev => prev === 'candlelight' ? 'tabletop' : 'candlelight');
   };
 
   // Keep a ref to current state for peer callbacks

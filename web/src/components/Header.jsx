@@ -370,7 +370,7 @@ export default function Header({
             onToggleTheme?.();
           }}
           aria-label="Toggle Candlelight Mode"
-          title={theme === 'candlelight' ? 'Candlelight Theme Active (Click for Sandstone)' : 'Switch to Candlelight Theme'}
+          title={theme === 'candlelight' ? 'Candlelight Evening Active (Click for Tabletop Day)' : 'Switch to Candlelight Evening'}
           style={{
             minWidth: '38px',
             minHeight: '38px',

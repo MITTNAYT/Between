@@ -4,6 +4,7 @@ import confetti from 'canvas-confetti';
 import { playClickSound, playHandshakeSound } from '../utils/audio';
 import { RELATIONSHIP_TYPES } from '../utils/engine';
 import { downloadCardAsPng } from '../utils/cardExporter';
+import { getCardThemeColor, getCardMascot } from './CardMascots';
 
 export default function ClosingScreen({
   bookmarkedMoments = [],
@@ -387,51 +388,110 @@ export default function ClosingScreen({
             No questions were starred this session. Every conversation has its own rhythm.
           </p>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            {bookmarkedMoments.map((item, idx) => (
-              <div
-                key={item.id || idx}
-                style={{
-                  padding: '12px 14px',
-                  background: 'var(--color-surface-subtle)',
-                  borderRadius: 'var(--radius-sm)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  gap: '12px'
-                }}
-              >
-                <p style={{
-                  fontSize: '13.5px',
-                  lineHeight: '1.45',
-                  color: 'var(--color-ink)',
-                  fontFamily: 'var(--font-serif)',
-                  margin: 0,
-                  flex: 1
-                }}>
-                  “{item.text}”
-                </p>
-                <button
-                  onClick={() => {
-                    playClickSound();
-                    downloadCardAsPng(item);
-                  }}
-                  className="pill-badge pill-badge-surface"
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+            gap: '14px'
+          }}>
+            {bookmarkedMoments.map((item, idx) => {
+              const themeColor = getCardThemeColor(item);
+              const Mascot = getCardMascot(item.category, item.id, item.depth);
+              const isWildcard = item.isWildcard || item.id?.startsWith('wildcard');
+
+              return (
+                <div
+                  key={item.id || idx}
                   style={{
-                    cursor: 'pointer',
-                    gap: '4px',
-                    fontSize: '11px',
-                    fontWeight: '700',
-                    padding: '4px 10px',
-                    flexShrink: 0
+                    background: '#FFFFFF',
+                    borderRadius: '18px',
+                    padding: '8px',
+                    border: '1px solid rgba(0, 0, 0, 0.08)',
+                    boxShadow: '0 6px 16px -4px rgba(28, 25, 23, 0.1)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    transition: 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                    position: 'relative'
                   }}
-                  title="Download this moment as a physical mini card PNG"
+                  onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-3px)'}
+                  onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
                 >
-                  <Download size={11} strokeWidth={2.4} />
-                  <span>Mini Card</span>
-                </button>
-              </div>
-            ))}
+                  {/* Inner Powder Blue Block */}
+                  <div style={{
+                    background: themeColor,
+                    borderRadius: '12px',
+                    padding: '10px 10px 12px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    minHeight: '230px',
+                    textAlign: 'center',
+                    border: '1px solid rgba(0, 0, 0, 0.05)'
+                  }}>
+                    {/* Top Row: Star Badge & Download Button */}
+                    <div style={{
+                      width: '100%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      marginBottom: '4px'
+                    }}>
+                      <div className="tabletop-star-badge" style={{ width: '22px', height: '22px', fontSize: '11px' }}>
+                        ★
+                      </div>
+                      <button
+                        onClick={() => {
+                          playClickSound();
+                          downloadCardAsPng(item);
+                        }}
+                        style={{
+                          background: 'rgba(255, 255, 255, 0.88)',
+                          border: '1px solid rgba(28, 25, 23, 0.12)',
+                          borderRadius: '50%',
+                          width: '26px',
+                          height: '26px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          cursor: 'pointer',
+                          color: '#1C1917',
+                          boxShadow: '0 1px 3px rgba(0,0,0,0.06)'
+                        }}
+                        title="Download this physical mini card PNG"
+                      >
+                        <Download size={13} strokeWidth={2.4} />
+                      </button>
+                    </div>
+
+                    {/* Mini Mascot */}
+                    <div style={{ margin: '2px 0' }}>
+                      <Mascot size={64} />
+                    </div>
+
+                    {/* White Sticker Label */}
+                    <div className="card-label-sticker" style={{ fontSize: '9px', padding: '3px 8px', margin: '4px 0' }}>
+                      {isWildcard ? 'WILDCARD' : (item.category || 'BETWEEN')}
+                    </div>
+
+                    {/* Prompt snippet */}
+                    <p style={{
+                      fontFamily: 'var(--font-sans)',
+                      fontSize: '11.5px',
+                      fontWeight: '600',
+                      lineHeight: '1.4',
+                      color: '#1C1917',
+                      margin: '4px 0 0',
+                      display: '-webkit-box',
+                      WebkitLineClamp: 3,
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden'
+                    }}>
+                      “{item.text}”
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>

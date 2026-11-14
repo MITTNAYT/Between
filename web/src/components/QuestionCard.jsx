@@ -185,26 +185,7 @@ export default function QuestionCard({
       }}>
         {/* Left: Tabletop Star Circle Badge + Turn Indicator */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <div
-            style={{
-              width: '28px',
-              height: '28px',
-              borderRadius: '50%',
-              background: '#1C1917',
-              color: '#FFFFFF',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '14px',
-              fontWeight: '900',
-              lineHeight: 1,
-              boxShadow: '0 2px 5px rgba(0, 0, 0, 0.2)',
-              userSelect: 'none',
-              flexShrink: 0
-            }}
-            title="Between Tabletop Deck"
-            aria-hidden="true"
-          >
+          <div className="tabletop-star-badge" title="Between Tabletop Deck" aria-hidden="true">
             ★
           </div>
 
@@ -323,48 +304,34 @@ export default function QuestionCard({
         </div>
       </div>
 
-      {/* Center Hero Area: Handcrafted Ink Mascot */}
+      {/* Center Hero Area: Handcrafted Ink Mascot directly matching reference card */}
       <div style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        margin: '6px 0 2px',
-        filter: 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.05))',
+        margin: '4px 0 2px',
+        filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.08))',
         userSelect: 'none'
       }}>
-        <Mascot size={90} />
+        <Mascot size={104} />
       </div>
 
-      {/* Floating Category Pill Tag (White Grotesque Tag) */}
-      <div style={{
-        background: '#FFFFFF',
-        color: '#1C1917',
-        padding: '5px 16px',
-        borderRadius: '9999px',
-        fontSize: '11px',
-        fontWeight: '800',
-        letterSpacing: '0.08em',
-        textTransform: 'uppercase',
-        boxShadow: '0 2px 6px rgba(0, 0, 0, 0.08)',
-        border: '1px solid rgba(0, 0, 0, 0.08)',
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: '6px',
-        margin: '2px 0 8px',
-        userSelect: 'none'
-      }}>
-        <span>
-          {isWildcard
-            ? 'WILDCARD · ASK ANYTHING'
-            : (isMystery
-              ? `SECRET · FROM ${question.author ? question.author.toUpperCase() : 'PARTNER'}`
-              : (question.category || 'BETWEEN')
-            )
-          }
-        </span>
+      {/* White Sticker/Label Badge directly matching photo (e.g. DOWNCYCLING, NÄHCAFE, SPECKGÜRTEL) */}
+      <div style={{ margin: '2px 0 8px', userSelect: 'none' }}>
+        <div className="card-label-sticker">
+          <span>
+            {isWildcard
+              ? 'WILDCARD · ASK ANYTHING'
+              : (isMystery
+                ? `SECRET · FROM ${question.author ? question.author.toUpperCase() : 'PARTNER'}`
+                : (question.category || 'BETWEEN')
+              )
+            }
+          </span>
+        </div>
       </div>
 
-      {/* Main Question Text */}
+      {/* Main Question Text: High-contrast, clean sans-serif matching German card prompts */}
       <div style={{
         flex: '1',
         display: 'flex',
@@ -372,17 +339,11 @@ export default function QuestionCard({
         alignItems: 'center',
         justifyContent: 'center',
         width: '100%',
-        padding: '4px 6px 8px'
+        padding: '2px 6px 6px'
       }}>
-        <h2 style={{
-          fontFamily: 'var(--font-sans)',
-          fontSize: 'clamp(15.5px, 3.8vw, 20px)',
-          fontWeight: '700',
-          lineHeight: '1.42',
-          color: '#1C1917',
-          maxWidth: '420px',
+        <h2 className="card-prompt-text" style={{
+          maxWidth: '430px',
           margin: 0,
-          letterSpacing: '-0.01em',
           textAlign: 'center'
         }}>
           {isWildcard
@@ -649,26 +610,7 @@ export default function QuestionCard({
       }}>
         {/* Left: Tabletop Star Circle Badge + Sub Tabs */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <div
-            style={{
-              width: '28px',
-              height: '28px',
-              borderRadius: '50%',
-              background: '#1C1917',
-              color: '#FFFFFF',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '14px',
-              fontWeight: '900',
-              lineHeight: 1,
-              boxShadow: '0 2px 5px rgba(0, 0, 0, 0.2)',
-              userSelect: 'none',
-              flexShrink: 0
-            }}
-            title="Between Tabletop Deck (Reverse)"
-            aria-hidden="true"
-          >
+          <div className="tabletop-star-badge" title="Between Tabletop Deck (Reverse)" aria-hidden="true">
             ★
           </div>
 

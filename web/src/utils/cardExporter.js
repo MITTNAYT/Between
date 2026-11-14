@@ -166,26 +166,26 @@ export async function renderCardToCanvas(question, options = {}) {
   // 5. Center Handcrafted Mascot Illustration
   drawMascot(ctx, question.category, 400, 310, 2.2);
 
-  // 6. Floating Category Pill Tag (White Grotesque Pill)
+  // 6. White Label Sticker (matching physical card sticker)
   ctx.font = '800 19px "Plus Jakarta Sans", sans-serif';
   const tagMetrics = ctx.measureText(category);
-  const pillWidth = Math.max(tagMetrics.width + 48, 180);
-  const pillHeight = 48;
+  const pillWidth = Math.max(tagMetrics.width + 44, 170);
+  const pillHeight = 44;
   const pillX = 400 - pillWidth / 2;
   const pillY = 490;
 
   ctx.save();
   ctx.shadowColor = 'rgba(28, 25, 23, 0.08)';
-  ctx.shadowBlur = 10;
+  ctx.shadowBlur = 8;
   ctx.shadowOffsetY = 3;
-  drawRoundedRect(ctx, pillX, pillY, pillWidth, pillHeight, 24);
+  drawRoundedRect(ctx, pillX, pillY, pillWidth, pillHeight, 8);
   ctx.fillStyle = '#FFFFFF';
   ctx.fill();
   ctx.restore();
 
   ctx.strokeStyle = 'rgba(28, 25, 23, 0.08)';
   ctx.lineWidth = 1.5;
-  drawRoundedRect(ctx, pillX, pillY, pillWidth, pillHeight, 24);
+  drawRoundedRect(ctx, pillX, pillY, pillWidth, pillHeight, 8);
   ctx.stroke();
 
   // Category Tag Text
