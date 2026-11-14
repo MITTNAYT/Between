@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRightLeft, Bookmark, Sparkles, Shuffle, ChevronDown, ChevronUp, RotateCw, Check, Flame, Clock, Play } from 'lucide-react';
+import { ArrowRightLeft, Bookmark, Sparkles, Shuffle, RotateCw, Check, Flame, Clock, Play, X, Edit3 } from 'lucide-react';
 import InteractiveCard3D from './InteractiveCard3D';
 import { getCardMascot, getCardThemeColor } from './CardMascots';
 import { WILDCARD_INSPIRATIONS, getDigDeeperData } from '../utils/engine';
@@ -24,12 +24,11 @@ export default function QuestionCard({
   isPartnerSpeaking = false
 }) {
   const [isFlipped, setIsFlipped] = useState(false);
-  const [hintExpanded, setHintExpanded] = useState(false);
   const [selectedWildcardPrompt, setSelectedWildcardPrompt] = useState(wildcardPrompt || null);
   const [customWildcardInput, setCustomWildcardInput] = useState('');
-  const [showCustomInput, setShowCustomInput] = useState(false);
+  const [showCustomModal, setShowCustomModal] = useState(false);
 
-  // Dig Deeper & Micro-Challenge State (Tailored to question & Open Space / online play)
+  // Dig Deeper & Micro-Challenge State
   const digDeeperData = getDigDeeperData(question, false);
   const [challengeOffset, setChallengeOffset] = useState(0);
   const challengeList = digDeeperData.challenges || [digDeeperData.challenge];
@@ -79,7 +78,6 @@ export default function QuestionCard({
   const allPrompts = WILDCARD_INSPIRATIONS[relationshipType] || WILDCARD_INSPIRATIONS.COUPLE;
 
   const [wildcardOffset, setWildcardOffset] = useState(() => Math.floor(Math.random() * (allPrompts.length || 6)));
-  const [noteText, setNoteText] = useState('');
 
   // Keep in sync if peer selected a wildcard prompt
   useEffect(() => {
@@ -88,47 +86,51 @@ export default function QuestionCard({
     }
   }, [wildcardPrompt]);
 
-  const currentVisiblePrompts = [
-    allPrompts[wildcardOffset % allPrompts.length],
-    allPrompts[(wildcardOffset + 1) % allPrompts.length],
-    allPrompts[(wildcardOffset + 2) % allPrompts.length]
-  ];
+  // Initialize wildcard prompt if empty
+  useEffect(() => {
+    if (isWildcard && !selectedWildcardPrompt && !wildcardPrompt && allPrompts.length > 0) {
+      const initialPrompt = allPrompts[wildcardOffset % allPrompts.length];
+      setSelectedWildcardPrompt(initialPrompt);
+    }
+  }, [isWildcard, selectedWildcardPrompt, wildcardPrompt, wildcardOffset, allPrompts]);
 
-  const handleShuffleWildcard = () => {
+  const handleShuffleWildcard = (e) => {
+    if (e) e.stopPropagation();
     playCardShuffleSound();
     triggerHaptic('medium');
-    setWildcardOffset(Math.floor(Math.random() * allPrompts.length));
+    const nextOffset = (wildcardOffset + 1) % allPrompts.length;
+    setWildcardOffset(nextOffset);
+    const nextPrompt = allPrompts[nextOffset];
+    setSelectedWildcardPrompt(nextPrompt);
+    onSelectWildcardPrompt?.(nextPrompt);
   };
 
-  const handleSelectPrompt = (prompt) => {
-    playChimeSound();
-    setSelectedWildcardPrompt(prompt);
-    onSelectWildcardPrompt?.(prompt);
-  };
-
-  const handleApplyCustomWildcard = () => {
+  const handleApplyCustomWildcard = (e) => {
+    if (e) e.preventDefault();
     if (!customWildcardInput.trim()) return;
     playChimeSound();
+    triggerHaptic('success');
     const custom = customWildcardInput.trim();
     setSelectedWildcardPrompt(custom);
     onSelectWildcardPrompt?.(custom);
-    setShowCustomInput(false);
+    setShowCustomModal(false);
   };
 
-  const toggleFlip = () => {
+  const toggleFlip = (e) => {
+    if (e) e.stopPropagation();
     playCardFlipSound();
     triggerHaptic('light');
     setIsFlipped(prev => !prev);
   };
 
   const activeQuestionText = isWildcard
-    ? (wildcardPrompt || selectedWildcardPrompt || question.text)
+    ? (wildcardPrompt || selectedWildcardPrompt || allPrompts[wildcardOffset % allPrompts.length] || question.text)
     : question.text;
 
   const themeColor = getCardThemeColor(question);
   const Mascot = getCardMascot(question?.category, question?.id, question?.depth);
 
-  // FRONT CONTENT (Tabletop Playing Card Face)
+  // FRONT CONTENT (Authentic Tabletop Playing Card Face)
   const frontContent = (
     <div
       className="card-face-canvas"
@@ -155,9 +157,9 @@ export default function QuestionCard({
         alignItems: 'center',
         justifyContent: 'space-between',
         gap: '8px',
-        marginBottom: '6px'
+        marginBottom: '4px'
       }}>
-        {/* Left: Tabletop Star Circle Badge */}
+        {/* Left: Tabletop Star Circle Badge matching photo */}
         <div className="tabletop-star-badge" title="Between Tabletop Deck" aria-hidden="true">
           ★
         </div>
@@ -165,7 +167,8 @@ export default function QuestionCard({
         {/* Right: Turn Switcher Pill & Bookmark */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <button
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               playClickSound();
               triggerHaptic('light');
               onPassTurn?.();
@@ -189,7 +192,8 @@ export default function QuestionCard({
           </button>
 
           <button
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               playClickSound();
               onToggleBookmark?.();
             }}
@@ -234,11 +238,11 @@ export default function QuestionCard({
       </div>
 
       {/* White Sticker/Label Badge directly matching photo (e.g. DOWNCYCLING, NÄHCAFE, SPECKGÜRTEL) */}
-      <div style={{ margin: '2px 0 8px', userSelect: 'none' }}>
+      <div style={{ margin: '2px 0 6px', userSelect: 'none' }}>
         <div className="card-label-sticker">
           <span>
             {isWildcard
-              ? 'WILDCARD · ASK ANYTHING'
+              ? '★ WILDCARD · ASK ANYTHING ★'
               : (isMystery
                 ? `SECRET · FROM ${question.author ? question.author.toUpperCase() : 'PARTNER'}`
                 : (question.category || 'BETWEEN')
@@ -248,7 +252,7 @@ export default function QuestionCard({
         </div>
       </div>
 
-      {/* Main Question Text: High-contrast, clean sans-serif matching German card prompts */}
+      {/* Main Question Text: High-contrast, clean modern font matching German card prompts */}
       <div style={{
         flex: '1',
         display: 'flex',
@@ -256,7 +260,7 @@ export default function QuestionCard({
         alignItems: 'center',
         justifyContent: 'center',
         width: '100%',
-        padding: '2px 6px 6px'
+        padding: '4px 8px 6px'
       }}>
         <h2 className="card-prompt-text" style={{
           maxWidth: '430px',
@@ -270,137 +274,62 @@ export default function QuestionCard({
         </h2>
       </div>
 
-      {/* Wildcard: Interactive Random Chooser */}
+      {/* Wildcard Tactile Action Pills (Keeps the card face completely clean & physical!) */}
       {isWildcard && (
-        <div style={{ width: '100%', marginTop: '8px' }}>
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginBottom: '8px'
-          }}>
-            <span style={{ fontSize: '10.5px', fontWeight: '800', color: '#1C1917', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-              Choose a question to ask:
-            </span>
-            <button
-              onClick={handleShuffleWildcard}
-              className="btn-secondary"
-              style={{
-                padding: '3px 8px',
-                fontSize: '11px',
-                gap: '4px',
-                background: '#FFFFFF',
-                borderColor: 'rgba(28, 25, 23, 0.15)',
-                color: '#1C1917'
-              }}
-              title="Roll 3 new random questions"
-            >
-              <Shuffle size={11} strokeWidth={2.4} />
-              <span>Roll 3 More</span>
-            </button>
-          </div>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '8px',
+          width: '100%',
+          margin: '6px 0 4px',
+          userSelect: 'none'
+        }}>
+          <button
+            type="button"
+            onClick={handleShuffleWildcard}
+            className="btn-secondary"
+            style={{
+              padding: '6px 14px',
+              fontSize: '11.5px',
+              fontWeight: '700',
+              gap: '5px',
+              background: '#FFFFFF',
+              borderColor: 'rgba(28, 25, 23, 0.15)',
+              color: '#1C1917',
+              boxShadow: '0 2px 5px rgba(0, 0, 0, 0.06)',
+              borderRadius: '9999px'
+            }}
+            title="Shuffle to another wildcard question"
+          >
+            <Shuffle size={12} strokeWidth={2.4} />
+            <span>Inspire Me</span>
+          </button>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            {currentVisiblePrompts.map((promptText, idx) => {
-              const isSelected = (selectedWildcardPrompt === promptText) || (wildcardPrompt === promptText);
-              return (
-                <button
-                  key={idx}
-                  onClick={() => handleSelectPrompt(promptText)}
-                  style={{
-                    padding: '8px 12px',
-                    borderRadius: '8px',
-                    border: isSelected ? '1.5px solid #1C1917' : '1px solid rgba(28, 25, 23, 0.1)',
-                    background: isSelected ? '#FFFFFF' : 'rgba(255, 255, 255, 0.75)',
-                    color: '#1C1917',
-                    fontSize: '12.5px',
-                    textAlign: 'left',
-                    lineHeight: '1.35',
-                    cursor: 'pointer',
-                    transition: 'all 0.15s',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    gap: '8px',
-                    boxShadow: isSelected ? '0 2px 6px rgba(0, 0, 0, 0.08)' : 'none'
-                  }}
-                >
-                  <span>“{promptText}”</span>
-                  {isSelected && (
-                    <span style={{
-                      fontSize: '9.5px',
-                      fontWeight: '800',
-                      background: '#1C1917',
-                      color: '#FFF',
-                      padding: '2px 6px',
-                      borderRadius: '9999px',
-                      whiteSpace: 'nowrap'
-                    }}>
-                      Chosen
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Option to type custom question */}
-          <div style={{ marginTop: '8px', textAlign: 'center' }}>
-            {!showCustomInput ? (
-              <button
-                onClick={() => {
-                  playClickSound();
-                  setShowCustomInput(true);
-                }}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: '#1C1917',
-                  fontSize: '11.5px',
-                  fontWeight: '700',
-                  cursor: 'pointer',
-                  textDecoration: 'underline'
-                }}
-              >
-                Or write your own custom question...
-              </button>
-            ) : (
-              <div style={{
-                display: 'flex',
-                gap: '6px',
-                marginTop: '6px',
-                animation: 'fadeIn 0.2s ease-out'
-              }}>
-                <input
-                  type="text"
-                  value={customWildcardInput}
-                  onChange={(e) => setCustomWildcardInput(e.target.value)}
-                  placeholder="Type any question you want to ask..."
-                  style={{
-                    flex: 1,
-                    padding: '6px 10px',
-                    fontSize: '12.5px',
-                    borderRadius: '8px',
-                    border: '1px solid rgba(28, 25, 23, 0.15)',
-                    background: '#FFFFFF',
-                    outline: 'none',
-                    color: '#1C1917'
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') handleApplyCustomWildcard();
-                  }}
-                />
-                <button
-                  onClick={handleApplyCustomWildcard}
-                  disabled={!customWildcardInput.trim()}
-                  className="btn-primary"
-                  style={{ padding: '6px 12px', fontSize: '12px', whiteSpace: 'nowrap' }}
-                >
-                  Ask
-                </button>
-              </div>
-            )}
-          </div>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              playClickSound();
+              setShowCustomModal(true);
+            }}
+            className="btn-secondary"
+            style={{
+              padding: '6px 14px',
+              fontSize: '11.5px',
+              fontWeight: '700',
+              gap: '5px',
+              background: '#FFFFFF',
+              borderColor: 'rgba(28, 25, 23, 0.15)',
+              color: '#1C1917',
+              boxShadow: '0 2px 5px rgba(0, 0, 0, 0.06)',
+              borderRadius: '9999px'
+            }}
+            title="Type your own custom wildcard question"
+          >
+            <Edit3 size={12} strokeWidth={2.4} color="#C6882C" />
+            <span>Write Custom</span>
+          </button>
         </div>
       )}
 
@@ -412,24 +341,24 @@ export default function QuestionCard({
         style={{
           cursor: 'pointer',
           gap: '7px',
-          fontSize: '12px',
-          padding: '8px 20px',
+          fontSize: '11.5px',
+          padding: '7px 18px',
           background: '#FFFFFF',
           color: '#1C1917',
-          marginTop: '10px',
+          marginTop: '6px',
           boxShadow: '0 2px 6px rgba(0, 0, 0, 0.08)',
           border: '1px solid rgba(0, 0, 0, 0.1)',
           transition: 'all 0.18s'
         }}
         title="Flip card for follow-up question & challenge"
       >
-        <RotateCw size={13} strokeWidth={2.4} color="#C6882C" />
+        <RotateCw size={12} strokeWidth={2.4} color="#C6882C" />
         <span>Flip for Follow-up & Challenge</span>
       </button>
     </div>
   );
 
-  // BACK CONTENT (3D Flipped Side: Dig Deeper & Secret Reveal)
+  // BACK CONTENT (3D Flipped Side: The Unspoken Layer & Micro-Challenge)
   const backContent = (
     <div
       className="card-face-canvas card-face-canvas-back"
@@ -551,7 +480,7 @@ export default function QuestionCard({
                   </span>
                 )}
                 <p style={{
-                  fontFamily: 'var(--font-sans)',
+                  fontFamily: 'var(--font-body)',
                   fontSize: 'clamp(13px, 3.4vw, 15px)',
                   fontWeight: '600',
                   lineHeight: '1.4',
@@ -593,7 +522,8 @@ export default function QuestionCard({
 
             <button
               type="button"
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 playCardShuffleSound();
                 triggerHaptic('light');
                 setChallengeOffset(prev => prev + 1);
@@ -647,7 +577,8 @@ export default function QuestionCard({
               ) : isTimerRunning ? (
                 <button
                   type="button"
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     playClickSound();
                     setIsTimerRunning(false);
                   }}
@@ -671,7 +602,8 @@ export default function QuestionCard({
               ) : (
                 <button
                   type="button"
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     playClickSound();
                     triggerHaptic('medium');
                     setIsTimerRunning(true);
@@ -703,15 +635,179 @@ export default function QuestionCard({
   );
 
   return (
-    <InteractiveCard3D 
-      isWildcard={isWildcard} 
-      swipeClass={swipeClass}
-      onSwipeLeft={onSwipeLeft}
-      onSwipeRight={onSwipeRight}
-      isFlipped={isFlipped}
-      frontContent={frontContent}
-      backContent={backContent}
-      className="question-card-inner"
-    />
+    <>
+      <InteractiveCard3D 
+        isWildcard={isWildcard} 
+        swipeClass={swipeClass}
+        onSwipeLeft={onSwipeLeft}
+        onSwipeRight={onSwipeRight}
+        isFlipped={isFlipped}
+        frontContent={frontContent}
+        backContent={backContent}
+        className="question-card-inner"
+      />
+
+      {/* Clean Tactile Modal for Custom Wildcard Question Input */}
+      {showCustomModal && (
+        <div
+          className="modal-overlay"
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(28, 25, 23, 0.65)',
+            backdropFilter: 'blur(6px)',
+            WebkitBackdropFilter: 'blur(6px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '16px',
+            zIndex: 9999,
+            animation: 'fadeIn 0.2s ease-out'
+          }}
+          onClick={() => setShowCustomModal(false)}
+        >
+          <div
+            className="tabletop-playing-card"
+            style={{
+              maxWidth: '420px',
+              width: '100%',
+              padding: '20px',
+              background: '#FFFFFF',
+              boxShadow: '0 24px 60px rgba(0, 0, 0, 0.25)',
+              position: 'relative'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginBottom: '14px'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div className="tabletop-star-badge" style={{ width: '24px', height: '24px', fontSize: '11px' }}>
+                  ★
+                </div>
+                <div className="card-label-sticker" style={{ fontSize: '11px', padding: '3px 10px' }}>
+                  WILDCARD CREATOR
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowCustomModal(false)}
+                className="btn-icon"
+                style={{ width: '32px', height: '32px', minWidth: '32px', minHeight: '32px' }}
+                title="Close"
+              >
+                <X size={15} />
+              </button>
+            </div>
+
+            <h3 style={{
+              fontSize: '17px',
+              fontWeight: '800',
+              color: '#1C1917',
+              margin: '0 0 4px',
+              fontFamily: 'var(--font-display)'
+            }}>
+              Write Your Wildcard Question
+            </h3>
+            <p style={{
+              fontSize: '12.5px',
+              color: 'var(--color-body)',
+              lineHeight: '1.4',
+              margin: '0 0 14px'
+            }}>
+              Ask your partner anything you have been wondering about. When submitted, the card on both screens will update in real time.
+            </p>
+
+            <form onSubmit={handleApplyCustomWildcard}>
+              <textarea
+                value={customWildcardInput}
+                onChange={(e) => setCustomWildcardInput(e.target.value)}
+                placeholder="What is something you've always wanted to ask me?"
+                rows={3}
+                autoFocus
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  borderRadius: '12px',
+                  border: '1.5px solid rgba(28, 25, 23, 0.18)',
+                  fontSize: '14.5px',
+                  lineHeight: '1.45',
+                  color: '#1C1917',
+                  background: '#FAF6F0',
+                  boxSizing: 'border-box',
+                  resize: 'none',
+                  outline: 'none',
+                  fontFamily: 'var(--font-body)',
+                  marginBottom: '12px'
+                }}
+              />
+
+              {/* Quick Inspiration Starters */}
+              <div style={{ marginBottom: '16px' }}>
+                <div style={{ fontSize: '10.5px', fontWeight: '800', letterSpacing: '0.06em', color: '#8C8278', textTransform: 'uppercase', marginBottom: '6px' }}>
+                  Quick Inspirations:
+                </div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                  {[
+                    "What's a memory of us that always makes you smile?",
+                    "What is something you've been putting off telling me?",
+                    "What is a dream you're still working toward?",
+                    "When did you last feel completely understood by me?"
+                  ].map((sug, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => setCustomWildcardInput(sug)}
+                      style={{
+                        padding: '4px 9px',
+                        borderRadius: '6px',
+                        border: '1px solid rgba(28, 25, 23, 0.1)',
+                        background: '#F4ECE2',
+                        fontSize: '11px',
+                        color: '#1C1917',
+                        cursor: 'pointer',
+                        textAlign: 'left',
+                        lineHeight: '1.3'
+                      }}
+                    >
+                      “{sug.slice(0, 36)}...”
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <button
+                  type="button"
+                  onClick={() => setShowCustomModal(false)}
+                  className="btn-secondary"
+                  style={{ flex: 1, minHeight: '44px', borderRadius: 'var(--radius-pill)' }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={!customWildcardInput.trim()}
+                  className="btn-primary"
+                  style={{
+                    flex: 1.5,
+                    minHeight: '44px',
+                    borderRadius: 'var(--radius-pill)',
+                    opacity: !customWildcardInput.trim() ? 0.45 : 1
+                  }}
+                >
+                  Set as Question
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

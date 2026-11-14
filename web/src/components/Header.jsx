@@ -151,7 +151,7 @@ export default function Header({
             {connectionStatus === 'CONNECTED' && (
               <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#387B6A', display: 'inline-block' }} />
             )}
-            <span style={{ fontFamily: 'monospace', letterSpacing: '0.08em' }}>{roomCode}</span>
+            <span style={{ fontFamily: 'var(--font-mono)', letterSpacing: '0.08em' }}>{roomCode}</span>
             {copied ? <Check size={11} strokeWidth={2.6} color="#387B6A" /> : <Copy size={11} strokeWidth={2} />}
           </button>
         )}
@@ -243,7 +243,7 @@ export default function Header({
                 }} />
                 
                 <span className="tabular-nums" style={{
-                  fontFamily: 'monospace',
+                  fontFamily: 'var(--font-mono)',
                   fontWeight: '700',
                   fontSize: '11px',
                   color: '#387B6A'

@@ -67,7 +67,7 @@ export default function LegalModal({ isOpen, onClose }) {
           </div>
 
           <h3 style={{
-            fontFamily: 'var(--font-serif)',
+            fontFamily: 'var(--font-display)',
             fontSize: '22px',
             fontWeight: '600',
             color: 'var(--color-ink)',

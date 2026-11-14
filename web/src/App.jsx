@@ -788,9 +788,10 @@ export default function App() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              gap: '12px',
+              gap: '8px',
               padding: '0 4px',
-              marginTop: '4px'
+              marginTop: '4px',
+              boxSizing: 'border-box'
             }}>
               {/* Previous Card Button */}
               <button
@@ -799,17 +800,18 @@ export default function App() {
                 className="btn-secondary"
                 style={{
                   minHeight: '44px',
-                  padding: '8px 16px',
+                  padding: '8px clamp(12px, 3.5vw, 18px)',
                   opacity: currentIndex === 0 ? 0.35 : 1,
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '6px',
-                  fontSize: '13px',
+                  fontSize: 'clamp(12px, 3vw, 13.5px)',
                   fontWeight: '700',
                   borderRadius: 'var(--radius-pill)',
                   background: '#FFFFFF',
                   border: '1px solid rgba(0, 0, 0, 0.1)',
-                  boxShadow: 'var(--shadow-sm)'
+                  boxShadow: 'var(--shadow-sm)',
+                  flexShrink: 0
                 }}
                 title="Go to previous card"
               >
@@ -823,14 +825,15 @@ export default function App() {
                 className="btn-primary"
                 style={{
                   minHeight: '44px',
-                  padding: '8px 24px',
+                  padding: '8px clamp(16px, 5vw, 26px)',
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '6px',
-                  fontSize: '13.5px',
+                  fontSize: 'clamp(12.5px, 3.2vw, 14px)',
                   fontWeight: '800',
                   borderRadius: 'var(--radius-pill)',
-                  boxShadow: '0 4px 14px rgba(217, 78, 52, 0.25)'
+                  boxShadow: '0 4px 14px rgba(217, 78, 52, 0.25)',
+                  flexShrink: 0
                 }}
                 title={currentIndex === questions.length - 1 ? 'Finish session and view saved moments' : 'Deal next card'}
               >

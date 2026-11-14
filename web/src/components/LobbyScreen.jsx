@@ -364,7 +364,7 @@ export default function LobbyScreen({
             marginBottom: '14px'
           }}>
             <span style={{
-              fontFamily: 'monospace',
+              fontFamily: 'var(--font-mono)',
               fontSize: '28px',
               fontWeight: '900',
               letterSpacing: '0.14em',
@@ -593,7 +593,7 @@ export default function LobbyScreen({
                         background: '#F9F7F4',
                         fontSize: '14px',
                         fontWeight: '800',
-                        fontFamily: 'monospace',
+                        fontFamily: 'var(--font-mono)',
                         letterSpacing: '0.08em',
                         color: 'var(--color-ink)',
                         outline: 'none'

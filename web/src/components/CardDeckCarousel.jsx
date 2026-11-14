@@ -111,13 +111,13 @@ export default function CardDeckCarousel({
           if (isLeft) onPreviousCard?.();
           else onAdvanceCard?.();
         }}
-        className="peek-card-wrapper"
+        className={`peek-card-wrapper ${isLeft ? 'peek-left' : 'peek-right'}`}
         style={{
           position: 'absolute',
           top: '50%',
-          [isLeft ? 'left' : 'right']: '-18%',
-          width: '76%',
-          maxWidth: '360px',
+          [isLeft ? 'left' : 'right']: '-14%',
+          width: '74%',
+          maxWidth: '350px',
           transform: `translateY(-50%) ${
             isLeft 
               ? `rotate(-6deg) scale(0.86) translateX(${dragOffset * 0.25}px)` 

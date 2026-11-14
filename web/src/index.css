@@ -37,9 +37,14 @@
   --radius-lg: 28px;
   --radius-pill: 9999px;
 
-  /* Fonts */
-  --font-serif: "Source Serif 4", Georgia, Cambria, "Times New Roman", Times, serif;
-  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  /* Fonts - Modern Geometric Indie Tabletop System */
+  --font-main: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sans: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-body: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sub: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serif: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "Space Grotesk", monospace;
   
   /* Transitions */
   --ease-calm: cubic-bezier(0.4, 0, 0.2, 1);
@@ -62,11 +67,17 @@ html, body {
   min-height: 100dvh;
   background-color: var(--color-canvas);
   color: var(--color-ink);
-  font-family: var(--font-sans);
+  font-family: var(--font-body);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.015em;
 }
 
 /* Prevent iOS Safari auto-zoom on inputs */
@@ -643,19 +654,19 @@ input, textarea, select {
     0 0 32px rgba(224, 86, 56, 0.2);
 }
 
-/* Crisp White Sticker/Label Badge directly matching the German card photo */
+/* Crisp White Sticker/Label Badge directly matching the German card photo (e.g. DOWNCYCLING, NÄHCAFE) */
 .card-label-sticker {
   background: #FFFFFF;
   color: #111111;
   padding: 4px 14px;
-  border-radius: 6px;
-  font-family: var(--font-sans);
+  border-radius: 4px;
+  font-family: var(--font-display);
   font-size: 11.5px;
   font-weight: 800;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   box-shadow: 0 1.5px 3.5px rgba(0, 0, 0, 0.07);
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.08);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -664,16 +675,17 @@ input, textarea, select {
 
 /* Clean, modern, highly legible sans-serif prompt typography matching the photo */
 .card-prompt-text {
-  font-family: var(--font-sans);
+  font-family: var(--font-body);
   font-weight: 600;
-  font-size: clamp(16.5px, 4.2vw, 20px);
-  line-height: 1.48;
+  font-size: clamp(15.5px, 4.2vw, 19.5px);
+  line-height: 1.45;
   color: #181513;
   letter-spacing: -0.01em;
   word-break: break-word;
+  overflow-wrap: break-word;
 }
 
-/* Distinct Black Star Circle Badge in Top-Left */
+/* Distinct Black Star Circle Badge in Top-Left matching reference */
 .tabletop-star-badge {
   width: 28px;
   height: 28px;
@@ -683,12 +695,56 @@ input, textarea, select {
   display: flex;
   align-items: center;
   justify-content: center;
+  font-family: var(--font-display);
   font-size: 14px;
   font-weight: 900;
   line-height: 1;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   user-select: none;
   flex-shrink: 0;
+}
+
+/* Responsive Tabletop Playing Cards & Carousel Peek Cards */
+.tabletop-playing-card {
+  width: 100%;
+  max-width: 440px;
+  background: #FFFFFF;
+  border-radius: 24px;
+  padding: 12px;
+  box-shadow: 
+    0 1px 0 rgba(255, 255, 255, 0.9) inset,
+    0 16px 40px -8px rgba(28, 25, 23, 0.15),
+    0 6px 14px -3px rgba(28, 25, 23, 0.08);
+  box-sizing: border-box;
+  margin: 0 auto;
+}
+
+@media (max-width: 480px) {
+  .tabletop-playing-card {
+    border-radius: 20px;
+    padding: 8px;
+  }
+  .card-face-canvas {
+    border-radius: 14px !important;
+    padding: 12px 10px !important;
+    min-height: clamp(350px, 48vh, 410px) !important;
+  }
+  .peek-card-wrapper {
+    width: 68% !important;
+    opacity: 0.32 !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .peek-card-wrapper {
+    display: none !important; /* Prevent edge overflow on ultra-narrow viewports */
+  }
+  .tabletop-playing-card {
+    padding: 6px;
+  }
+  .card-face-canvas {
+    padding: 10px 8px !important;
+  }
 }
 
 /* Tactile Peek Cards in the Carousel */

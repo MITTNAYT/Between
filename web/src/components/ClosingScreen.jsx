@@ -168,7 +168,7 @@ export default function ClosingScreen({
 
     // 5. Starred Questions / Saved Moments
     ctx.fillStyle = '#1C1917';
-    ctx.font = '600 24px "Plus Jakarta Sans", sans-serif';
+    ctx.font = '700 24px "Outfit", sans-serif';
     ctx.fillText('MOMENTS WE REMEMBER', centerX, logoY + 275);
 
     let currentY = logoY + 340;
@@ -176,13 +176,13 @@ export default function ClosingScreen({
 
     if (questionsToDraw.length === 0) {
       ctx.fillStyle = '#8C8278';
-      ctx.font = 'italic 26px "Source Serif 4", serif';
+      ctx.font = '500 24px "Plus Jakarta Sans", sans-serif';
       ctx.fillText('“A quiet ritual of deep presence and shared time.”', centerX, currentY + 60);
       currentY += 160;
     } else {
       questionsToDraw.forEach((item, index) => {
         ctx.fillStyle = '#1C1917';
-        ctx.font = 'italic 28px "Source Serif 4", serif';
+        ctx.font = '600 26px "Plus Jakarta Sans", sans-serif';
         
         // Wrap text
         const words = item.text.split(' ');
@@ -219,7 +219,7 @@ export default function ClosingScreen({
       ctx.stroke();
 
       ctx.fillStyle = '#D94E34';
-      ctx.font = 'bold 20px "Plus Jakarta Sans", sans-serif';
+      ctx.font = 'bold 20px "Outfit", sans-serif';
       ctx.fillText(`WORDS FROM ${author.toUpperCase()}`, centerX, currentY + 45);
 
       ctx.fillStyle = '#8C8278';
@@ -227,7 +227,7 @@ export default function ClosingScreen({
       ctx.fillText(`Dedicated with love to ${recipient}`, centerX, currentY + 72);
 
       ctx.fillStyle = '#1C1917';
-      ctx.font = 'italic 24px "Source Serif 4", serif';
+      ctx.font = '500 22px "Plus Jakarta Sans", sans-serif';
 
       const noteWords = noteToRender.trim().split(' ');
       let noteLine = '';
@@ -290,9 +290,9 @@ export default function ClosingScreen({
         </div>
 
         <h1 style={{
-          fontFamily: 'var(--font-serif)',
+          fontFamily: 'var(--font-display)',
           fontSize: '32px',
-          fontWeight: '600',
+          fontWeight: '700',
           color: 'var(--color-ink)',
           marginBottom: '8px'
         }}>
@@ -321,9 +321,9 @@ export default function ClosingScreen({
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Bookmark size={18} strokeWidth={2.4} color="var(--color-ember)" />
             <h3 style={{
-              fontFamily: 'var(--font-serif)',
+              fontFamily: 'var(--font-display)',
               fontSize: '18px',
-              fontWeight: '600',
+              fontWeight: '700',
               color: 'var(--color-ink)',
               margin: 0
             }}>
@@ -511,7 +511,7 @@ export default function ClosingScreen({
               fontSize: '15px',
               lineHeight: '1.6',
               color: 'var(--color-ink)',
-              fontFamily: 'var(--font-serif)',
+              fontFamily: 'var(--font-body)',
               fontStyle: 'italic',
               boxShadow: 'var(--shadow-sm)'
             }}>
