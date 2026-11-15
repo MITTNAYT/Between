@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Volume2, VolumeX, Copy, Check, LogOut, Flame, Users, Phone, PhoneCall, PhoneOff, Mic, MicOff } from 'lucide-react';
+import { Copy, Check, LogOut, Sun, Moon, Phone, PhoneCall, PhoneOff, Mic, MicOff } from 'lucide-react';
 import BetweenLogo from './BetweenLogo';
-import { toggleAmbientSoundscape, playClickSound } from '../utils/audio';
+import { playClickSound } from '../utils/audio';
 
 export default function Header({ 
   roomCode = '', 
@@ -21,7 +21,6 @@ export default function Header({
   onEndCall,
   onToggleMute
 }) {
-  const [isPlayingSoundscape, setIsPlayingSoundscape] = useState(false);
   const [copied, setCopied] = useState(false);
 
   const formatCallDuration = (seconds) => {
@@ -40,13 +39,6 @@ export default function Header({
     }).catch(() => {
       prompt('Copy invite link:', url);
     });
-  };
-
-  const handleToggleAudio = () => {
-    playClickSound();
-    const playing = toggleAmbientSoundscape();
-    setIsPlayingSoundscape(playing);
-    onShowToast?.(playing ? 'Ambient soundscape playing 🎵' : 'Soundscape muted 🔇');
   };
 
   return (
@@ -84,8 +76,8 @@ export default function Header({
               fontWeight: '700',
               borderRadius: 'var(--radius-pill)',
               color: 'var(--color-ink)',
-              background: '#FFFFFF',
-              border: '1px solid rgba(0, 0, 0, 0.1)',
+              background: 'var(--color-surface)',
+              border: '1px solid var(--color-hairline)',
               boxShadow: 'var(--shadow-sm)'
             }}
           >
@@ -302,33 +294,8 @@ export default function Header({
         )}
       </div>
 
-      {/* Right Controls: Only Soundscape & Day/Night Theme */}
+      {/* Right Controls: Light / Dark Mode Tabletop Theme */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
-        {/* Ambient Soundscape */}
-        <button
-          className="btn-icon"
-          onClick={handleToggleAudio}
-          aria-label="Toggle ambient soundscape"
-          title={isPlayingSoundscape ? 'Mute ambient soundscape' : 'Play calming soundscape'}
-          style={{
-            minWidth: '40px',
-            minHeight: '40px',
-            width: '40px',
-            height: '40px',
-            borderRadius: '50%',
-            background: '#FFFFFF',
-            border: '1px solid rgba(0, 0, 0, 0.1)',
-            boxShadow: 'var(--shadow-sm)',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: isPlayingSoundscape ? 'var(--color-ember)' : 'var(--color-body)'
-          }}
-        >
-          {isPlayingSoundscape ? <Volume2 size={16} strokeWidth={2.2} /> : <VolumeX size={16} strokeWidth={2.2} />}
-        </button>
-
         {/* Tabletop Day vs Candlelight Evening */}
         <button
           className="btn-icon"
@@ -336,25 +303,30 @@ export default function Header({
             playClickSound();
             onToggleTheme?.();
           }}
-          aria-label="Toggle Theme Mode"
-          title={theme === 'candlelight' ? 'Candlelight Evening Active (Click for Tabletop Day)' : 'Switch to Candlelight Evening'}
+          aria-label={theme === 'candlelight' ? 'Switch to Daylight Tabletop Mode' : 'Switch to Candlelight Night Mode'}
+          title={theme === 'candlelight' ? 'Candlelight Night Mode active · Click for Daylight Mode' : 'Daylight Mode active · Click for Candlelight Night Mode'}
           style={{
             minWidth: '40px',
             minHeight: '40px',
             width: '40px',
             height: '40px',
             borderRadius: '50%',
-            background: '#FFFFFF',
-            border: '1px solid rgba(0, 0, 0, 0.1)',
-            boxShadow: theme === 'candlelight' ? '0 0 12px rgba(229, 169, 60, 0.35)' : 'var(--shadow-sm)',
+            background: 'var(--color-surface)',
+            border: theme === 'candlelight' ? '1px solid rgba(229, 169, 60, 0.4)' : '1px solid var(--color-hairline)',
+            boxShadow: theme === 'candlelight' ? '0 0 14px rgba(229, 169, 60, 0.28), var(--shadow-sm)' : 'var(--shadow-sm)',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: theme === 'candlelight' ? '#E5A93C' : 'var(--color-body)'
+            color: theme === 'candlelight' ? '#E5A93C' : 'var(--color-ink)',
+            transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
           }}
         >
-          <Flame size={16} strokeWidth={2.2} fill={theme === 'candlelight' ? '#E5A93C' : 'none'} />
+          {theme === 'candlelight' ? (
+            <Sun size={17} strokeWidth={2.4} />
+          ) : (
+            <Moon size={17} strokeWidth={2.4} />
+          )}
         </button>
       </div>
     </header>

@@ -31,7 +31,7 @@ export default function LobbyScreen({
   // Mode: 'CREATE' | 'JOIN'
   const [mode, setMode] = useState(initialRoomCode ? 'JOIN' : 'CREATE');
   const [selectedRel, setSelectedRel] = useState('COUPLE');
-  const [selectedLength, setSelectedLength] = useState('FIFTEEN_MIN');
+  const [selectedLength, setSelectedLength] = useState('TWENTY_CARDS');
   const [joinCodeInput, setJoinCodeInput] = useState(initialRoomCode);
   const [copiedLink, setCopiedLink] = useState(false);
 
@@ -237,7 +237,7 @@ export default function LobbyScreen({
 
       {/* 1. ERROR STATE */}
       {(errorMessage || connectionStatus === 'ERROR') ? (
-        <div className="tabletop-playing-card" style={{ padding: '24px 20px', textAlign: 'center' }}>
+        <div className="editorial-card" style={{ padding: '24px 20px', textAlign: 'center' }}>
           <div style={{
             width: '54px',
             height: '54px',
@@ -269,7 +269,7 @@ export default function LobbyScreen({
         </div>
       ) : (!isHost && connectionStatus === 'CONNECTING') ? (
         /* 2. GUEST CONNECTING STATE */
-        <div className="tabletop-playing-card" style={{ padding: '32px 20px', textAlign: 'center' }}>
+        <div className="editorial-card" style={{ padding: '32px 20px', textAlign: 'center' }}>
           <div style={{
             width: '54px',
             height: '54px',
@@ -299,7 +299,7 @@ export default function LobbyScreen({
         </div>
       ) : (!isHost && isConnected) ? (
         /* 3. GUEST CONNECTED WAITING FOR HOST */
-        <div className="tabletop-playing-card" style={{ padding: '32px 20px', textAlign: 'center' }}>
+        <div className="editorial-card" style={{ padding: '32px 20px', textAlign: 'center' }}>
           <div style={{
             width: '54px',
             height: '54px',
@@ -329,7 +329,7 @@ export default function LobbyScreen({
         </div>
       ) : isWaitingForGuest ? (
         /* 4. HOST WAITING ROOM */
-        <div className="tabletop-playing-card" style={{ padding: '24px 20px', textAlign: 'center' }}>
+        <div className="editorial-card" style={{ padding: '24px 20px', textAlign: 'center' }}>
           <div style={{
             width: '52px',
             height: '52px',
@@ -439,9 +439,10 @@ export default function LobbyScreen({
           {/* Segmented Mode Switcher: 2 Clear Options */}
           <div style={{
             display: 'flex',
-            background: 'rgba(28, 25, 23, 0.06)',
+            background: 'var(--color-surface-subtle)',
             padding: '4px',
             borderRadius: 'var(--radius-pill)',
+            border: '1px solid var(--color-hairline)',
             gap: '4px'
           }}>
             <button
@@ -452,9 +453,9 @@ export default function LobbyScreen({
                 minHeight: '44px',
                 padding: '8px 16px',
                 borderRadius: 'var(--radius-pill)',
-                border: 'none',
-                background: mode === 'CREATE' ? '#FFFFFF' : 'transparent',
-                color: mode === 'CREATE' ? '#1C1917' : 'var(--color-muted)',
+                border: mode === 'CREATE' ? '1px solid var(--color-hairline)' : 'none',
+                background: mode === 'CREATE' ? 'var(--color-surface)' : 'transparent',
+                color: mode === 'CREATE' ? 'var(--color-ink)' : 'var(--color-muted)',
                 fontWeight: mode === 'CREATE' ? '800' : '600',
                 fontSize: '13.5px',
                 cursor: 'pointer',
@@ -478,9 +479,9 @@ export default function LobbyScreen({
                 minHeight: '44px',
                 padding: '8px 16px',
                 borderRadius: 'var(--radius-pill)',
-                border: 'none',
-                background: mode === 'JOIN' ? '#FFFFFF' : 'transparent',
-                color: mode === 'JOIN' ? '#1C1917' : 'var(--color-muted)',
+                border: mode === 'JOIN' ? '1px solid var(--color-hairline)' : 'none',
+                background: mode === 'JOIN' ? 'var(--color-surface)' : 'transparent',
+                color: mode === 'JOIN' ? 'var(--color-ink)' : 'var(--color-muted)',
                 fontWeight: mode === 'JOIN' ? '800' : '600',
                 fontSize: '13.5px',
                 cursor: 'pointer',
@@ -498,7 +499,7 @@ export default function LobbyScreen({
           </div>
 
           {/* Card Container for Configuration */}
-          <div className="tabletop-playing-card" style={{ padding: '20px 18px' }}>
+          <div className="editorial-card" style={{ padding: '20px 18px' }}>
             {/* 1. Player Names */}
             {mode === 'CREATE' ? (
               <div style={{ marginBottom: '16px' }}>
@@ -637,8 +638,8 @@ export default function LobbyScreen({
                           padding: '12px 6px',
                           minHeight: '82px',
                           borderRadius: '12px',
-                          border: isSelected ? '2px solid #1C1917' : '1px solid rgba(0,0,0,0.08)',
-                          background: isSelected ? '#FFFFFF' : '#F9F7F4',
+                          border: isSelected ? '2px solid var(--color-ink)' : '1px solid var(--color-hairline)',
+                          background: isSelected ? 'var(--color-surface)' : 'var(--color-surface-subtle)',
                           boxShadow: isSelected ? '0 4px 12px rgba(0,0,0,0.1)' : 'none',
                           cursor: 'pointer',
                           display: 'flex',
@@ -659,8 +660,8 @@ export default function LobbyScreen({
                             width: '14px',
                             height: '14px',
                             borderRadius: '50%',
-                            background: '#1C1917',
-                            color: '#FFFFFF',
+                            background: 'var(--color-ink)',
+                            color: 'var(--color-surface)',
                             fontSize: '8px',
                             fontWeight: '900',
                             display: 'flex',
@@ -685,7 +686,7 @@ export default function LobbyScreen({
                         <span style={{
                           fontSize: '12px',
                           fontWeight: isSelected ? '800' : '600',
-                          color: '#1C1917'
+                          color: 'var(--color-ink)'
                         }}>
                           {rel.label}
                         </span>
@@ -694,7 +695,7 @@ export default function LobbyScreen({
                   })}
                 </div>
 
-                {/* Session Length */}
+                {/* Card Deck Size */}
                 <label style={{
                   display: 'block',
                   fontSize: '11px',
@@ -704,7 +705,7 @@ export default function LobbyScreen({
                   color: 'var(--color-muted)',
                   marginBottom: '8px'
                 }}>
-                  Deck Length
+                  Card Deck Size
                 </label>
 
                 <div style={{
@@ -722,21 +723,21 @@ export default function LobbyScreen({
                         onClick={() => { playClickSound(); setSelectedLength(len.id); }}
                         style={{
                           padding: '8px 4px',
-                          minHeight: '48px',
+                          minHeight: '52px',
                           borderRadius: '10px',
-                          border: isSelected ? '2px solid #1C1917' : '1px solid rgba(0,0,0,0.08)',
-                          background: isSelected ? '#FFFFFF' : '#F9F7F4',
+                          border: isSelected ? '2px solid var(--color-ink)' : '1px solid var(--color-hairline)',
+                          background: isSelected ? 'var(--color-surface)' : 'var(--color-surface-subtle)',
                           boxShadow: isSelected ? 'var(--shadow-sm)' : 'none',
                           cursor: 'pointer',
                           textAlign: 'center',
                           transition: 'all 0.15s'
                         }}
                       >
-                        <div style={{ fontSize: '13px', fontWeight: '800', color: '#1C1917' }}>
-                          {len.tabLabel}
+                        <div style={{ fontSize: '13px', fontWeight: '800', color: 'var(--color-ink)' }}>
+                          {len.count}
                         </div>
                         <div style={{ fontSize: '10px', color: 'var(--color-muted)', fontWeight: '600' }}>
-                          {len.count} cards
+                          Cards
                         </div>
                       </button>
                     );

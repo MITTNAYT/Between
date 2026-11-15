@@ -1,8 +1,5 @@
-// Web Audio API Synthesizer for tactile feedback and ambient soundscape
+// Web Audio API Synthesizer for tactile feedback
 let audioCtx = null;
-let soundscapeGain = null;
-let soundscapeOscs = [];
-let isSoundscapePlaying = false;
 
 function getAudioContext() {
   if (!audioCtx) {
@@ -258,68 +255,12 @@ export function playReactionSound() {
   } catch (e) {}
 }
 
-/**
- * Ambient background soundscape (Warm Pink/Brown noise & gentle resonance)
- */
 export function toggleAmbientSoundscape() {
-  const ctx = getAudioContext();
-  if (!ctx) return false;
-
-  if (isSoundscapePlaying) {
-    stopAmbientSoundscape();
-    return false;
-  } else {
-    startAmbientSoundscape();
-    return true;
-  }
-}
-
-function startAmbientSoundscape() {
-  const ctx = getAudioContext();
-  if (!ctx) return;
-
-  try {
-    soundscapeGain = ctx.createGain();
-    soundscapeGain.gain.setValueAtTime(0.001, ctx.currentTime);
-    soundscapeGain.gain.exponentialRampToValueAtTime(0.03, ctx.currentTime + 2.0);
-    soundscapeGain.connect(ctx.destination);
-
-    // Warm chord drone: 108Hz (A2), 162Hz (E3), 216Hz (A3)
-    const freqs = [108, 162, 216];
-    soundscapeOscs = freqs.map(freq => {
-      const osc = ctx.createOscillator();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, ctx.currentTime);
-      osc.connect(soundscapeGain);
-      osc.start();
-      return osc;
-    });
-
-    isSoundscapePlaying = true;
-  } catch (e) {
-    console.error('Ambient audio error:', e);
-  }
-}
-
-function stopAmbientSoundscape() {
-  if (soundscapeGain && audioCtx) {
-    try {
-      soundscapeGain.gain.setValueAtTime(soundscapeGain.gain.value, audioCtx.currentTime);
-      soundscapeGain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 1.2);
-      setTimeout(() => {
-        soundscapeOscs.forEach(osc => {
-          try { osc.stop(); } catch (e) {}
-        });
-        soundscapeOscs = [];
-        soundscapeGain = null;
-      }, 1300);
-    } catch (e) {}
-  }
-  isSoundscapePlaying = false;
+  return false;
 }
 
 export function getIsSoundscapePlaying() {
-  return isSoundscapePlaying;
+  return false;
 }
 
 /**

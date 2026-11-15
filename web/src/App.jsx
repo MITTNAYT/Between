@@ -22,18 +22,17 @@ export default function App() {
   const [hostName, setHostName] = useState(() => localStorage.getItem('between_host_name') || localStorage.getItem('between_user_name') || 'Partner 1');
   const [guestName, setGuestName] = useState(() => localStorage.getItem('between_guest_name') || 'Partner 2');
 
-  // Theme: 'tabletop' (default clean daylight linen & powder blue card face) | 'candlelight' (warm night ambiance)
+  // Theme: 'tabletop' (Light / Tabletop Day) | 'candlelight' (Dark / Midnight Candlelight)
   const [theme, setTheme] = useState(() => {
     const saved = localStorage.getItem('between_theme');
-    if (!saved || saved === 'sandstone' || saved === 'candlelight') {
-      localStorage.setItem('between_theme', 'tabletop');
-      return 'tabletop';
+    if (saved === 'dark' || saved === 'candlelight') {
+      return 'candlelight';
     }
-    return saved;
+    return 'tabletop';
   });
 
   const [relationshipType, setRelationshipType] = useState('COUPLE');
-  const [sessionLength, setSessionLength] = useState('FIFTEEN_MIN');
+  const [sessionLength, setSessionLength] = useState('TWENTY_CARDS');
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentTurn, setCurrentTurn] = useState('host'); // 'host' | 'guest'

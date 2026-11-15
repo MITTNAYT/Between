@@ -25,39 +25,51 @@ export const RELATIONSHIP_TYPES = {
 };
 
 export const SESSION_LENGTHS = {
-  FIVE_MIN: {
-    id: 'FIVE_MIN',
-    tabLabel: '5m',
-    badge: '5 mins',
-    title: 'Quick Check-in',
-    count: 5,
-    description: 'Five light questions to spark a quick, meaningful moment together.'
-  },
-  TEN_MIN: {
-    id: 'TEN_MIN',
-    tabLabel: '10m',
-    badge: '10 mins',
-    title: 'Warm Connection',
+  TEN_CARDS: {
+    id: 'TEN_CARDS',
+    tabLabel: '10 Cards',
+    badge: '10 Cards',
+    title: 'Spark Check-in',
     count: 10,
-    description: 'Ten questions moving from light ease into genuine closeness.'
+    description: '10 cards moving gently from warmth into meaningful conversation.'
   },
-  FIFTEEN_MIN: {
-    id: 'FIFTEEN_MIN',
-    tabLabel: '15m',
-    badge: '15 mins',
-    title: 'Gentle Conversation',
-    count: 15,
-    description: 'Fifteen questions with an interactive Wildcard slot at mid-session.'
+  TWENTY_CARDS: {
+    id: 'TWENTY_CARDS',
+    tabLabel: '20 Cards',
+    badge: '20 Cards',
+    title: 'Deep Connection',
+    count: 20,
+    description: '20 cards with an interactive wildcard prompt exploring intimacy and trust.'
   },
-  THIRTY_MIN: {
-    id: 'THIRTY_MIN',
-    tabLabel: '30m',
-    badge: '30 mins',
-    title: 'Go Deeper',
+  THIRTY_CARDS: {
+    id: 'THIRTY_CARDS',
+    tabLabel: '30 Cards',
+    badge: '30 Cards',
+    title: 'Vulnerability Journey',
     count: 30,
-    description: 'Thirty questions moving deeply toward mutual vulnerability and care.'
+    description: '30 cards unlocking unspoken thoughts, fond memories, and future dreams.'
+  },
+  FORTY_CARDS: {
+    id: 'FORTY_CARDS',
+    tabLabel: '40 Cards',
+    badge: '40 Cards',
+    title: 'The Full Deck',
+    count: 40,
+    description: '40 cards for an unhurried, unforgettable late-night deep dive.'
   }
 };
+
+/**
+ * Normalizes length IDs for seamless backward compatibility with saved sessions or legacy peer state
+ */
+export function normalizeSessionLengthId(lengthId) {
+  if (!lengthId) return 'TWENTY_CARDS';
+  if (lengthId === 'FIVE_MIN' || lengthId === 'TEN_MIN' || lengthId === 'TEN_CARDS') return 'TEN_CARDS';
+  if (lengthId === 'FIFTEEN_MIN' || lengthId === 'TWENTY_CARDS') return 'TWENTY_CARDS';
+  if (lengthId === 'THIRTY_MIN' || lengthId === 'THIRTY_CARDS') return 'THIRTY_CARDS';
+  if (lengthId === 'FORTY_CARDS') return 'FORTY_CARDS';
+  return 'TWENTY_CARDS';
+}
 
 export const WILDCARD_INSPIRATIONS = {
   COUPLE: [
@@ -123,23 +135,15 @@ export const WILDCARD_INSPIRATIONS = {
 };
 
 /**
- * Builds the slot plans for a session length
+ * Builds the slot plans for a session length (Deck Size: 10, 20, 30, or 40 cards)
  */
-function getSlotsForLength(lengthId, relType) {
+function getSlotsForLength(rawLengthId, relType) {
+  const lengthId = normalizeSessionLengthId(rawLengthId);
   const isJustMet = relType === 'JUST_MET';
   const maxDepth = isJustMet ? 3 : 5;
 
-  if (lengthId === 'FIVE_MIN') {
-    return [
-      { phase: 'WARMUP', targetDepth: 1 },
-      { phase: 'OPENING', targetDepth: 2 },
-      { phase: 'DEEPENING', targetDepth: Math.min(3, maxDepth) },
-      { phase: 'DEEPENING', targetDepth: Math.min(3, maxDepth) },
-      { phase: 'LANDING', targetDepth: 2, allowedCategories: ['GRATITUDE', 'US'] }
-    ];
-  }
-
-  if (lengthId === 'TEN_MIN') {
+  if (lengthId === 'TEN_CARDS') {
+    // 10 Cards: 2 Warmup, 2 Opening, 2 Deepening, 1 Wildcard, 2 Peak, 1 Landing
     return [
       { phase: 'WARMUP', targetDepth: 1 },
       { phase: 'WARMUP', targetDepth: 1 },
@@ -147,52 +151,54 @@ function getSlotsForLength(lengthId, relType) {
       { phase: 'OPENING', targetDepth: 2 },
       { phase: 'DEEPENING', targetDepth: Math.min(3, maxDepth) },
       { phase: 'DEEPENING', targetDepth: Math.min(3, maxDepth) },
-      { phase: 'DEEPENING', targetDepth: Math.min(3, maxDepth) },
+      { phase: 'WILDCARD', isWildcard: true, targetDepth: 3 },
       { phase: 'PEAK', targetDepth: Math.min(4, maxDepth) },
       { phase: 'PEAK', targetDepth: Math.min(5, maxDepth) },
       { phase: 'LANDING', targetDepth: 2, allowedCategories: ['GRATITUDE', 'US'] }
     ];
   }
 
-  if (lengthId === 'FIFTEEN_MIN') {
-    // 15 slots with wildcard at slot 8
+  if (lengthId === 'TWENTY_CARDS') {
+    // 20 Cards: 3 Warmup, 4 Opening, 4 Deepening, 1 Wildcard (slot 11), 5 Peak, 3 Landing
     const slots = [];
-    slots.push({ phase: 'WARMUP', targetDepth: 1 });
-    slots.push({ phase: 'WARMUP', targetDepth: 1 });
-    slots.push({ phase: 'OPENING', targetDepth: 2 });
-    slots.push({ phase: 'OPENING', targetDepth: 2 });
-    slots.push({ phase: 'OPENING', targetDepth: 2 });
-    slots.push({ phase: 'DEEPENING', targetDepth: Math.min(3, maxDepth) });
-    slots.push({ phase: 'DEEPENING', targetDepth: Math.min(3, maxDepth) });
-    slots.push({ phase: 'DEEPENING', targetDepth: Math.min(3, maxDepth) });
-    // Slot 8 = wildcard
+    for (let i = 0; i < 3; i++) slots.push({ phase: 'WARMUP', targetDepth: 1 });
+    for (let i = 0; i < 4; i++) slots.push({ phase: 'OPENING', targetDepth: 2 });
+    for (let i = 0; i < 4; i++) slots.push({ phase: 'DEEPENING', targetDepth: Math.min(3, maxDepth) });
     slots.push({ phase: 'WILDCARD', isWildcard: true, targetDepth: 3 });
-    slots.push({ phase: 'DEEPENING', targetDepth: Math.min(3, maxDepth) });
-    slots.push({ phase: 'PEAK', targetDepth: Math.min(4, maxDepth) });
-    slots.push({ phase: 'PEAK', targetDepth: Math.min(4, maxDepth) });
-    slots.push({ phase: 'PEAK', targetDepth: Math.min(5, maxDepth) });
-    slots.push({ phase: 'LANDING', targetDepth: 2, allowedCategories: ['GRATITUDE', 'US'] });
-    slots.push({ phase: 'LANDING', targetDepth: 2, allowedCategories: ['GRATITUDE', 'US'] });
+    for (let i = 0; i < 5; i++) slots.push({ phase: 'PEAK', targetDepth: Math.min(4 + (i % 2), maxDepth) });
+    for (let i = 0; i < 3; i++) slots.push({ phase: 'LANDING', targetDepth: 2, allowedCategories: ['GRATITUDE', 'US'] });
     return slots;
   }
 
-  // THIRTY_MIN (30 slots with wildcard at slot 15)
+  if (lengthId === 'THIRTY_CARDS') {
+    // 30 Cards: 4 Warmup, 6 Opening, 5 Deepening, 1 Wildcard (slot 16), 5 Deepening, 6 Peak, 3 Landing
+    const slots = [];
+    for (let i = 0; i < 4; i++) slots.push({ phase: 'WARMUP', targetDepth: 1 });
+    for (let i = 0; i < 6; i++) slots.push({ phase: 'OPENING', targetDepth: 2 });
+    for (let i = 0; i < 5; i++) slots.push({ phase: 'DEEPENING', targetDepth: Math.min(3, maxDepth) });
+    slots.push({ phase: 'WILDCARD', isWildcard: true, targetDepth: 3 });
+    for (let i = 0; i < 5; i++) slots.push({ phase: 'DEEPENING', targetDepth: Math.min(3, maxDepth) });
+    for (let i = 0; i < 6; i++) slots.push({ phase: 'PEAK', targetDepth: Math.min(4 + (i % 2), maxDepth) });
+    for (let i = 0; i < 3; i++) slots.push({ phase: 'LANDING', targetDepth: 2, allowedCategories: ['GRATITUDE', 'US'] });
+    return slots;
+  }
+
+  // FORTY_CARDS (40 cards: 5 Warmup, 8 Opening, 7 Deepening, 1 Wildcard, 7 Deepening, 8 Peak, 4 Landing)
   const slots = [];
-  for (let i = 0; i < 4; i++) slots.push({ phase: 'WARMUP', targetDepth: 1 });
-  for (let i = 0; i < 6; i++) slots.push({ phase: 'OPENING', targetDepth: 2 });
-  for (let i = 0; i < 5; i++) slots.push({ phase: 'DEEPENING', targetDepth: Math.min(3, maxDepth) });
-  // Slot 15 = wildcard
+  for (let i = 0; i < 5; i++) slots.push({ phase: 'WARMUP', targetDepth: 1 });
+  for (let i = 0; i < 8; i++) slots.push({ phase: 'OPENING', targetDepth: 2 });
+  for (let i = 0; i < 7; i++) slots.push({ phase: 'DEEPENING', targetDepth: Math.min(3, maxDepth) });
   slots.push({ phase: 'WILDCARD', isWildcard: true, targetDepth: 3 });
-  for (let i = 0; i < 5; i++) slots.push({ phase: 'DEEPENING', targetDepth: Math.min(3, maxDepth) });
-  for (let i = 0; i < 6; i++) slots.push({ phase: 'PEAK', targetDepth: Math.min(4 + (i % 2), maxDepth) });
-  for (let i = 0; i < 3; i++) slots.push({ phase: 'LANDING', targetDepth: 2, allowedCategories: ['GRATITUDE', 'US'] });
+  for (let i = 0; i < 7; i++) slots.push({ phase: 'DEEPENING', targetDepth: Math.min(3, maxDepth) });
+  for (let i = 0; i < 8; i++) slots.push({ phase: 'PEAK', targetDepth: Math.min(4 + (i % 2), maxDepth) });
+  for (let i = 0; i < 4; i++) slots.push({ phase: 'LANDING', targetDepth: 2, allowedCategories: ['GRATITUDE', 'US'] });
   return slots;
 }
 
 /**
  * Builds a curated session list from the question pool
  */
-export function buildSession(relationshipType = 'COUPLE', sessionLength = 'FIFTEEN_MIN', recentlySeen = []) {
+export function buildSession(relationshipType = 'COUPLE', sessionLength = 'TWENTY_CARDS', recentlySeen = []) {
   const pool = questionsData.filter(q => 
     q.relationshipTypes.includes(relationshipType) && q.status === 'APPROVED'
   );
