@@ -39,71 +39,57 @@ function drawRoundedRect(ctx, x, y, width, height, radius) {
 }
 
 /**
- * Draws a clean mascot illustration using vector silhouettes
+ * Draws an elegant minimalist romantic line art illustration using vector strokes
  */
 function drawMascot(ctx, mascotName, centerX, centerY, scale = 1.8) {
   ctx.save();
   ctx.translate(centerX, centerY);
   ctx.scale(scale, scale);
 
-  // Soft ground shadow
-  ctx.fillStyle = 'rgba(28, 25, 23, 0.16)';
-  ctx.beginPath();
-  ctx.ellipse(0, 44, 26, 4.5, 0, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Draw Ghost (default / most iconic mascot from photo)
-  // Silhouette offset shadow
-  ctx.fillStyle = '#1C1917';
-  ctx.beginPath();
-  ctx.moveTo(-1, -34);
-  ctx.bezierCurveTo(-15, -34, -23, -22, -23, -6);
-  ctx.bezierCurveTo(-23, 10, -25, 24, -31, 30);
-  ctx.bezierCurveTo(-23, 31, -16, 23, -10, 26);
-  ctx.bezierCurveTo(-4, 29, 1, 34, 7, 32);
-  ctx.bezierCurveTo(13, 30, 17, 25, 24, 28);
-  ctx.bezierCurveTo(30, 31, 32, 24, 33, 18);
-  ctx.bezierCurveTo(34, 4, 33, -12, 27, -22);
-  ctx.bezierCurveTo(20, -31, 10, -34, -1, -34);
-  ctx.closePath();
-  ctx.fill();
-
-  // White inner body with thick ink outline
-  ctx.fillStyle = '#FFFFFF';
   ctx.strokeStyle = '#1C1917';
-  ctx.lineWidth = 3.5;
-  ctx.lineJoin = 'round';
-  ctx.beginPath();
-  ctx.moveTo(-2, -32);
-  ctx.bezierCurveTo(-14, -32, -20, -21, -20, -6);
-  ctx.bezierCurveTo(-20, 9, -22, 21, -27, 26);
-  ctx.bezierCurveTo(-20, 26, -14, 20, -8, 23);
-  ctx.bezierCurveTo(-2, 26, 2, 30, 8, 28);
-  ctx.bezierCurveTo(14, 26, 18, 21, 24, 24);
-  ctx.bezierCurveTo(29, 26, 30, 19, 31, 14);
-  ctx.bezierCurveTo(32, 1, 31, -13, 25, -22);
-  ctx.bezierCurveTo(19, -30, 9, -32, -2, -32);
-  ctx.closePath();
-  ctx.fill();
-  ctx.stroke();
-
-  // Ghost eyes
-  ctx.fillStyle = '#1C1917';
-  ctx.beginPath();
-  ctx.ellipse(-6, -12, 3.5, 5.5, 0, 0, Math.PI * 2);
-  ctx.ellipse(8, -11, 3.5, 5.5, 0, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Comic accent lines
-  ctx.strokeStyle = '#1C1917';
-  ctx.lineWidth = 2.5;
+  ctx.lineWidth = 2.8;
   ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  // Intertwined Hands Line Art
+  // Left hand / arm
   ctx.beginPath();
-  ctx.moveTo(-28, -20);
-  ctx.lineTo(-32, -16);
-  ctx.moveTo(27, -24);
-  ctx.lineTo(31, -20);
+  ctx.moveTo(-36, 12);
+  ctx.bezierCurveTo(-28, 12, -22, 8, -14, 0);
+  ctx.bezierCurveTo(-10, -4, -6, -6, 0, -2);
+  ctx.bezierCurveTo(4, 0, 6, 5, 2, 8);
+  ctx.bezierCurveTo(-2, 11, -8, 9, -12, 14);
+  ctx.bezierCurveTo(-16, 18, -22, 22, -34, 22);
   ctx.stroke();
+
+  // Right hand / arm interlocking
+  ctx.beginPath();
+  ctx.moveTo(36, 12);
+  ctx.bezierCurveTo(28, 12, 22, 8, 14, 0);
+  ctx.bezierCurveTo(10, -4, 6, -6, 0, -2);
+  ctx.bezierCurveTo(-4, 0, -6, 5, -2, 8);
+  ctx.bezierCurveTo(2, 11, 8, 9, 12, 14);
+  ctx.bezierCurveTo(16, 18, 22, 22, 34, 22);
+  ctx.stroke();
+
+  // Gentle touch arc
+  ctx.beginPath();
+  ctx.moveTo(-6, -8);
+  ctx.bezierCurveTo(-2, -12, 2, -12, 6, -8);
+  ctx.stroke();
+
+  // Starburst of connection above touch point
+  ctx.beginPath();
+  ctx.moveTo(0, -28);
+  ctx.lineTo(0, -18);
+  ctx.moveTo(-5, -23);
+  ctx.lineTo(5, -23);
+  ctx.stroke();
+
+  ctx.fillStyle = '#1C1917';
+  ctx.beginPath();
+  ctx.arc(0, -23, 1.8, 0, Math.PI * 2);
+  ctx.fill();
 
   ctx.restore();
 }
