@@ -39,7 +39,7 @@ function drawRoundedRect(ctx, x, y, width, height, radius) {
 }
 
 /**
- * Draws an elegant minimalist romantic line art illustration using vector strokes
+ * Draws an elegant minimalist romantic line art illustration (Cozy Coffee Cups) using vector strokes
  */
 function drawMascot(ctx, mascotName, centerX, centerY, scale = 1.8) {
   ctx.save();
@@ -51,44 +51,67 @@ function drawMascot(ctx, mascotName, centerX, centerY, scale = 1.8) {
   ctx.lineCap = 'round';
   ctx.lineJoin = 'round';
 
-  // Intertwined Hands Line Art
-  // Left hand / arm
+  // Table horizon
   ctx.beginPath();
-  ctx.moveTo(-36, 12);
-  ctx.bezierCurveTo(-28, 12, -22, 8, -14, 0);
-  ctx.bezierCurveTo(-10, -4, -6, -6, 0, -2);
-  ctx.bezierCurveTo(4, 0, 6, 5, 2, 8);
-  ctx.bezierCurveTo(-2, 11, -8, 9, -12, 14);
-  ctx.bezierCurveTo(-16, 18, -22, 22, -34, 22);
+  ctx.moveTo(-32, 26);
+  ctx.lineTo(32, 26);
   ctx.stroke();
 
-  // Right hand / arm interlocking
+  // Left Coffee Mug
   ctx.beginPath();
-  ctx.moveTo(36, 12);
-  ctx.bezierCurveTo(28, 12, 22, 8, 14, 0);
-  ctx.bezierCurveTo(10, -4, 6, -6, 0, -2);
-  ctx.bezierCurveTo(-4, 0, -6, 5, -2, 8);
-  ctx.bezierCurveTo(2, 11, 8, 9, 12, 14);
-  ctx.bezierCurveTo(16, 18, 22, 22, 34, 22);
+  ctx.moveTo(-24, -2);
+  ctx.lineTo(-4, -2);
+  ctx.lineTo(-4, 16);
+  ctx.bezierCurveTo(-4, 24, -10, 24, -14, 24);
+  ctx.bezierCurveTo(-18, 24, -24, 24, -24, 16);
+  ctx.closePath();
   ctx.stroke();
 
-  // Gentle touch arc
+  // Left Handle
   ctx.beginPath();
-  ctx.moveTo(-6, -8);
-  ctx.bezierCurveTo(-2, -12, 2, -12, 6, -8);
+  ctx.moveTo(-24, 2);
+  ctx.bezierCurveTo(-30, 2, -32, 12, -24, 14);
   ctx.stroke();
 
-  // Starburst of connection above touch point
+  // Right Coffee Mug
   ctx.beginPath();
-  ctx.moveTo(0, -28);
-  ctx.lineTo(0, -18);
-  ctx.moveTo(-5, -23);
-  ctx.lineTo(5, -23);
+  ctx.moveTo(4, -2);
+  ctx.lineTo(24, -2);
+  ctx.lineTo(24, 16);
+  ctx.bezierCurveTo(24, 24, 18, 24, 14, 24);
+  ctx.bezierCurveTo(10, 24, 4, 24, 4, 16);
+  ctx.closePath();
   ctx.stroke();
 
+  // Right Handle
+  ctx.beginPath();
+  ctx.moveTo(24, 2);
+  ctx.bezierCurveTo(30, 2, 32, 12, 24, 14);
+  ctx.stroke();
+
+  // Intertwining steam loops
+  ctx.lineWidth = 2.2;
+  ctx.beginPath();
+  ctx.moveTo(-14, -8);
+  ctx.bezierCurveTo(-14, -18, -6, -20, -2, -28);
+  ctx.bezierCurveTo(0, -32, 0, -36, 0, -36);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(14, -8);
+  ctx.bezierCurveTo(14, -18, 6, -20, 2, -28);
+  ctx.bezierCurveTo(0, -32, 0, -36, 0, -36);
+  ctx.stroke();
+
+  // Heart atop steam
   ctx.fillStyle = '#1C1917';
   ctx.beginPath();
-  ctx.arc(0, -23, 1.8, 0, Math.PI * 2);
+  ctx.moveTo(0, -30);
+  ctx.bezierCurveTo(-1.5, -32.5, -4.5, -32, -3.5, -29);
+  ctx.bezierCurveTo(-2.5, -26, 0, -24, 0, -24);
+  ctx.bezierCurveTo(0, -24, 2.5, -26, 3.5, -29);
+  ctx.bezierCurveTo(4.5, -32, 1.5, -32.5, 0, -30);
+  ctx.closePath();
   ctx.fill();
 
   ctx.restore();

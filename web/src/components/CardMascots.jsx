@@ -2,160 +2,16 @@ import React from 'react';
 
 /**
  * ============================================================================
- * MINIMALIST ROMANTIC & CONNECTION LINE ART
- * Pure vector single-line illustrations symbolizing intimacy, vulnerability,
- * and connection in the refined style of modern indie card decks:
- * - Fluid, expressive continuous bezier contours (#1C1917, strokeWidth 2.4 - 2.8)
- * - Delicate romantic symbolism (intertwined hands, gentle embrace, whispers,
- *   cozy coffee mugs, starry constellations, heart keyhole, flame spark)
+ * MINIMALIST ROMANTIC & CONNECTION OBJECT LINE ART
+ * Pure vector single-line illustrations of iconic romantic still-life objects
+ * and poetic symbols in the refined style of modern indie card decks:
+ * - 100% clean object/symbol illustrations (no distorted human figures or faces)
+ * - Fluid, expressive continuous bezier contours (#1C1917, strokeWidth 2.2 - 2.8)
  * - Razor-sharp on all screens (zero raster compression artifacts)
  * ============================================================================
  */
 
-// 1. Intertwined Hands (Connection, Touch, Holding Hands)
-export function IntertwinedHandsIllustration({ size = 116, className = '' }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={`mascot-animated mascot-hands ${className}`}>
-      {/* Left arm & hand */}
-      <path
-        d="M14 62C22 62 28 58 36 50C40 46 44 44 50 48C54 50 56 55 52 58C48 61 42 59 38 64C34 68 28 72 16 72"
-        stroke="#1C1917"
-        strokeWidth="2.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      {/* Right arm & hand interlocking */}
-      <path
-        d="M86 62C78 62 72 58 64 50C60 46 56 44 50 48C46 50 44 55 48 58C52 61 58 59 62 64C66 68 72 72 84 72"
-        stroke="#1C1917"
-        strokeWidth="2.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      {/* Gentle touch accent arc */}
-      <path
-        d="M44 42C48 38 52 38 56 42"
-        stroke="#1C1917"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-      />
-      {/* Starburst of connection above touch point */}
-      <path d="M50 22V32" stroke="#1C1917" strokeWidth="2.2" strokeLinecap="round" />
-      <path d="M45 27H55" stroke="#1C1917" strokeWidth="2.2" strokeLinecap="round" />
-      <circle cx="50" cy="27" r="1.6" fill="#1C1917" />
-    </svg>
-  );
-}
-
-// 2. Gentle Embrace (Intimacy, Deep Hug, Safe Harbor)
-export function GentleEmbraceIllustration({ size = 116, className = '' }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={`mascot-animated mascot-breathe ${className}`}>
-      {/* Left head resting on shoulder */}
-      <path
-        d="M44 32C44 24 38 20 32 24C26 28 26 38 32 44C36 48 42 50 42 58C42 66 38 78 30 84"
-        stroke="#1C1917"
-        strokeWidth="2.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      {/* Right head leaning in */}
-      <path
-        d="M44 32C48 24 56 22 62 26C68 30 68 40 62 46C56 52 52 56 52 64C52 72 58 80 66 84"
-        stroke="#1C1917"
-        strokeWidth="2.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      {/* Arm wrapping in tender embrace */}
-      <path
-        d="M28 54C34 50 48 48 58 56C66 62 70 72 64 78"
-        stroke="#1C1917"
-        strokeWidth="2.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      {/* Heart warmth mark in between */}
-      <path
-        d="M50 40C48 37 45 38 46 41C47 44 50 47 50 47C50 47 53 44 54 41C55 38 52 37 50 40Z"
-        fill="#1C1917"
-      />
-    </svg>
-  );
-}
-
-// 3. Profile Whispers (Secrets, Vulnerability, Unspoken Words)
-export function ProfileWhisperIllustration({ size = 116, className = '' }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={`mascot-animated mascot-sway ${className}`}>
-      {/* Left Face Profile (whispering) */}
-      <path
-        d="M28 20C34 20 38 24 38 30C38 34 36 36 38 38C40 40 44 41 44 44C44 46 41 47 40 49C42 51 43 53 40 55C37 57 32 58 32 64C32 70 30 78 26 82"
-        stroke="#1C1917"
-        strokeWidth="2.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      {/* Right Face Profile (listening, facing left) */}
-      <path
-        d="M72 20C66 20 62 24 62 30C62 34 64 36 62 38C60 40 56 41 56 44C56 46 59 47 60 49C58 51 57 53 60 55C63 57 68 58 68 64C68 70 70 78 74 82"
-        stroke="#1C1917"
-        strokeWidth="2.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      {/* Gentle whisper waves */}
-      <path d="M48 42C50 43 50 45 48 46" stroke="#1C1917" strokeWidth="2.2" strokeLinecap="round" />
-      <path d="M51 39C54 41 54 47 51 49" stroke="#1C1917" strokeWidth="2.2" strokeLinecap="round" />
-      {/* Star twinkle above heads */}
-      <path d="M50 18L51.5 22L55.5 23L51.5 24L50 28L48.5 24L44.5 23L48.5 22Z" fill="#1C1917" />
-    </svg>
-  );
-}
-
-// 4. Leaning Shoulders (Companionship, Trust, Under the Night Sky)
-export function LeaningShouldersIllustration({ size = 116, className = '' }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={`mascot-animated mascot-breathe ${className}`}>
-      {/* Ground horizon */}
-      <path d="M16 84C38 80 62 80 84 84" stroke="#1C1917" strokeWidth="2.4" strokeLinecap="round" />
-      {/* Left person silhouette back */}
-      <path
-        d="M36 46C36 38 40 34 46 36C48 37 49 42 46 48"
-        stroke="#1C1917"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-      />
-      <path
-        d="M26 82C26 66 32 54 46 52C50 51 52 54 52 64C52 74 50 82 50 82"
-        stroke="#1C1917"
-        strokeWidth="2.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      {/* Right person silhouette back leaning in */}
-      <path
-        d="M54 46C54 38 52 34 46 36"
-        stroke="#1C1917"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-      />
-      <path
-        d="M74 82C74 66 68 54 54 52"
-        stroke="#1C1917"
-        strokeWidth="2.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      {/* Night sky constellation stars */}
-      <circle cx="28" cy="26" r="1.6" fill="#1C1917" />
-      <circle cx="72" cy="24" r="1.8" fill="#1C1917" />
-      <path d="M50 14L51.5 18L55.5 19L51.5 20L50 24L48.5 20L44.5 19L48.5 18Z" fill="#1C1917" />
-    </svg>
-  );
-}
-
-// 5. Cozy Coffee Cups (Conversations, Morning Talks, Safe Warmth)
+// 1. Cozy Coffee Cups (Conversations, Morning Talks, Safe Warmth)
 export function CozyCoffeeCupsIllustration({ size = 116, className = '' }) {
   return (
     <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={`mascot-animated mascot-cup ${className}`}>
@@ -216,7 +72,7 @@ export function CozyCoffeeCupsIllustration({ size = 116, className = '' }) {
   );
 }
 
-// 6. Clinking Coupe Glasses (Chemistry, Celebration, Date Night)
+// 2. Clinking Coupe Glasses (Chemistry, Celebration, Date Night)
 export function ClinkingGlassesIllustration({ size = 116, className = '' }) {
   return (
     <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={`mascot-animated mascot-spark ${className}`}>
@@ -241,31 +97,7 @@ export function ClinkingGlassesIllustration({ size = 116, className = '' }) {
   );
 }
 
-// 7. Heart Keyhole & Skeleton Key (Trust, Vulnerability, Unlocking)
-export function HeartKeyholeIllustration({ size = 116, className = '' }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={`mascot-animated mascot-sway ${className}`}>
-      {/* Continuous single-line elegant heart */}
-      <path
-        d="M50 82C40 74 20 58 20 40C20 28 28 20 38 20C44 20 48 24 50 28C52 24 56 20 62 20C72 20 80 28 80 40C80 58 60 74 50 82Z"
-        stroke="#1C1917"
-        strokeWidth="2.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      {/* Delicate Antique Skeleton Key turning inside */}
-      <circle cx="50" cy="40" r="6" stroke="#1C1917" strokeWidth="2.3" />
-      <line x1="50" y1="46" x2="50" y2="64" stroke="#1C1917" strokeWidth="2.3" strokeLinecap="round" />
-      <path d="M50 56H56" stroke="#1C1917" strokeWidth="2.3" strokeLinecap="round" />
-      <path d="M50 62H55" stroke="#1C1917" strokeWidth="2.3" strokeLinecap="round" />
-      {/* Twinkle dots */}
-      <circle cx="34" cy="32" r="1.6" fill="#1C1917" />
-      <circle cx="66" cy="32" r="1.6" fill="#1C1917" />
-    </svg>
-  );
-}
-
-// 8. Constellation (Destiny, Dreams, Future Together)
+// 3. Star Constellation (Destiny, Dreams, Future Together)
 export function ConstellationIllustration({ size = 116, className = '' }) {
   return (
     <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={`mascot-animated mascot-glide ${className}`}>
@@ -297,12 +129,12 @@ export function ConstellationIllustration({ size = 116, className = '' }) {
   );
 }
 
-// 9. Folded Letter (Unspoken Thoughts, Confessions, Words)
+// 4. Folded Letter (Unspoken Thoughts, Confessions, Words)
 export function FoldedLetterIllustration({ size = 116, className = '' }) {
   return (
     <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={`mascot-animated mascot-float ${className}`}>
       {/* Minimalist envelope body */}
-      <rect x="22" y="32" width="56" height="38" rx="4" stroke="#1C1917" strokeWidth="2.6" />
+      <rect x="22" y="32" width="56" height="38" rx="4" stroke="#1C1917" strokeWidth="2.6" fill="#FFFFFF" />
       {/* Envelope flap lines */}
       <polyline points="22,34 50,54 78,34" stroke="#1C1917" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
       <line x1="22" y1="70" x2="42" y2="50" stroke="#1C1917" strokeWidth="1.8" strokeLinecap="round" />
@@ -320,14 +152,14 @@ export function FoldedLetterIllustration({ size = 116, className = '' }) {
   );
 }
 
-// 10. Candle Flame (Midnight Whispers, Stillness, Warmth)
+// 5. Candle Flame (Midnight Whispers, Stillness, Warmth)
 export function CandleFlameIllustration({ size = 116, className = '' }) {
   return (
     <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={`mascot-animated mascot-candle ${className}`}>
       {/* Base holder line */}
       <path d="M30 84C42 86 58 86 70 84" stroke="#1C1917" strokeWidth="2.6" strokeLinecap="round" />
       {/* Slender candle body */}
-      <rect x="44" y="44" width="12" height="40" rx="3" stroke="#1C1917" strokeWidth="2.6" />
+      <rect x="44" y="44" width="12" height="40" rx="3" stroke="#1C1917" strokeWidth="2.6" fill="#FFFFFF" />
       {/* Wick */}
       <line x1="50" y1="38" x2="50" y2="44" stroke="#1C1917" strokeWidth="2.2" strokeLinecap="round" />
       {/* Teardrop dancing flame */}
@@ -350,46 +182,13 @@ export function CandleFlameIllustration({ size = 116, className = '' }) {
   );
 }
 
-// 11. Botanical Bloom (Growing Together, Roots, Tenderness)
-export function BotanicalBloomIllustration({ size = 116, className = '' }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={`mascot-animated mascot-breathe ${className}`}>
-      {/* Left curving stem with delicate leaves */}
-      <path
-        d="M48 84C48 70 42 56 36 44C32 36 32 28 36 22"
-        stroke="#1C1917"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-      />
-      <path d="M38 52C30 50 26 44 28 38C34 38 37 44 38 52Z" stroke="#1C1917" strokeWidth="2.2" strokeLinejoin="round" />
-      <path d="M36 34C28 30 28 24 32 20C36 22 37 28 36 34Z" stroke="#1C1917" strokeWidth="2.2" strokeLinejoin="round" />
-      
-      {/* Right curving stem intertwining */}
-      <path
-        d="M52 84C52 70 58 56 64 44C68 36 68 28 64 22"
-        stroke="#1C1917"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-      />
-      <path d="M62 52C70 50 74 44 72 38C66 38 63 44 62 52Z" stroke="#1C1917" strokeWidth="2.2" strokeLinejoin="round" />
-      <path d="M64 34C72 30 72 24 68 20C64 22 63 28 64 34Z" stroke="#1C1917" strokeWidth="2.2" strokeLinejoin="round" />
-      
-      {/* Blooming blossom meeting in center */}
-      <path
-        d="M50 24C46 16 54 12 50 8C46 12 54 16 50 24Z"
-        fill="#1C1917"
-      />
-    </svg>
-  );
-}
-
-// 12. Match Spark (Wildcard / The First Spark / Chemistry)
+// 6. Matchstick Spark (Wildcard / The First Spark / Chemistry)
 export function MatchSparkIllustration({ size = 116, className = '' }) {
   return (
     <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={`mascot-animated mascot-spark ${className}`}>
       {/* Slender wooden matchstick tilted */}
       <g transform="rotate(22 50 64)">
-        <rect x="46" y="44" width="8" height="42" rx="2" stroke="#1C1917" strokeWidth="2.5" />
+        <rect x="46" y="44" width="8" height="42" rx="2" stroke="#1C1917" strokeWidth="2.5" fill="#FFFFFF" />
         <ellipse cx="50" cy="40" rx="6" ry="7" fill="#1C1917" />
       </g>
       {/* Radiant vibrant flame */}
@@ -411,45 +210,204 @@ export function MatchSparkIllustration({ size = 116, className = '' }) {
   );
 }
 
-// Aliases for backwards compatibility with previous imports
-export const NeedleMascot = IntertwinedHandsIllustration;
-export const GhostMascot = GentleEmbraceIllustration;
-export const PizzaMascot = ProfileWhisperIllustration;
-export const SkiMasksMascot = LeaningShouldersIllustration;
-export const BleichmonsterMascot = HeartKeyholeIllustration;
-export const MittenMascot = CozyCoffeeCupsIllustration;
-export const MatchstickMascot = MatchSparkIllustration;
-export const TinCanTelephoneMascot = ProfileWhisperIllustration;
-export const TeacupMascot = CozyCoffeeCupsIllustration;
-export const PolaroidCameraMascot = FoldedLetterIllustration;
-export const ClinkingGlassesMascot = ClinkingGlassesIllustration;
-export const HeartPadlockMascot = HeartKeyholeIllustration;
-export const HoodsMascot = LeaningShouldersIllustration;
-export const MeltingMascot = ProfileWhisperIllustration;
-export const HandsMascot = IntertwinedHandsIllustration;
-export const FlightMascot = ConstellationIllustration;
-export const CatPawMascot = IntertwinedHandsIllustration;
-export const LoveLetterMascot = FoldedLetterIllustration;
-export const HourglassMascot = CandleFlameIllustration;
-export const CandleMascot = CandleFlameIllustration;
+// 7. Vintage Vinyl Record (Shared Rhythm, Music, Kitchen Dancing)
+export function VinylRecordIllustration({ size = 116, className = '' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={`mascot-animated mascot-sway ${className}`}>
+      {/* Outer Vinyl Disc */}
+      <circle cx="50" cy="50" r="34" stroke="#1C1917" strokeWidth="2.6" />
+      {/* Sound Grooves */}
+      <circle cx="50" cy="50" r="26" stroke="#1C1917" strokeWidth="1.2" strokeDasharray="8 4" />
+      <circle cx="50" cy="50" r="19" stroke="#1C1917" strokeWidth="1.2" strokeDasharray="6 3" />
+      {/* Center Label */}
+      <circle cx="50" cy="50" r="12" stroke="#1C1917" strokeWidth="2.2" fill="#FFFFFF" />
+      {/* Spindle Hole */}
+      <circle cx="50" cy="50" r="3.2" fill="#1C1917" />
+      {/* Turntable Stylus / Tone Arm */}
+      <path d="M78 18L66 26L60 38" stroke="#1C1917" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+      <rect x="56" y="36" width="6" height="4" rx="1" fill="#1C1917" transform="rotate(-30 59 38)" />
+      {/* Musical Note & Sparkle */}
+      <path d="M22 28V20C22 17 26 17 29 19V24" stroke="#1C1917" strokeWidth="2" strokeLinecap="round" />
+      <circle cx="21" cy="28" r="2.5" fill="#1C1917" />
+      <circle cx="78" cy="74" r="1.6" fill="#1C1917" />
+      <path d="M26 72L27 74L29 75L27 76L26 78L25 76L23 75L25 74Z" fill="#1C1917" />
+    </svg>
+  );
+}
+
+// 8. Polaroid Photo (Memories, Captured Moments, Nostalgia)
+export function PolaroidPhotoIllustration({ size = 116, className = '' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={`mascot-animated mascot-float ${className}`}>
+      {/* Polaroid Outer Card Frame */}
+      <rect x="25" y="20" width="50" height="60" rx="4" stroke="#1C1917" strokeWidth="2.6" fill="#FFFFFF" />
+      {/* Photo Viewport */}
+      <rect x="30" y="25" width="40" height="38" rx="2" stroke="#1C1917" strokeWidth="2.2" />
+      {/* Scenic Horizon Inside Photo */}
+      <path d="M30 52C36 45 42 48 50 42C56 38 62 46 70 52" stroke="#1C1917" strokeWidth="2.2" strokeLinecap="round" />
+      {/* Sun / Moon in Photo */}
+      <circle cx="42" cy="36" r="3.2" fill="#1C1917" />
+      {/* Heart Doodle on Bottom Margin */}
+      <path
+        d="M50 71C48.5 68.5 45 69 46 72.5C47 75.5 50 78 50 78C50 78 53 75.5 54 72.5C55 69 51.5 68.5 50 71Z"
+        fill="#1C1917"
+      />
+      {/* Top Paperclip */}
+      <path d="M44 14C44 10 52 10 52 14V24C52 27 48 27 48 24V16" stroke="#1C1917" strokeWidth="2" strokeLinecap="round" />
+      {/* Ambient Twinkles */}
+      <circle cx="18" cy="30" r="1.6" fill="#1C1917" />
+      <circle cx="82" cy="65" r="1.8" fill="#1C1917" />
+    </svg>
+  );
+}
+
+// 9. Paper Airplane (Messages Across Distance, Playful Love, Unspoken Thoughts)
+export function PaperAirplaneIllustration({ size = 116, className = '' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={`mascot-animated mascot-glide ${className}`}>
+      {/* Looping Heart Flight Trail */}
+      <path
+        d="M16 78C26 80 32 68 28 58C24 48 14 54 20 66C24 74 36 68 46 58"
+        stroke="#1C1917"
+        strokeWidth="2"
+        strokeDasharray="4 3"
+        strokeLinecap="round"
+      />
+      {/* Main Origami Paper Plane */}
+      <polygon points="80,24 28,44 50,58" stroke="#1C1917" strokeWidth="2.6" strokeLinejoin="round" fill="#FFFFFF" />
+      <line x1="80" y1="24" x2="50" y2="58" stroke="#1C1917" strokeWidth="2.4" strokeLinecap="round" />
+      <polygon points="50,58 52,70 62,53" stroke="#1C1917" strokeWidth="2.2" strokeLinejoin="round" fill="#1C1917" />
+      {/* Guiding Sparkle Star */}
+      <path d="M86 16L87.5 20L92 21.5L87.5 23L86 27L84.5 23L80 21.5L84.5 20Z" fill="#1C1917" />
+      <circle cx="68" cy="80" r="1.6" fill="#1C1917" />
+    </svg>
+  );
+}
+
+// 10. Antique Skeleton Key (Trust, Unlocking Deeper Layers, Emotional Safety)
+export function AntiqueKeyIllustration({ size = 116, className = '' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={`mascot-animated mascot-sway ${className}`}>
+      {/* Heart-Shaped Key Bow */}
+      <path
+        d="M50 32C44 23 32 25 32 35C32 44 48 53 50 55C52 53 68 44 68 35C68 25 56 23 50 32Z"
+        stroke="#1C1917"
+        strokeWidth="2.6"
+        strokeLinejoin="round"
+      />
+      {/* Inner Heart Cutout */}
+      <path
+        d="M50 36C47 31 39 32 39 38C39 43 48 48 50 50C52 48 61 43 61 38C61 32 53 31 50 36Z"
+        fill="#1C1917"
+      />
+      {/* Slender Key Stem */}
+      <line x1="50" y1="55" x2="50" y2="84" stroke="#1C1917" strokeWidth="2.6" strokeLinecap="round" />
+      {/* Key Teeth with Heart Notch */}
+      <path d="M50 72H60V77H55V82H60" stroke="#1C1917" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+      {/* Sparkles of Trust */}
+      <circle cx="68" cy="74" r="1.8" fill="#1C1917" />
+      <circle cx="32" cy="66" r="1.6" fill="#1C1917" />
+      <path d="M50 14L51.5 17L54 18L51.5 19L50 22L48.5 19L46 18L48.5 17Z" fill="#1C1917" />
+    </svg>
+  );
+}
+
+// 11. Crescent Moon & Star (Midnight Conversations, Pillow Talk, Dreams)
+export function CrescentMoonIllustration({ size = 116, className = '' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={`mascot-animated mascot-glide ${className}`}>
+      {/* Slender Romantic Crescent Moon */}
+      <path
+        d="M52 18C38 22 28 36 30 52C32 68 46 80 64 78C48 74 40 58 44 42C47 30 56 22 62 18C59 17 55 17 52 18Z"
+        stroke="#1C1917"
+        strokeWidth="2.6"
+        strokeLinejoin="round"
+      />
+      {/* Twinkling Star Cradled in Crescent */}
+      <path d="M68 42L70 47L75 49L70 51L68 56L66 51L61 49L66 47Z" fill="#1C1917" />
+      {/* Starlight Constellation Dots */}
+      <circle cx="26" cy="32" r="1.6" fill="#1C1917" />
+      <circle cx="76" cy="26" r="1.5" fill="#1C1917" />
+      <circle cx="34" cy="72" r="1.6" fill="#1C1917" />
+      <circle cx="74" cy="68" r="1.3" fill="#1C1917" />
+    </svg>
+  );
+}
+
+// 12. Minimalist Hourglass (Presence, Stillness, Precious Time Together)
+export function HourglassIllustration({ size = 116, className = '' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={`mascot-animated mascot-breathe ${className}`}>
+      {/* Top & Bottom Tabletop Caps */}
+      <line x1="26" y1="22" x2="74" y2="22" stroke="#1C1917" strokeWidth="2.8" strokeLinecap="round" />
+      <line x1="26" y1="78" x2="74" y2="78" stroke="#1C1917" strokeWidth="2.8" strokeLinecap="round" />
+      {/* Tapered Glass Bulbs */}
+      <path
+        d="M32 22L48 48C49 50 49 50 48 52L32 78M68 22L52 48C51 50 51 50 52 52L68 78"
+        stroke="#1C1917"
+        strokeWidth="2.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      {/* Flowing Sand Mound in Lower Chamber */}
+      <path d="M38 76C44 68 56 68 62 76" stroke="#1C1917" strokeWidth="2.2" strokeLinecap="round" />
+      {/* Gentle Stream of Falling Sand */}
+      <line x1="50" y1="46" x2="50" y2="70" stroke="#1C1917" strokeWidth="2" strokeDasharray="3 3" strokeLinecap="round" />
+      {/* Presence Sparkle at Center Waist */}
+      <circle cx="50" cy="50" r="2.2" fill="#1C1917" />
+      <circle cx="20" cy="50" r="1.4" fill="#1C1917" />
+      <circle cx="80" cy="50" r="1.4" fill="#1C1917" />
+    </svg>
+  );
+}
 
 /**
- * The 12 Romantic & Connection Line Art Masterpieces
+ * 12 Refined Romantic Object & Poetic Symbol Illustrations
+ * (All 100% inanimate tabletop objects - zero anatomical oddities)
  */
 export const ROMANTIC_HERO_MASCOTS = [
-  IntertwinedHandsIllustration, // 0: Touch & Connection
-  GentleEmbraceIllustration,    // 1: Intimacy & Closeness
-  ProfileWhisperIllustration,   // 2: Vulnerability & Secrets
-  LeaningShouldersIllustration, // 3: Companionship & Night Sky
-  CozyCoffeeCupsIllustration,   // 4: Warmup & Morning Conversations
-  ClinkingGlassesIllustration,  // 5: Chemistry & Date Night
-  HeartKeyholeIllustration,     // 6: Trust & Unlocking Heart
-  ConstellationIllustration,    // 7: Destiny & Dreams
-  FoldedLetterIllustration,     // 8: Words & Confessions
-  CandleFlameIllustration,      // 9: Midnight Whispers
-  BotanicalBloomIllustration,   // 10: Growth & Tenderness
-  MatchSparkIllustration        // 11: Wildcard / The Spark
+  CozyCoffeeCupsIllustration,   // 0: Morning talks, warmth
+  MatchSparkIllustration,        // 1: The first spark, chemistry
+  CandleFlameIllustration,       // 2: Midnight whispers, stillness
+  FoldedLetterIllustration,      // 3: Unspoken thoughts, confessions
+  ConstellationIllustration,     // 4: Destiny, future, dreams
+  ClinkingGlassesIllustration,   // 5: Celebration, date night
+  VinylRecordIllustration,       // 6: Music, slow dance in kitchen
+  PolaroidPhotoIllustration,     // 7: Memories, captured moments
+  PaperAirplaneIllustration,     // 8: Messages, thoughts across distance
+  AntiqueKeyIllustration,        // 9: Trust, unlocking vulnerability
+  CrescentMoonIllustration,      // 10: Pillow talk, bedtime dreams
+  HourglassIllustration          // 11: Presence, time standing still
 ];
+
+// Aliases for seamless backwards compatibility
+export const IntertwinedHandsIllustration = CozyCoffeeCupsIllustration;
+export const GentleEmbraceIllustration = CandleFlameIllustration;
+export const ProfileWhisperIllustration = FoldedLetterIllustration;
+export const LeaningShouldersIllustration = ConstellationIllustration;
+export const HeartKeyholeIllustration = AntiqueKeyIllustration;
+export const BotanicalBloomIllustration = HourglassIllustration;
+
+export const NeedleMascot = CozyCoffeeCupsIllustration;
+export const GhostMascot = CandleFlameIllustration;
+export const PizzaMascot = FoldedLetterIllustration;
+export const SkiMasksMascot = ConstellationIllustration;
+export const BleichmonsterMascot = AntiqueKeyIllustration;
+export const MittenMascot = CozyCoffeeCupsIllustration;
+export const MatchstickMascot = MatchSparkIllustration;
+export const TinCanTelephoneMascot = PaperAirplaneIllustration;
+export const TeacupMascot = CozyCoffeeCupsIllustration;
+export const PolaroidCameraMascot = PolaroidPhotoIllustration;
+export const ClinkingGlassesMascot = ClinkingGlassesIllustration;
+export const HeartPadlockMascot = AntiqueKeyIllustration;
+export const HoodsMascot = ConstellationIllustration;
+export const MeltingMascot = CandleFlameIllustration;
+export const HandsMascot = CozyCoffeeCupsIllustration;
+export const FlightMascot = PaperAirplaneIllustration;
+export const CatPawMascot = PolaroidPhotoIllustration;
+export const LoveLetterMascot = FoldedLetterIllustration;
+export const HourglassMascot = HourglassIllustration;
+export const CandleMascot = CandleFlameIllustration;
 
 /**
  * Powder blue palette matching the photo reference (#A8CEEB),
@@ -481,44 +439,71 @@ export function getCardStickerLabel(question) {
 }
 
 /**
- * Intelligent selector pairing each question with an emotionally resonant,
- * minimalist romantic line art drawing.
+ * Intelligent selector pairing each question with an evocative,
+ * beautifully drawn romantic object illustration.
  */
 export function getCardMascot(category = '', questionId = '', depth = 1) {
   const cat = (category || '').toUpperCase();
   const id = (questionId || '').toUpperCase();
 
-  // Special cases
-  if (id.includes('WILDCARD')) return MatchSparkIllustration;
-  if (id.includes('MIDNIGHT')) return CandleFlameIllustration;
+  // 1. Wildcard & Spark questions
+  if (id.includes('WILDCARD') || cat.includes('SPARK')) {
+    return MatchSparkIllustration;
+  }
 
-  // Thematic Affinity Mappings
-  if (cat.includes('TEA') || cat.includes('CONVERS') || cat.includes('WARM') || cat.includes('HABIT')) {
+  // 2. Midnight, deep intimacy, quiet questions
+  if (id.includes('MIDNIGHT') || cat.includes('INTIM') || cat.includes('DEEP')) {
+    return CandleFlameIllustration;
+  }
+
+  // 3. Morning talks, cozy habits, safety
+  if (cat.includes('TEA') || cat.includes('COFFEE') || cat.includes('WARM') || cat.includes('HABIT') || cat.includes('DAILY')) {
     return CozyCoffeeCupsIllustration;
   }
-  if (cat.includes('SPARK') || cat.includes('CHEM') || cat.includes('PLAY')) {
+
+  // 4. Celebration, chemistry, playfulness
+  if (cat.includes('CHEM') || cat.includes('PLAY') || cat.includes('DATE') || cat.includes('CHEERS')) {
     return ClinkingGlassesIllustration;
   }
-  if (cat.includes('TOUCH') || cat.includes('HOLD') || cat.includes('US') || cat.includes('CONNECT')) {
-    return IntertwinedHandsIllustration;
+
+  // 5. Written words, letters, confessions
+  if (cat.includes('LETTER') || cat.includes('WRITE') || cat.includes('CONFESS') || cat.includes('UNSPOKEN')) {
+    return FoldedLetterIllustration;
   }
-  if (cat.includes('INTIM') || cat.includes('EMBRACE') || cat.includes('CLOSENESS')) {
-    return GentleEmbraceIllustration;
-  }
-  if (cat.includes('SECRET') || cat.includes('VULNER') || cat.includes('FEAR') || cat.includes('UNSPOKEN')) {
-    return ProfileWhisperIllustration;
-  }
-  if (cat.includes('TRUST') || cat.includes('LOCK') || cat.includes('KEY') || cat.includes('TRUTH')) {
-    return HeartKeyholeIllustration;
-  }
+
+  // 6. Dreams, future, destiny, stars
   if (cat.includes('DREAM') || cat.includes('FUTURE') || cat.includes('STARRY') || cat.includes('GOAL')) {
     return ConstellationIllustration;
   }
-  if (cat.includes('LETTER') || cat.includes('WRITE') || cat.includes('WORD') || cat.includes('MEMOR')) {
-    return FoldedLetterIllustration;
+
+  // 7. Music, rhythms, dancing, shared vibes
+  if (cat.includes('MUSIC') || cat.includes('DANCE') || cat.includes('VIBE') || cat.includes('FUN')) {
+    return VinylRecordIllustration;
   }
-  if (cat.includes('GROW') || cat.includes('ROOT') || cat.includes('ORIGIN') || cat.includes('VALUE')) {
-    return BotanicalBloomIllustration;
+
+  // 8. Memories, nostalgia, moments, photos
+  if (cat.includes('MEMOR') || cat.includes('PAST') || cat.includes('FIRST') || cat.includes('MOMENT')) {
+    return PolaroidPhotoIllustration;
+  }
+
+  // 9. Distance, messages, sending love, flight
+  if (cat.includes('DISTANCE') || cat.includes('THOUGHT') || cat.includes('TRAVEL') || cat.includes('MESSAGE')) {
+    return PaperAirplaneIllustration;
+  }
+
+  // 10. Secrets, trust, emotional safety, unlocking
+  if (cat.includes('SECRET') || cat.includes('TRUST') || cat.includes('VULNER') || cat.includes('TRUTH')) {
+    return AntiqueKeyIllustration;
+  }
+
+  // 11. Night talks, pillow conversations, sleep
+  if (cat.includes('NIGHT') || cat.includes('BED') || cat.includes('SLEEP') || cat.includes('MOON')) {
+    return CrescentMoonIllustration;
+  }
+
+  // 12. Time, patience, presence, growth
+  if (cat.includes('TIME') || cat.includes('GROW') || cat.includes('SLOW') || cat.includes('PRESENT')) {
+    return HourglassIllustration;
   }
 
   // Deterministic fallback based on questionId so consecutive cards never repeat

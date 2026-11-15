@@ -4,7 +4,7 @@ import QRCode from 'qrcode';
 import { RELATIONSHIP_TYPES, SESSION_LENGTHS } from '../utils/engine';
 import { playClickSound } from '../utils/audio';
 import { generateRandomCode } from '../utils/peer';
-import { IntertwinedHandsIllustration, GentleEmbraceIllustration, ProfileWhisperIllustration } from './CardMascots';
+import { CozyCoffeeCupsIllustration, CandleFlameIllustration, ClinkingGlassesIllustration } from './CardMascots';
 
 const REL_ICONS = {
   COUPLE: Heart,
@@ -148,7 +148,7 @@ export default function LobbyScreen({
           padding: '6px 0',
           userSelect: 'none'
         }}>
-          {/* Card 1: Nähcafe */}
+          {/* Card 1: Connection (Cozy Coffee Cups) */}
           <div style={{
             width: '74px',
             height: '104px',
@@ -171,12 +171,12 @@ export default function LobbyScreen({
               padding: '4px 2px'
             }}>
               <div style={{ alignSelf: 'flex-start', width: '12px', height: '12px', borderRadius: '50%', background: '#1C1917', color: '#FFF', fontSize: '7px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>★</div>
-              <IntertwinedHandsIllustration size={34} />
+              <CozyCoffeeCupsIllustration size={34} />
               <div style={{ background: '#FFF', color: '#1C1917', fontSize: '6px', fontWeight: '800', padding: '1px 3px', borderRadius: '2px', textTransform: 'uppercase' }}>CONNECTION</div>
             </div>
           </div>
 
-          {/* Card 2: Intimacy (Gentle Embrace) */}
+          {/* Card 2: Intimacy (Candle Flame) */}
           <div style={{
             width: '84px',
             height: '118px',
@@ -200,12 +200,12 @@ export default function LobbyScreen({
               padding: '5px 3px'
             }}>
               <div style={{ alignSelf: 'flex-start', width: '14px', height: '14px', borderRadius: '50%', background: '#1C1917', color: '#FFF', fontSize: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>★</div>
-              <GentleEmbraceIllustration size={44} />
+              <CandleFlameIllustration size={44} />
               <div style={{ background: '#FFF', color: '#1C1917', fontSize: '7px', fontWeight: '800', padding: '1px 4px', borderRadius: '2px', textTransform: 'uppercase' }}>INTIMACY</div>
             </div>
           </div>
 
-          {/* Card 3: Vulnerability (Profile Whisper) */}
+          {/* Card 3: Chemistry (Clinking Glasses) */}
           <div style={{
             width: '74px',
             height: '104px',
@@ -228,8 +228,8 @@ export default function LobbyScreen({
               padding: '4px 2px'
             }}>
               <div style={{ alignSelf: 'flex-start', width: '12px', height: '12px', borderRadius: '50%', background: '#1C1917', color: '#FFF', fontSize: '7px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>★</div>
-              <ProfileWhisperIllustration size={34} />
-              <div style={{ background: '#FFF', color: '#1C1917', fontSize: '6px', fontWeight: '800', padding: '1px 3px', borderRadius: '2px', textTransform: 'uppercase' }}>VULNERABILITY</div>
+              <ClinkingGlassesIllustration size={34} />
+              <div style={{ background: '#FFF', color: '#1C1917', fontSize: '6px', fontWeight: '800', padding: '1px 3px', borderRadius: '2px', textTransform: 'uppercase' }}>CHEMISTRY</div>
             </div>
           </div>
         </div>
