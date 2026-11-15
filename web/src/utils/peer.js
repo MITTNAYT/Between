@@ -619,10 +619,16 @@ class MultiplayerSync {
     });
   }
 
-  sendReaction(emoji) {
+  sendReaction(emoji, meta = {}) {
     this.broadcastMessage({
       type: 'REACTION',
-      payload: { emoji, sender: this.isHost ? 'host' : 'guest', timestamp: Date.now() }
+      payload: {
+        emoji,
+        sender: this.isHost ? 'host' : 'guest',
+        senderName: this.myName || (this.isHost ? 'Partner 1' : 'Partner 2'),
+        timestamp: Date.now(),
+        ...(typeof meta === 'object' && meta !== null ? meta : {})
+      }
     });
   }
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Sparkles, Bookmark, Copy, Check, Heart, ArrowRight, Home, Download, Image as ImageIcon } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import ReactionBar from './ReactionBar';
 import { playClickSound, playHandshakeSound } from '../utils/audio';
 import { RELATIONSHIP_TYPES } from '../utils/engine';
 import { downloadCardAsPng } from '../utils/cardExporter';
@@ -18,7 +19,8 @@ export default function ClosingScreen({
   isHost = true,
   peerAppreciationNote = '',
   myAppreciationNote = '',
-  onSendAppreciationNote
+  onSendAppreciationNote,
+  onSendReaction
 }) {
   const [copiedMoments, setCopiedMoments] = useState(false);
   const [appreciationNote, setAppreciationNote] = useState(myAppreciationNote || '');
@@ -634,6 +636,13 @@ export default function ClosingScreen({
           }
         </span>
       </button>
+
+      {/* Live Reactions Dock */}
+      {onSendReaction && (
+        <div style={{ display: 'flex', justifyContent: 'center', margin: '4px 0 16px', width: '100%' }}>
+          <ReactionBar onSendReaction={onSendReaction} />
+        </div>
+      )}
 
       {/* Navigation Actions */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>

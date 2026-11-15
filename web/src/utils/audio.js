@@ -229,29 +229,174 @@ export function playHandshakeSound() {
   } catch (e) {}
 }
 
+let lastReactionTime = 0;
+let reactionComboStep = 0;
+
 /**
- * Light pop / reaction chime
+ * Rich, emotionally resonant reaction synthesizer for couples
+ * Synthesizes unique acoustic signatures per emoji with musical pentatonic pitch scaling on rapid taps
  */
-export function playReactionSound() {
+export function playReactionSound(emojiOrType = '❤️', forcedStep = null) {
   try {
     const ctx = getAudioContext();
     if (!ctx) return;
 
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
+    const now = Date.now();
+    if (forcedStep !== null) {
+      reactionComboStep = forcedStep;
+    } else if (now - lastReactionTime < 1100) {
+      reactionComboStep = (reactionComboStep + 1) % 6;
+    } else {
+      reactionComboStep = 0;
+    }
+    lastReactionTime = now;
 
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(680, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.08);
+    // Major Pentatonic scale multipliers: 1, 9/8, 5/4, 3/2, 5/3, 2
+    const PENTATONIC = [1.0, 1.125, 1.25, 1.5, 1.667, 2.0];
+    const pitchFactor = PENTATONIC[reactionComboStep % PENTATONIC.length];
 
-    gain.gain.setValueAtTime(0.07, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+    const t = ctx.currentTime;
+    const emoji = typeof emojiOrType === 'string' ? emojiOrType : '❤️';
 
-    osc.connect(gain);
-    gain.connect(ctx.destination);
+    if (emoji === '❤️' || emoji === 'heart' || emoji === '🫶' || emoji === '💋') {
+      // Warm Rhodes / Marimba bell chord (C5 + G5)
+      const osc1 = ctx.createOscillator();
+      const osc2 = ctx.createOscillator();
+      const gain = ctx.createGain();
 
-    osc.start();
-    osc.stop(ctx.currentTime + 0.16);
+      osc1.type = 'sine';
+      osc2.type = 'sine';
+      osc1.frequency.setValueAtTime(523.25 * pitchFactor, t);
+      osc2.frequency.setValueAtTime(783.99 * pitchFactor, t);
+
+      gain.gain.setValueAtTime(0.09, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.28);
+
+      osc1.connect(gain);
+      osc2.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc1.start(t);
+      osc2.start(t);
+      osc1.stop(t + 0.3);
+      osc2.stop(t + 0.3);
+    } else if (emoji === '🥂' || emoji === 'cheers') {
+      // Realistic crystal coupe glass clink (2400Hz + 3600Hz high glass harmonics)
+      const osc1 = ctx.createOscillator();
+      const osc2 = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc1.type = 'sine';
+      osc2.type = 'sine';
+      osc1.frequency.setValueAtTime(2400 * pitchFactor, t);
+      osc2.frequency.setValueAtTime(3620 * pitchFactor, t);
+
+      gain.gain.setValueAtTime(0.06, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.35);
+
+      osc1.connect(gain);
+      osc2.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc1.start(t);
+      osc2.start(t);
+      osc1.stop(t + 0.36);
+      osc2.stop(t + 0.36);
+    } else if (emoji === '✨' || emoji === 'magic' || emoji === 'sparkles') {
+      // Shimmering upward 3-note harp arpeggio
+      const notes = [880, 1175, 1568];
+      notes.forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const g = ctx.createGain();
+        const noteTime = t + idx * 0.035;
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq * pitchFactor, noteTime);
+
+        g.gain.setValueAtTime(0.001, t);
+        g.gain.setValueAtTime(0.05, noteTime);
+        g.gain.exponentialRampToValueAtTime(0.001, noteTime + 0.18);
+
+        osc.connect(g);
+        g.connect(ctx.destination);
+
+        osc.start(noteTime);
+        osc.stop(noteTime + 0.2);
+      });
+    } else if (emoji === '🔥' || emoji === 'fire' || emoji === 'electric') {
+      // Snappy resonant pop with harmonic slide
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(440 * pitchFactor, t);
+      osc.frequency.exponentialRampToValueAtTime(140 * pitchFactor, t + 0.09);
+
+      gain.gain.setValueAtTime(0.12, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(t);
+      osc.stop(t + 0.13);
+    } else if (emoji === '🥹' || emoji === 'melted' || emoji === '🥺' || emoji === 'sweet' || emoji === '🥰') {
+      // Delicate Celeste / Music box chime
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(659.25 * pitchFactor, t);
+      osc.frequency.exponentialRampToValueAtTime(987.77 * pitchFactor, t + 0.06);
+
+      gain.gain.setValueAtTime(0.08, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.24);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(t);
+      osc.stop(t + 0.25);
+    } else if (emoji === '🫂' || emoji === 'embrace') {
+      // Deep warm Rhodes / cello tone (gentle hug feeling)
+      const osc1 = ctx.createOscillator();
+      const osc2 = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc1.type = 'sine';
+      osc2.type = 'sine';
+      osc1.frequency.setValueAtTime(293.66 * pitchFactor, t);
+      osc2.frequency.setValueAtTime(440 * pitchFactor, t);
+
+      gain.gain.setValueAtTime(0.09, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.32);
+
+      osc1.connect(gain);
+      osc2.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc1.start(t);
+      osc2.start(t);
+      osc1.stop(t + 0.34);
+      osc2.stop(t + 0.34);
+    } else {
+      // Universal joyful chime
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(587.33 * pitchFactor, t);
+      osc.frequency.exponentialRampToValueAtTime(880 * pitchFactor, t + 0.08);
+
+      gain.gain.setValueAtTime(0.07, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(t);
+      osc.stop(t + 0.19);
+    }
   } catch (e) {}
 }
 

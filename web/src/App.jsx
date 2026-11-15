@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { ChevronLeft, ChevronRight, Phone, PhoneCall, Users, Copy, Check, X, Sparkles, Radio } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Phone, PhoneCall, Users, Copy, Check, X } from 'lucide-react';
 import Header from './components/Header';
 import LobbyScreen from './components/LobbyScreen';
 import CardDeckCarousel from './components/CardDeckCarousel';
@@ -7,7 +7,7 @@ import ReactionBar from './components/ReactionBar';
 import ClosingScreen from './components/ClosingScreen';
 import LegalModal from './components/LegalModal';
 import { buildSession } from './utils/engine';
-import { multiplayerSync, generateRandomCode } from './utils/peer';
+import { multiplayerSync } from './utils/peer';
 import { playClickSound, playReactionSound, playCardSlideSound, playChimeSound } from './utils/audio';
 import { triggerHaptic } from './utils/haptics';
 
@@ -38,6 +38,16 @@ export default function App() {
   const [currentTurn, setCurrentTurn] = useState('host'); // 'host' | 'guest'
   const [bookmarkedMoments, setBookmarkedMoments] = useState([]);
   const [floatingReactions, setFloatingReactions] = useState([]);
+  const [partnerReactionPill, setPartnerReactionPill] = useState(null);
+
+  // Auto-dismiss partner reaction pill banner after 2.8s
+  useEffect(() => {
+    if (!partnerReactionPill) return;
+    const timer = setTimeout(() => {
+      setPartnerReactionPill(null);
+    }, 2800);
+    return () => clearTimeout(timer);
+  }, [partnerReactionPill]);
 
   // Wildcard and Appreciation States
   const [activeWildcardPrompt, setActiveWildcardPrompt] = useState(null);
@@ -115,15 +125,55 @@ export default function App() {
     };
   }, [screen, roomCode, isHost, hostName, guestName, connectionStatus, relationshipType, sessionLength, questions, currentIndex, currentTurn, bookmarkedMoments]);
 
-  // Floating reaction spawner
-  const spawnReaction = useCallback((emoji, sender) => {
-    const id = `${Date.now()}-${Math.random()}`;
-    const xPos = 38 + Math.random() * 24;
-    setFloatingReactions(prev => [...prev, { id, emoji, sender, xPos }]);
-    triggerHaptic('pop');
-    setTimeout(() => {
-      setFloatingReactions(prev => prev.filter(r => r.id !== id));
-    }, 2600);
+  // Floating reaction spawner with organic physics and partner banner
+  const spawnReaction = useCallback((emoji, sender, meta = {}) => {
+    const isPeer = meta.isPeer ?? (sender !== (stateRef.current.isHost ? 'host' : 'guest'));
+    const senderName = meta.senderName || (isPeer
+      ? (stateRef.current.isHost ? stateRef.current.guestName : stateRef.current.hostName)
+      : (stateRef.current.isHost ? stateRef.current.hostName : stateRef.current.guestName)
+    );
+    const label = meta.label || '';
+    const now = Date.now();
+
+    if (isPeer) {
+      setPartnerReactionPill({
+        emoji,
+        label,
+        senderName,
+        id: `${now}-${Math.random()}`
+      });
+    }
+
+    const swayTypes = ['sway-left', 'sway-right', 'sway-center'];
+    const particleCount = (meta.combo && meta.combo > 2) ? 2 : 1;
+    const newParticles = [];
+
+    for (let i = 0; i < particleCount; i++) {
+      const id = `${now}-${Math.random()}-${i}`;
+      // Center-weighted natural spread
+      const baseX = isPeer ? (48 + (Math.random() * 34 - 17)) : (50 + (Math.random() * 36 - 18));
+      const sizePx = Math.floor(32 + Math.random() * 18);
+      const sway = swayTypes[Math.floor(Math.random() * swayTypes.length)];
+      const delayMs = i * 90;
+
+      newParticles.push({
+        id,
+        emoji,
+        sender,
+        senderName,
+        isPeer,
+        xPos: Math.max(10, Math.min(90, baseX)),
+        sizePx,
+        sway,
+        delayMs
+      });
+
+      setTimeout(() => {
+        setFloatingReactions(prev => prev.filter(r => r.id !== id));
+      }, 3000 + delayMs);
+    }
+
+    setFloatingReactions(prev => [...prev.slice(-35), ...newParticles]);
   }, []);
 
   // Peer Event Handlers
@@ -203,9 +253,15 @@ export default function App() {
     }
   }, []);
 
-  const handleReactionReceived = useCallback((emoji) => {
-    spawnReaction(emoji, stateRef.current.isHost ? 'guest' : 'host');
-    playReactionSound();
+  const handleReactionReceived = useCallback((payload) => {
+    const emoji = typeof payload === 'object' && payload?.emoji ? payload.emoji : payload;
+    const sender = typeof payload === 'object' && payload?.sender ? payload.sender : (stateRef.current.isHost ? 'guest' : 'host');
+    const senderName = typeof payload === 'object' && payload?.senderName ? payload.senderName : (stateRef.current.isHost ? stateRef.current.guestName : stateRef.current.hostName);
+    const label = typeof payload === 'object' && payload?.label ? payload.label : '';
+
+    spawnReaction(emoji, sender, { senderName, label, isPeer: true });
+    playReactionSound(emoji);
+    triggerHaptic('pop');
   }, [spawnReaction]);
 
   // WebRTC Voice Call Handlers
@@ -480,9 +536,10 @@ export default function App() {
   };
 
   // Reactions
-  const handleSendReaction = (emoji) => {
-    spawnReaction(emoji, isHost ? 'host' : 'guest');
-    multiplayerSync.sendReaction(emoji);
+  const handleSendReaction = (emoji, meta = {}) => {
+    const myName = isHost ? hostName : guestName;
+    spawnReaction(emoji, isHost ? 'host' : 'guest', { senderName: myName, isPeer: false, ...meta });
+    multiplayerSync.sendReaction(emoji, { senderName: myName, ...meta });
   };
 
   // Return to Lobby
@@ -623,18 +680,38 @@ export default function App() {
         </div>
       )}
 
-      {/* Floating live reactions */}
-      <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 9999 }}>
+      {/* Floating live reactions with organic drift and physics */}
+      <div className="floating-reaction-container">
         {floatingReactions.map(r => (
           <div
             key={r.id}
-            className="floating-reaction"
-            style={{ left: `${r.xPos}%`, bottom: '15%' }}
+            className={`floating-reaction ${r.sway || 'sway-center'}`}
+            style={{
+              left: `${r.xPos}%`,
+              bottom: '12%',
+              fontSize: `${r.sizePx || 36}px`,
+              animationDelay: `${r.delayMs || 0}ms`
+            }}
           >
-            {r.emoji}
+            <span>{r.emoji}</span>
+            {r.isPeer && r.senderName && (
+              <span className="reaction-partner-tag">
+                {r.senderName}
+              </span>
+            )}
           </div>
         ))}
       </div>
+
+      {/* Partner Reaction Pill Banner */}
+      {partnerReactionPill && (
+        <div className="partner-reaction-pill">
+          <span style={{ fontSize: '22px' }}>{partnerReactionPill.emoji}</span>
+          <span style={{ fontSize: '13px', fontWeight: '700', color: 'var(--color-heading)' }}>
+            <strong>{partnerReactionPill.senderName}</strong> reacted {partnerReactionPill.label ? `“${partnerReactionPill.label}”` : ''}
+          </span>
+        </div>
+      )}
 
       <div className="app-container">
         {/* Top Header */}
@@ -867,6 +944,7 @@ export default function App() {
             myAppreciationNote={myAppreciationNote}
             peerAppreciationNote={peerAppreciationNote}
             onSendAppreciationNote={handleSendAppreciationNote}
+            onSendReaction={handleSendReaction}
             onStartNew={() => {
               const newDeck = buildSession(relationshipType, sessionLength);
               setQuestions(newDeck);
